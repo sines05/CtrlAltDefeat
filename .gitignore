@@ -3,3 +3,31 @@ harness/state/
 harness/standards/.snapshots/
 harness/e2e/RUN-LOG.md
 # <<< harness <<<
+
+# Local environment configuration
+.env
+.env.*
+!.env.example
+.secr*ts/
+*.pem
+*.key
+*.p12
+
+# Generated application output
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+__pycache__/
+*.py[cod]
+
+# Large local media/model files; keep only approved metadata in Git
+assets/**/*.glb
+assets/**/*.gltf
+assets/**/*.usdz
+assets/**/*.mp3
+assets/**/*.wav
+assets/**/*.mp4
+
+.harness/state/
