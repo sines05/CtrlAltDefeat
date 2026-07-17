@@ -1,0 +1,75 @@
+edges:
+  - {from: phase-1-bootstrap, to: phase-2-content-grounding}
+  - {from: phase-2-content-grounding, to: phase-3-scene-shell}
+  - {from: phase-3-scene-shell, to: phase-4-avatar-animation}
+  - {from: phase-3-scene-shell, to: phase-5-qa-tts}
+  - {from: phase-4-avatar-animation, to: phase-6-fallback-smoke}
+  - {from: phase-5-qa-tts, to: phase-6-fallback-smoke}
+subtasks:
+  phase-1-bootstrap:
+    files_to_create:
+      - package.json
+      - apps/web/**
+      - services/api/**
+      - tests/bootstrap/**
+    files_to_modify: []
+    files_to_delete: []
+    post: [verification-phase-1-bootstrap.json]
+  phase-2-content-grounding:
+    files_to_create:
+      - content/approved/sources/**
+      - content/approved/chunks/**
+      - content/approved/tours/**
+      - content/approved/qa-examples/**
+      - content/approved/tts/**
+      - content/approved/signoffs/**
+      - tests/content/**
+    files_to_modify: []
+    files_to_delete: []
+    post: [verification-phase-2-content-grounding.json]
+  phase-3-scene-shell:
+    files_to_create:
+      - services/api/src/scene/**
+      - services/api/src/tour/**
+      - apps/web/src/scene/**
+      - apps/web/src/fallback/**
+      - apps/web/src/hotspots/**
+      - tests/scene/**
+      - tests/api/scene-tour/**
+    files_to_modify:
+      - apps/web/src/**
+      - services/api/src/**
+    files_to_delete: []
+    post: [verification-phase-3-scene-shell.json]
+  phase-4-avatar-animation:
+    files_to_create:
+      - assets/avatar/**
+      - apps/web/src/avatar/**
+      - tests/avatar/**
+    files_to_modify:
+      - apps/web/src/scene/**
+    files_to_delete: []
+    post: [verification-phase-4-avatar-animation.json]
+  phase-5-qa-tts:
+    files_to_create:
+      - services/api/src/qa/**
+      - services/api/src/tts/**
+      - services/api/src/providers/**
+      - apps/web/src/qa/**
+      - apps/web/src/tts/**
+      - tests/api/qa-tts/**
+    files_to_modify:
+      - services/api/src/qa/**
+      - services/api/src/tts/**
+      - apps/web/src/qa/**
+      - apps/web/src/tts/**
+    files_to_delete: []
+    post: [verification-phase-5-qa-tts.json]
+  phase-6-fallback-smoke:
+    files_to_create:
+      - tests/e2e/**
+      - tests/perf/**
+      - tests/mobile/**
+    files_to_modify: []
+    files_to_delete: []
+    post: [verification-phase-6-fallback-smoke.json]

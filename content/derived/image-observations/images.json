@@ -1,0 +1,4392 @@
+{
+  "dataset_id": "tay-ho-do-paper-museum-image-observations",
+  "version": "0.1.0",
+  "status": "derived_unverified",
+  "generated_at": "2026-07-17",
+  "source_dir": "assets/images",
+  "generator": {
+    "model": "haiku",
+    "agent_count": 8,
+    "method": "vision review of each original image",
+    "normalizations": [
+      "confidence clamped to 0-1",
+      "exact duplicate annotations canonicalized to the primary filename",
+      "unverified wax-material claims generalized to statue/model"
+    ]
+  },
+  "evidence_policy": [
+    "Descriptions record visible image evidence only.",
+    "Text is transcribed only where legible; uncertain spans are marked.",
+    "Process stages inferred from visuals are explicitly marked as inference.",
+    "This dataset is not approved grounding content and must be reviewed before publication."
+  ],
+  "assets": [
+    {
+      "filename": "2aOboQl1ju0CmQNmKJ7mMomFUzc4LgFBPPYipzUW.jpg",
+      "display_type": "album_page",
+      "description_vi": "Một bức ảnh chụp cận cảnh các lớp giấy thủ công có mép xơ tự nhiên được dán trên trang album màu đen. Phía bên phải bức ảnh trong album có hình ảnh mờ của một bàn tay đang chạm vào giấy. Trang album được đặt trên một bề mặt có các nan tre hoặc gỗ song song.",
+      "caption_vi": "Trang album trưng bày ảnh chụp cận cảnh các lớp giấy thủ công xơ sợi.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Một bàn tay mờ ở góc phải trong bức ảnh"
+      ],
+      "objects_and_materials": [
+        "giấy thủ công",
+        "album",
+        "bề mặt nan tre"
+      ],
+      "possible_process_stage": "product_use",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion",
+          "glare"
+        ]
+      },
+      "keywords_vi": [
+        "giấy thủ công",
+        "mép xơ",
+        "trang album",
+        "sợi giấy",
+        "trưng bày"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không thể xác định loại giấy cụ thể hoặc địa điểm chụp bức ảnh gốc trong album.",
+      "asset_id": "img-001",
+      "source_path": "assets/images/2aOboQl1ju0CmQNmKJ7mMomFUzc4LgFBPPYipzUW.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 669142,
+      "sha256": "70973558e6e1b2dc59632b6647dda33ecd0970de791ae07f4ce2df1285ef23aa",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 1,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kDDuM3XlY8c4cROoexh3pNd0Q3wOBk2a.jpg",
+      "display_type": "diorama",
+      "description_vi": "Một bức tượng mô phỏng người đàn ông bán khỏa thân, quấn khăn trên đầu và mặc khố đang cầm dao thái một khúc gỗ. Bên cạnh chân tượng có các khúc gỗ khô khác nằm trên mặt đất giả đá. Phía sau tượng là bức tường vẽ phong cảnh rừng cây tông màu nâu vàng.",
+      "caption_vi": "Tượng mô phỏng công đoạn xử lý nguyên liệu gỗ thô trong quy trình làm giấy.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "bức tượng người đàn ông bán khỏa thân quấn khăn đầu và mặc khố"
+      ],
+      "objects_and_materials": [
+        "tượng mô phỏng",
+        "dao rựa",
+        "khúc gỗ",
+        "sơn tường",
+        "mặt sàn giả đá"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion"
+        ]
+      },
+      "keywords_vi": [
+        "tượng mô phỏng",
+        "khúc gỗ",
+        "dao rựa",
+        "nguyên liệu thô",
+        "triển lãm",
+        "bảo tàng"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định chính xác loại gỗ đang được xử lý hoặc địa danh cụ thể của bảo tàng qua bức tượng.",
+      "asset_id": "img-002",
+      "source_path": "assets/images/2aOboQl1kDDuM3XlY8c4cROoexh3pNd0Q3wOBk2a.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1147556,
+      "sha256": "2c85d95d191ffb781552e12f5be20800b161e45cab92fae6681002f2c598e61c",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 1,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kDJ0arx2z8EuMG9hnWUQOix2vNpDoXYW.jpg",
+      "display_type": "diorama",
+      "description_vi": "Một bức tượng mô phỏng người đàn ông quấn khăn cam trên đầu, mặc áo cộc tay phanh ngực và quần đùi đang vác một thân cây trên vai. Tượng đứng trên nền đất xám cạnh một cửa kính lớn nhìn ra bên ngoài. Bức tường phía sau được vẽ họa tiết rừng cây màu nâu đỏ.",
+      "caption_vi": "Tượng mô phỏng người lao động vác thân cây nguyên liệu làm giấy.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "bức tượng người đàn ông quấn khăn cam vác thân cây"
+      ],
+      "objects_and_materials": [
+        "tượng mô phỏng",
+        "thân cây giả",
+        "cửa kính",
+        "sơn tường"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion",
+          "glare"
+        ]
+      },
+      "keywords_vi": [
+        "tượng mô phỏng",
+        "vác gỗ",
+        "thân cây nguyên liệu",
+        "bảo tàng",
+        "trưng bày"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định loại thân cây cụ thể hoặc nguồn gốc của bức tượng.",
+      "asset_id": "img-003",
+      "source_path": "assets/images/2aOboQl1kDJ0arx2z8EuMG9hnWUQOix2vNpDoXYW.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1221419,
+      "sha256": "e2c6009b18a04aa7b3e4bed4b42f20c4f4ff75a7a7ee597140cd4c8d78b4dbfc",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 1,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kDZv2zmQvcxFBWtrho3RnvlODwLUIETI.jpg",
+      "display_type": "diorama",
+      "description_vi": "Một bức tượng mô phỏng người đàn ông cởi trần mặc khố, quấn khăn tối màu trên đầu đang cúi người cầm một cái rổ tròn chứa chất bột xám trên một bệ xi măng phẳng hình chữ nhật. Một chiếc nia tre lớn dựa nghiêng ở góc dưới bên trái. Phía sau tượng là bức tường vẽ mô tả phong cảnh bằng nét vẽ đơn sắc xám nâu.",
+      "caption_vi": "Tượng mô phỏng công đoạn chuẩn bị bột giấy hoặc đãi bột trong quy trình làm giấy.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "bức tượng người đàn ông cởi trần mặc khố cúi người cầm rổ"
+      ],
+      "objects_and_materials": [
+        "tượng mô phỏng",
+        "rổ tre",
+        "nia tre",
+        "bệ xi măng",
+        "bức tường vẽ"
+      ],
+      "possible_process_stage": "pulp_preparation",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion",
+          "low_light"
+        ]
+      },
+      "keywords_vi": [
+        "tượng mô phỏng",
+        "chuẩn bị bột",
+        "rổ tre",
+        "nia tre",
+        "bệ xi măng",
+        "quy trình làm giấy"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không thể xác định chính xác tên gọi kỹ thuật của công đoạn cụ thể này hoặc thành phần bột giấy trong rổ.",
+      "asset_id": "img-004",
+      "source_path": "assets/images/2aOboQl1kDZv2zmQvcxFBWtrho3RnvlODwLUIETI.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 832595,
+      "sha256": "43c0e84c5acd835f3806f4b79e970953ec3e9389dd06b547d2fc1972d65f57ab",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 1,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kDamZ4Um0CBRkwN1EVwu02ZRjnEUk8IK.jpg",
+      "display_type": "diorama",
+      "description_vi": "Một bức tượng mô phỏng người phụ nữ mặc áo bà ba màu xanh lá cây, thắt lưng vải trắng và đội khăn xếp màu cam trên đầu đang cúi người dùng hai tay nâng khuôn lưới gỗ hình chữ nhật. Khuôn gỗ và mặt bệ xung quanh phủ một lớp bụi dày. Phía sau tượng có phông nền vẽ cảnh sinh hoạt xưa bằng tông màu nâu ấm.",
+      "caption_vi": "Tượng mô phỏng công đoạn xeo giấy bằng khuôn lưới gỗ.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "bức tượng người phụ nữ mặc áo xanh lá đội khăn xếp cúi người cầm khuôn gỗ"
+      ],
+      "objects_and_materials": [
+        "tượng mô phỏng",
+        "khuôn xeo gỗ",
+        "lớp bụi",
+        "phông nền vẽ"
+      ],
+      "possible_process_stage": "sheet_forming",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion",
+          "low_light"
+        ]
+      },
+      "keywords_vi": [
+        "tượng mô phỏng",
+        "xeo giấy",
+        "khuôn gỗ",
+        "bể xeo",
+        "bảo tàng",
+        "quy trình thủ công"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định loại xơ sợi cụ thể của tấm giấy đang được mô phỏng tạo hình hoặc cấu trúc chi tiết của lưới xeo dưới lớp bụi.",
+      "asset_id": "img-005",
+      "source_path": "assets/images/2aOboQl1kDamZ4Um0CBRkwN1EVwu02ZRjnEUk8IK.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 531873,
+      "sha256": "f8bddbad81a019c25f90d8fafcd906e86603061b615c2da1ef5ec725bf483e2a",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 1,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kDiCKMSQ8RNYIekpm4xbsRfoHE1mQ4ae.jpg",
+      "display_type": "diorama",
+      "description_vi": "Một bức tượng mô phỏng người phụ nữ mặc áo bà ba màu nâu xám, quấn khăn rằn trên đầu đang cúi người dùng hai tay kéo một bó dải vỏ cây dài từ một bể tròn bằng đá hoặc xi măng. Phía bên trái là một bể tròn khác, xung quanh có một số nhánh cây trầu bà xanh tươi mọc tự nhiên.",
+      "caption_vi": "Tượng mô phỏng công đoạn ngâm hoặc vớt vỏ cây nguyên liệu làm giấy.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "bức tượng người phụ nữ mặc áo nâu xám cúi người kéo vỏ cây"
+      ],
+      "objects_and_materials": [
+        "tượng mô phỏng",
+        "bó vỏ cây",
+        "bể đá",
+        "cây trầu bà",
+        "bể xi măng"
+      ],
+      "possible_process_stage": "soaking",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion"
+        ]
+      },
+      "keywords_vi": [
+        "tượng mô phỏng",
+        "vỏ cây",
+        "ngâm vỏ cây",
+        "bể ngâm",
+        "bảo tàng",
+        "nguyên liệu làm giấy"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không thể xác định chính xác loại vỏ cây cụ thể đang được xử lý trong bể ngâm này.",
+      "asset_id": "img-006",
+      "source_path": "assets/images/2aOboQl1kDiCKMSQ8RNYIekpm4xbsRfoHE1mQ4ae.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1242313,
+      "sha256": "0891acd7da7eba96cd9cf7e28d110a9327a47ca941c3ddae5b2f6d2e4f08995a",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 1,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kDpc5eQ4GgZeqM6gnrC1ITm7HGvME1B2.jpg",
+      "display_type": "material_or_tool",
+      "description_vi": "Một mô hình phục dựng cơ cấu ép giấy thủ công dạng đòn bẩy bằng gỗ lớn được đặt trong không gian trưng bày. Một đầu thanh đòn bẩy gỗ được treo ba quả đá lớn làm đối trọng bằng dây thừng. Đầu kia của thanh gỗ tác dụng lực lên một bàn ép phẳng bằng đá hoặc bê tông màu trắng.",
+      "caption_vi": "Mô hình cơ cấu ép đòn bẩy truyền thống dùng lực ép từ đá làm đối trọng.",
+      "visible_text": [],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "thanh đòn bẩy gỗ",
+        "quả đá đối trọng",
+        "dây thừng",
+        "bàn ép bê tông",
+        "mặt sàn"
+      ],
+      "possible_process_stage": "pressing",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion",
+          "low_light"
+        ]
+      },
+      "keywords_vi": [
+        "máy ép giấy",
+        "đòn bẩy",
+        "đá đối trọng",
+        "ép giấy",
+        "dụng cụ truyền thống",
+        "phục dựng"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định lực ép tối đa hoặc tỷ lệ kích thước chính xác so với phiên bản thực tế của cơ cấu ép này.",
+      "asset_id": "img-007",
+      "source_path": "assets/images/2aOboQl1kDpc5eQ4GgZeqM6gnrC1ITm7HGvME1B2.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 894175,
+      "sha256": "15f65b4e5d6ef4c439f499e9e22c59f12cab3ca51c29162858733f1be4c2fb53",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 1,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kDrBOW5EOzXIbq1STNdUilBHq8YoAYvQ.jpg",
+      "display_type": "diorama",
+      "description_vi": "Một bức tượng mô phỏng người đàn ông mặc áo cộc tay màu đỏ nâu, quần ngắn màu xanh lục và đội khăn màu vàng trên đầu đang ngồi xổm cắt xén mép các tấm giấy xếp trên một khối đá trắng bằng một lưỡi dao cong dài gắn tay cầm. Một chồng giấy thô đã được xếp phẳng bên dưới lưỡi dao. Phía sau tượng vẽ phong cảnh đống xơ sợi màu nâu xám.",
+      "caption_vi": "Tượng mô phỏng công đoạn cắt xén hoặc hoàn thiện các tấm giấy.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "bức tượng người đàn ông mặc áo đỏ nâu đội khăn vàng ngồi xổm cắt giấy"
+      ],
+      "objects_and_materials": [
+        "tượng mô phỏng",
+        "dao cắt giấy cong",
+        "bệ đá trắng",
+        "các tấm giấy thủ công",
+        "sàn gỗ"
+      ],
+      "possible_process_stage": "finishing",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion"
+        ]
+      },
+      "keywords_vi": [
+        "tượng mô phỏng",
+        "cắt giấy",
+        "dao cắt",
+        "hoàn thiện giấy",
+        "giấy thủ công",
+        "quy trình làm giấy"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định kích thước cắt chuẩn xác hoặc độ dày của các tờ giấy trong chồng giấy mô phỏng.",
+      "asset_id": "img-008",
+      "source_path": "assets/images/2aOboQl1kDrBOW5EOzXIbq1STNdUilBHq8YoAYvQ.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 909678,
+      "sha256": "564a07eb71ed24ffc7d1c4411cc2e5e040109b0d070dd83e540ad055b51a5d97",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 1,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kDxQB9nVR0VfpQrMYJyadgYsFMavPChU.jpg",
+      "display_type": "gallery_overview",
+      "description_vi": "Một góc nhìn bao quát phòng trưng bày bảo tàng với các bức tường được vẽ tranh phong cảnh làng quê xưa tông màu nâu. Hàng dọc theo lối đi là các bàn gỗ đặt những khối ép giấy màu trắng hình hộp chữ nhật. Ở giữa phòng có một bức tượng người đàn ông mặc áo vàng, đầu quấn khăn đang bê một khối ép.",
+      "caption_vi": "Góc trưng bày các khối ép giấy và tượng mô phỏng trong nhà bảo tàng.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "bức tượng người đàn ông mặc áo vàng đội khăn ở giữa phòng"
+      ],
+      "objects_and_materials": [
+        "tượng mô phỏng",
+        "bàn gỗ trưng bày",
+        "khối ép thạch cao hoặc bê tông",
+        "bức tường vẽ tranh",
+        "cửa kính",
+        "sàn nhà bê tông"
+      ],
+      "possible_process_stage": "museum_overview",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion",
+          "glare"
+        ]
+      },
+      "keywords_vi": [
+        "phòng trưng bày",
+        "bảo tàng",
+        "khối ép giấy",
+        "tượng mô phỏng",
+        "tranh tường",
+        "không gian bảo tàng"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định chính xác chất liệu cấu tạo của các khối hộp màu trắng trên bàn gỗ.",
+      "asset_id": "img-009",
+      "source_path": "assets/images/2aOboQl1kDxQB9nVR0VfpQrMYJyadgYsFMavPChU.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 952995,
+      "sha256": "a9056333da61f7dbd8fa0e96add8bb8791ee739faa1d3eacf8d504264ff0da05",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 1,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kDyFGPZT0MrgYVccAWzBlupTN7fN3P8q.jpg",
+      "display_type": "diorama",
+      "description_vi": "Một bức tượng mô phỏng người đàn ông có râu quai nón, mặc áo màu vàng, quần ngắn xám và đầu quấn khăn đang bê một chồng giấy dày uốn cong đặt trên một tấm đế phẳng. Trước mặt tượng là một bàn trưng bày đặt một xấp giấy thô màu nâu nhạt khác trên một khối đá trắng. Phía sau tượng vẽ phong cảnh những ngôi nhà sàn và rặng cây đơn sắc.",
+      "caption_vi": "Tượng mô phỏng công đoạn vận chuyển hoặc kiểm tra giấy thành phẩm.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "bức tượng người đàn ông mặc áo vàng, đầu quấn khăn bê giấy"
+      ],
+      "objects_and_materials": [
+        "tượng mô phỏng",
+        "xấp giấy thủ công",
+        "bàn trưng bày bằng gỗ",
+        "khối đá trắng",
+        "tranh tường vẽ"
+      ],
+      "possible_process_stage": "finishing",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion"
+        ]
+      },
+      "keywords_vi": [
+        "tượng mô phỏng",
+        "giấy thành phẩm",
+        "xấp giấy thủ công",
+        "bảo tàng",
+        "trưng bày",
+        "hoàn thiện giấy"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định chính xác số lượng tờ giấy trong xấp giấy mô phỏng.",
+      "asset_id": "img-010",
+      "source_path": "assets/images/2aOboQl1kDyFGPZT0MrgYVccAWzBlupTN7fN3P8q.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 890851,
+      "sha256": "6d8627b0417309313d4535aac3137c4ca0ef8f263adaddaa6b69f516328cefe6",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 1,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kEAgOs3dZBwF9M9MbTS8vcqULRwVOM64.jpg",
+      "display_type": "illustration",
+      "description_vi": "Bức tranh vẽ một người phụ nữ ngồi trên thềm nhà đang phân loại vỏ cây dó. Phía sau người phụ nữ có một rổ đựng vỏ cây và xa hơn là phong cảnh cây cối. Bên dưới bức tranh có một nhãn giấy viết chữ tiêu đề tiếng Việt và tiếng Anh.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn phân loại vỏ cây dó để làm giấy.",
+      "visible_text": [
+        {
+          "text": "Phân loại vỏ Dó",
+          "certainty": "high"
+        },
+        {
+          "text": "Classifying Do' bark",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "một người phụ nữ đang ngồi phân loại vỏ cây"
+      ],
+      "objects_and_materials": [
+        "bức tranh vẽ",
+        "nhãn giấy",
+        "rổ tre vẽ trong tranh",
+        "vỏ cây dó vẽ trong tranh",
+        "bờ tường"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "tranh vẽ",
+        "phân loại vỏ dó",
+        "vỏ dó",
+        "làm giấy",
+        "thủ công"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "",
+      "asset_id": "img-011",
+      "source_path": "assets/images/2aOboQl1kEAgOs3dZBwF9M9MbTS8vcqULRwVOM64.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 866260,
+      "sha256": "204bc7d4ad2f147bfb5937bc10375236ebefb019b4968e715d9213a04028a489",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 2,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kEBfDPb79Nn1FmVyfaQDwOVWbQm0G9ce.jpg",
+      "display_type": "illustration",
+      "description_vi": "Bức tranh vẽ hai người đàn ông đang thực hiện công việc chế biến nguyên liệu. Một người đang ngồi trên khúc gỗ bào cây mò để lấy chất nhớt tạo độ kết dính cho giấy, người còn lại đứng trong một chậu gỗ lớn để giẫm hoặc rửa nguyên liệu. Dưới bức tranh có nhãn giấy chú thích bằng tiếng Việt và tiếng Anh.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn bào cây mò để lấy chất nhớt tạo độ kết dính cho bột giấy.",
+      "visible_text": [
+        {
+          "text": "Bào mò để làm nhớt",
+          "certainty": "high"
+        },
+        {
+          "text": "Shaving mo tree for formation aid",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "hai người đàn ông vẽ trong tranh đang chế biến nguyên liệu"
+      ],
+      "objects_and_materials": [
+        "bức tranh vẽ",
+        "nhãn giấy",
+        "khúc gỗ vẽ trong tranh",
+        "chậu gỗ vẽ trong tranh",
+        "thùng gỗ vẽ trong tranh",
+        "rổ tre vẽ trong tranh",
+        "bờ tường"
+      ],
+      "possible_process_stage": "pulp_preparation",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "tranh vẽ",
+        "bào mò",
+        "chất nhớt",
+        "cây mò",
+        "làm giấy",
+        "thủ công"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "",
+      "asset_id": "img-012",
+      "source_path": "assets/images/2aOboQl1kEBfDPb79Nn1FmVyfaQDwOVWbQm0G9ce.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 783257,
+      "sha256": "7421b83025cfdb9fa83140dd682a7c8644f0a2d9acaf55d4f67b7dff56c163db",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 2,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kEGKhBeE35nkhtSuveQBrswbgBcqotpQ.jpg",
+      "display_type": "illustration",
+      "description_vi": "Bức tranh vẽ cảnh nấu vỏ cây dó. Trong tranh vẽ một chiếc lò nấu lớn bằng đất nung hoặc gạch cao có bậc thang đi lên, một người đứng bên trên miệng lò và một người đứng bên dưới đang dùng sào đưa vỏ cây dó vào lò nấu. Một người khác đang nhóm lửa dưới mái che nhỏ bên cạnh lò, và phía trước là hai người đang lội nước xử lý nguyên liệu dưới ao nước. Phía dưới bức tranh có nhãn giấy chú thích.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn nấu vỏ cây dó trong lò đất nung lớn.",
+      "visible_text": [
+        {
+          "text": "Nấu Dó",
+          "certainty": "high"
+        },
+        {
+          "text": "Cooking Do' bark",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "năm người đàn ông vẽ trong tranh đang thực hiện các công đoạn nấu và ngâm vỏ dó"
+      ],
+      "objects_and_materials": [
+        "bức tranh vẽ",
+        "nhãn giấy",
+        "lò nấu dó vẽ trong tranh",
+        "sào tre vẽ trong tranh",
+        "nhà tranh vẽ trong tranh",
+        "bờ tường"
+      ],
+      "possible_process_stage": "boiling",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "tranh vẽ",
+        "nấu dó",
+        "lò nấu",
+        "vỏ dó",
+        "làm giấy",
+        "thủ công"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "",
+      "asset_id": "img-013",
+      "source_path": "assets/images/2aOboQl1kEGKhBeE35nkhtSuveQBrswbgBcqotpQ.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 944876,
+      "sha256": "c68494b4136c52e36cdc37d179743a46df11a02b0e14bcd3d5348f92f791dedf",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 2,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kEH039efbcf03cfE8VIMkci3vBqVhhvk.jpg",
+      "display_type": "illustration",
+      "description_vi": "Bức tranh vẽ hai người đang làm việc cạnh một ngôi nhà. Một người đang đứng đạp lể trong một chiếc thùng gỗ lớn tròn, người còn lại đang ngồi bào gỗ mò ở phía sau. Bên dưới bức tranh là một tấm bảng chữ màu nâu đỏ ghi chú thích bằng tiếng Việt giải thích về công đoạn đạp lể và bào gỗ mò.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn đạp lể và bào gỗ mò lấy nước nhớt pha lẫn vào bột giấy.",
+      "visible_text": [
+        {
+          "text": "CÔNG ĐOẠN",
+          "certainty": "high"
+        },
+        {
+          "text": "ĐẠP LỂ VÀ BÀO GỖ ( GỖ MÒ LẤY NƯỚC NHỚT PHA LẪN",
+          "certainty": "high"
+        },
+        {
+          "text": "VÀO BỘT GIẤY, SEO THÀNH TỜ GIẤY CHẤT NHỚT CỦA GỖ MÒ",
+          "certainty": "high"
+        },
+        {
+          "text": "LÀM CHO TỜ GIẤY KHÔNG DÍNH VÀO NHAU )",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "hai người vẽ trong tranh đang thực hiện công việc giẫm nguyên liệu và bào gỗ"
+      ],
+      "objects_and_materials": [
+        "bức tranh vẽ",
+        "khung tranh",
+        "bảng gỗ chú thích",
+        "thùng gỗ vẽ trong tranh",
+        "bờ tường"
+      ],
+      "possible_process_stage": "pulp_preparation",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "tranh vẽ",
+        "đạp lể",
+        "bào gỗ mò",
+        "nước nhớt",
+        "bột giấy",
+        "làm giấy"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "",
+      "asset_id": "img-014",
+      "source_path": "assets/images/2aOboQl1kEH039efbcf03cfE8VIMkci3vBqVhhvk.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 719171,
+      "sha256": "2ec8e4e92b9ce4488c3083cac56adb43cdc788cb9bc96e1a0ef9b695e5e98794",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 2,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kEhpx9hxteVfSAwY13YurHyQbQQ0S2XQ.jpg",
+      "display_type": "illustration",
+      "description_vi": "Bức tranh vẽ hai người phụ nữ đang ngồi trên sàn nhà gỗ hoặc thềm nhà thực hiện việc bóc tách và kiểm đếm các tờ giấy. Một người phụ nữ ngồi xổm đang tách một tờ giấy từ chồng giấy, người còn lại ngồi trên ghế gỗ đang đếm hoặc xếp các tờ giấy lên một chiếc hòm gỗ. Phía dưới bức tranh có nhãn giấy chú thích.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn lột giấy và đếm giấy thành phẩm.",
+      "visible_text": [
+        {
+          "text": "Lột giấy, đếm giấy",
+          "certainty": "high"
+        },
+        {
+          "text": "Splitting & counting the sheets",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "hai người phụ nữ vẽ trong tranh đang bóc tách và đếm giấy"
+      ],
+      "objects_and_materials": [
+        "bức tranh vẽ",
+        "nhãn giấy",
+        "hòm gỗ vẽ trong tranh",
+        "tờ giấy vẽ trong tranh",
+        "bờ tường"
+      ],
+      "possible_process_stage": "finishing",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "tranh vẽ",
+        "lột giấy",
+        "đếm giấy",
+        "giấy dó",
+        "thành phẩm",
+        "làm giấy"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "",
+      "asset_id": "img-015",
+      "source_path": "assets/images/2aOboQl1kEhpx9hxteVfSAwY13YurHyQbQQ0S2XQ.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1032462,
+      "sha256": "06e358f3f93d9566f7dce35a936b8ce41e6a6e2e99915909f7a086fb8a0ec9b6",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 2,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kEmhb2SyJOtM7yLB0xzuHquhAeX66Lho.jpg",
+      "display_type": "gallery_overview",
+      "description_vi": "Không gian trưng bày trong bảo tàng với một tủ kính nằm ngang trưng bày các cuốn sách xếp gấp, tranh ảnh nhỏ và các sản phẩm giấy thủ công. Phía sau tủ kính là một giá gỗ treo các mẫu giấy dó với nhiều màu sắc và độ dày khác nhau. Trên tường hai bên có treo một số bức tranh nhỏ.",
+      "caption_vi": "Tủ kính trưng bày các sản phẩm làm từ giấy dó và các mẫu giấy dó nhiều màu sắc phía sau.",
+      "visible_text": [],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "tủ kính trưng bày",
+        "sách xếp gấp",
+        "tranh vẽ",
+        "giá gỗ treo giấy",
+        "mẫu giấy dó",
+        "khung gỗ",
+        "bờ tường"
+      ],
+      "possible_process_stage": "museum_overview",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "không gian trưng bày",
+        "bảo tàng",
+        "sản phẩm giấy",
+        "giấy dó",
+        "mẫu giấy",
+        "sách gấp"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không thể đọc được các đoạn chữ viết nhỏ trên các hiện vật trưng bày trong tủ kính.",
+      "asset_id": "img-016",
+      "source_path": "assets/images/2aOboQl1kEmhb2SyJOtM7yLB0xzuHquhAeX66Lho.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 919034,
+      "sha256": "66b3ed3e186c51d29bf9a4262b722d41269a66bb77bb82a23e1a7a53af09cc2d",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 2,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kEo4jnQEvfU2fla3DHW2OrEfOhDiozBI.jpg",
+      "display_type": "artifact",
+      "description_vi": "Các sản phẩm thủ công từ giấy dó được trưng bày trên một chiếc bàn tròn màu trắng. Các sản phẩm bao gồm sổ tay, thiệp chúc mừng, mặt nạ hình mèo bằng giấy bồi, các tấm bưu thiếp in tranh vẽ phong cảnh phố cổ Hà Nội và cầu Long Biên.",
+      "caption_vi": "Trưng bày các sản phẩm lưu niệm làm từ giấy dó như sổ tay, bưu thiếp và mặt nạ.",
+      "visible_text": [
+        {
+          "text": "SEASON'S Greetings!",
+          "certainty": "high"
+        },
+        {
+          "text": "Animalia collection",
+          "certainty": "high"
+        },
+        {
+          "text": "JUL",
+          "certainty": "high"
+        },
+        {
+          "text": "2026",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "bàn tròn gỗ",
+        "mặt nạ giấy bồi",
+        "sổ tay giấy",
+        "bưu thiếp giấy",
+        "thiệp chúc mừng",
+        "lịch để bàn",
+        "sàn nhà"
+      ],
+      "possible_process_stage": "product_use",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "sản phẩm giấy dó",
+        "mặt nạ giấy bồi",
+        "sổ tay",
+        "bưu thiếp",
+        "quà lưu niệm",
+        "giấy dó"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không đọc được các chữ số và chữ viết nhỏ trên các tấm lịch và bưu thiếp khác.",
+      "asset_id": "img-017",
+      "source_path": "assets/images/2aOboQl1kEo4jnQEvfU2fla3DHW2OrEfOhDiozBI.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 717292,
+      "sha256": "737ce25a29a847534638dad19adad1ac16bc42e9f165d3668f16c27a652c2d7e",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 2,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kEtqKZpxvBy7lJaQwGCABaK1R1k8ckOe.jpg",
+      "display_type": "material_or_tool",
+      "description_vi": "Một khúc thân cây gỗ mò dựng thẳng đứng đặt trên bục trưng bày hình tròn màu trắng trong bảo tàng. Áp sát vào thân cây là một dụng cụ bào bằng gỗ thô sơ có gắn lưỡi kim loại để bào gỗ mò lấy chất nhớt. Phía sau bục trưng bày là các tủ kính đựng sản phẩm giấy và các mẫu giấy dó treo trên giá gỗ. Ở góc phải hậu cảnh có một phần chân của khách tham quan đang đứng.",
+      "caption_vi": "Khúc gỗ mò và dụng cụ bào thô sơ dùng để lấy chất nhớt làm giấy.",
+      "visible_text": [
+        {
+          "text": "BÀO GỖ MÒ",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "khúc gỗ mò",
+        "dụng cụ bào",
+        "bục trưng bày",
+        "nhãn giấy",
+        "tủ kính trưng bày",
+        "giá gỗ treo giấy",
+        "sàn nhà"
+      ],
+      "possible_process_stage": "pulp_preparation",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "khúc gỗ mò",
+        "dụng cụ bào",
+        "chất nhớt",
+        "làm giấy",
+        "hiện vật",
+        "bảo tàng"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định rõ thông tin trên nhãn nhỏ đặt cạnh khúc gỗ ở trên bục.",
+      "asset_id": "img-018",
+      "source_path": "assets/images/2aOboQl1kEtqKZpxvBy7lJaQwGCABaK1R1k8ckOe.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 700610,
+      "sha256": "484a8a45fc901624a2500bffe18c0b754cb2207b4619a15b925139d836821b49",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 2,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kEwwVUDugb1DRwY9CS6xQDWpeQKfFm4m.jpg",
+      "display_type": "artifact",
+      "description_vi": "Nhiều sản phẩm thủ công từ giấy dó và tờ rơi giới thiệu các lớp học trải nghiệm được bày trên bàn tròn màu trắng. Các sản phẩm gồm có lịch để bàn năm 2026, hộp quà, quạt giấy, bưu thiếp và các cuốn sổ tay tự đóng. Các tờ rơi giới thiệu về các xưởng thực hành làm giấy dó, đóng sổ, làm đèn hoa đăng và viết thư pháp.",
+      "caption_vi": "Trưng bày các sản phẩm lưu niệm từ giấy dó và tờ rơi giới thiệu các lớp học trải nghiệm làm giấy.",
+      "visible_text": [
+        {
+          "text": "Dó paper making workshop",
+          "certainty": "high"
+        },
+        {
+          "text": "Book binding workshop",
+          "certainty": "high"
+        },
+        {
+          "text": "Making lamp from dó paper Workshop",
+          "certainty": "high"
+        },
+        {
+          "text": "Making earings Workshop",
+          "certainty": "high"
+        },
+        {
+          "text": "Vietnamese Caligraphy Workshop",
+          "certainty": "high"
+        },
+        {
+          "text": "Seasonal workshop",
+          "certainty": "high"
+        },
+        {
+          "text": "Workshop làm sổ",
+          "certainty": "high"
+        },
+        {
+          "text": "Workshop làm đèn từ giấy dó",
+          "certainty": "high"
+        },
+        {
+          "text": "Các workshop theo mùa",
+          "certainty": "high"
+        },
+        {
+          "text": "2026",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "bàn tròn gỗ",
+        "tờ rơi quảng cáo",
+        "lịch để bàn",
+        "sổ tay giấy",
+        "quạt giấy",
+        "bưu thiếp",
+        "hộp giấy",
+        "sàn nhà"
+      ],
+      "possible_process_stage": "product_use",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "sản phẩm giấy dó",
+        "xưởng trải nghiệm",
+        "tờ rơi",
+        "quạt giấy",
+        "sổ tay",
+        "làm giấy dó"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Một số đoạn chữ mô tả chi tiết trên các tờ rơi quảng cáo quá nhỏ để có thể đọc rõ.",
+      "asset_id": "img-019",
+      "source_path": "assets/images/2aOboQl1kEwwVUDugb1DRwY9CS6xQDWpeQKfFm4m.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 780132,
+      "sha256": "3388d42219cf3ec1be6ce024a37d07cbce01d629b32cda0dcee00c824fbfcd16",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 2,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kF2ffRhGAud6h9XUtEehNr3PcdXRTwFE.jpg",
+      "display_type": "material_or_tool",
+      "description_vi": "Một bộ khuôn seo giấy bằng gỗ và lưới tre/kim loại được đặt trưng bày trên bục tròn màu trắng. Trên khuôn có một thanh kẹp gỗ và bên cạnh có một nhãn giấy ghi chữ viết tay bằng tiếng Việt và tiếng Anh. Hậu cảnh có các tủ kính trưng bày tranh ảnh và sản phẩm giấy của bảo tàng.",
+      "caption_vi": "Khuôn seo giấy bằng gỗ trưng bày trong không gian bảo tàng.",
+      "visible_text": [
+        {
+          "text": "Sản phẩm trưng bày",
+          "certainty": "high"
+        },
+        {
+          "text": "Display product",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "bục trưng bày",
+        "khuôn seo gỗ",
+        "mành tre khuôn seo",
+        "nhãn giấy",
+        "tủ kính trưng bày",
+        "sàn gạch"
+      ],
+      "possible_process_stage": "sheet_forming",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "khuôn seo giấy",
+        "dụng cụ làm giấy",
+        "seo giấy",
+        "hiện vật",
+        "bảo tàng",
+        "giấy thủ công"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không xác định được xuất xứ hoặc niên đại cụ thể của bộ khuôn seo từ nhãn trưng bày.",
+      "asset_id": "img-020",
+      "source_path": "assets/images/2aOboQl1kF2ffRhGAud6h9XUtEehNr3PcdXRTwFE.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 646435,
+      "sha256": "e28f4430da59417ca1f6bafd2ded462761d294ae1ff3706780fc8f888a9f4677",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 2,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kF4CXUQ2o0iYcIYNAvKqqh7VPxeLZYOm.jpg",
+      "display_type": "gallery_overview",
+      "description_vi": "Mười bức ảnh đen trắng được đóng khung và treo trên một bức tường màu sáng theo hai hàng ngang. Các bức ảnh thể hiện các cảnh sinh hoạt và lao động thời xưa tại Việt Nam, một số bức ảnh có đính kèm tem thư hoặc con dấu. Ánh sáng từ đèn rọi tạo ra các điểm sáng lóa nhẹ trên bề mặt kính của các bức ảnh.",
+      "caption_vi": "Góc trưng bày các bức ảnh lịch sử về đời sống sinh hoạt và lao động xưa trên tường",
+      "visible_text": [
+        {
+          "text": "TONKIN",
+          "certainty": "medium"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "hình người lao động trong các bức ảnh đen trắng",
+        "hình người sinh hoạt trong các bức ảnh đen trắng"
+      ],
+      "objects_and_materials": [
+        "bức ảnh",
+        "bưu thiếp",
+        "bức tường",
+        "tem thư",
+        "khung ảnh"
+      ],
+      "possible_process_stage": "museum_overview",
+      "process_stage_basis": "not_applicable",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "glare"
+        ]
+      },
+      "keywords_vi": [
+        "ảnh đen trắng",
+        "bưu thiếp cổ",
+        "trưng bày",
+        "bảo tàng",
+        "lịch sử"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Nội dung chữ viết tay và các chi tiết nhỏ trên các bưu thiếp không thể đọc rõ do khoảng cách chụp xa và hiện tượng lóa sáng.",
+      "asset_id": "img-021",
+      "source_path": "assets/images/2aOboQl1kF4CXUQ2o0iYcIYNAvKqqh7VPxeLZYOm.jpg",
+      "width": 2568,
+      "height": 1926,
+      "orientation": "landscape",
+      "bytes": 578244,
+      "sha256": "ba2bc196fc7185fbd3119e258dcb3940f264a665e7f9080f309d84d02c229e4f",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 3,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kF4HP8InoQSwIyPhf9hyCBi2QCk12YLY.jpg",
+      "display_type": "paper_sample",
+      "description_vi": "Nhiều mẫu giấy thủ công với các màu sắc và độ dày khác nhau được treo trên một giá đỡ bằng gỗ gắn trên tường trắng. Các mẫu giấy bao gồm các tông màu tự nhiên như nâu thô, trắng ngà, vàng nhạt cùng một số mẫu có màu sắc nổi bật như đỏ cam, tím và xanh xám. Một phần tủ kính trưng bày xuất hiện ở góc dưới bên phải của hình ảnh.",
+      "caption_vi": "Bảng trưng bày các mẫu giấy thủ công nhiều màu sắc và chất liệu trên giá gỗ",
+      "visible_text": [],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "mẫu giấy thủ công",
+        "giá gỗ",
+        "bức tường",
+        "tủ kính"
+      ],
+      "possible_process_stage": "finishing",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "mẫu giấy",
+        "giấy thủ công",
+        "giấy màu",
+        "trưng bày",
+        "giá gỗ"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định chính xác nguyên liệu xơ sợi cấu thành của từng loại giấy hoặc tên gọi kỹ thuật của chúng chỉ qua quan sát bằng mắt.",
+      "asset_id": "img-022",
+      "source_path": "assets/images/2aOboQl1kF4HP8InoQSwIyPhf9hyCBi2QCk12YLY.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 697183,
+      "sha256": "bad580d5972701cd9a1cf893450b678bb105a51c4a9a2ef725ee0192f04535e1",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 3,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kF4HP8InoQSwIykLaxNBIb3lKBscI6TI.jpg",
+      "display_type": "material_or_tool",
+      "description_vi": "Một chiếc cối đá lớn hình trụ tròn màu xám được đặt trên nền gạch màu đỏ nâu cạnh chân tường trắng. Bên trong lòng cối chứa một bó vỏ cây dó khô màu vàng nhạt được cuộn lại và buộc bằng dây. Hai nhãn giấy nhỏ có chữ viết tay được gắn trên vành cối và trên bó vỏ cây dó.",
+      "caption_vi": "Cối giã đá chứa bó vỏ cây dó khô dùng làm nguyên liệu làm giấy thủ công",
+      "visible_text": [
+        {
+          "text": "Cối giã Dó",
+          "certainty": "high"
+        },
+        {
+          "text": "Dó bark",
+          "certainty": "medium"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "cối đá",
+        "vỏ cây dó",
+        "nhãn giấy",
+        "nền gạch",
+        "dây buộc"
+      ],
+      "possible_process_stage": "pounding",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "cối đá",
+        "vỏ cây dó",
+        "cối giã",
+        "nguyên liệu làm giấy",
+        "thủ công"
+      ],
+      "confidence": 0.96,
+      "uncertainty_vi": "Phần chữ viết tay nhỏ bên dưới dòng chữ chính trên nhãn dán thành cối không thể đọc rõ.",
+      "asset_id": "img-023",
+      "source_path": "assets/images/2aOboQl1kF4HP8InoQSwIykLaxNBIb3lKBscI6TI.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1175418,
+      "sha256": "aad2bd2abc3d5c6b234e400f36e132c5db1801468dac748a80a2d23d73e57919",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 3,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kF5oHB1aRWYOE7X0YFiDo0kF080kg8Dg.jpg",
+      "display_type": "gallery_overview",
+      "description_vi": "Một bàn trưng bày hình tròn màu trắng đặt các hiện vật làm giấy thủ công gồm một bó vỏ cây dó khô, khuôn seo giấy bằng tre, cuốn sổ tay màu vàng có dấu đỏ chữ 'Dó', giỏ tre đựng sợi dó trắng xé tơi và một mô hình hình chóp. Phía sau là tủ kính trưng bày các bức tranh dân gian và ảnh tư liệu cổ trên nền xám đen.",
+      "caption_vi": "Bàn trưng bày các nguyên liệu và dụng cụ làm giấy dó thủ công trong bảo tàng",
+      "visible_text": [
+        {
+          "text": "Tranh Mẹ Bân",
+          "certainty": "medium"
+        },
+        {
+          "text": "Thanh Hóa",
+          "certainty": "medium"
+        },
+        {
+          "text": "Dó",
+          "certainty": "medium"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "bàn trưng bày",
+        "vỏ cây dó",
+        "khuôn seo giấy",
+        "cuốn sổ",
+        "giỏ tre",
+        "sợi dó",
+        "tranh dân gian"
+      ],
+      "possible_process_stage": "museum_overview",
+      "process_stage_basis": "not_applicable",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "dụng cụ làm giấy",
+        "khuôn seo",
+        "giấy dó",
+        "vỏ cây dó",
+        "sợi dó",
+        "bảo tàng",
+        "trưng bày"
+      ],
+      "confidence": 0.94,
+      "uncertainty_vi": "Chữ viết trên các bưu thiếp cổ trong tủ kính phía sau quá nhỏ và mờ để có thể đọc được.",
+      "asset_id": "img-024",
+      "source_path": "assets/images/2aOboQl1kF5oHB1aRWYOE7X0YFiDo0kF080kg8Dg.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 885257,
+      "sha256": "51c27621383bdfc4d40dcc52dc0168bf03dd8da11a3171203ee2a55ef1ca5b44",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 3,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kF7L9DkN4cdq9GPgGCvxmPBZHjp2A82q.jpg",
+      "display_type": "illustration",
+      "description_vi": "Một bức tranh minh họa có màu sắc sinh động được đóng khung treo trên tường mô tả công đoạn làm giấy thủ công truyền thống. Trong tranh vẽ, hai người phụ nữ đầu quấn khăn mặc trang phục xưa đang thực hiện việc lột giấy và đếm giấy bên cạnh các xấp giấy trắng. Phía dưới khung tranh gắn một bảng chú thích màu đỏ nâu với nội dung chữ trắng.",
+      "caption_vi": "Tranh minh họa công đoạn lột và đếm giấy thủ công kèm bảng chú thích",
+      "visible_text": [
+        {
+          "text": "CÔNG ĐOẠN",
+          "certainty": "high"
+        },
+        {
+          "text": "LỘT GIẤY, ĐẾM GIẤY CÔNG ĐOẠN CUỐI CỦA NGHỀ LÀM GIẤY DÓ ./.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "hai người phụ nữ trong bức vẽ minh họa công đoạn làm giấy"
+      ],
+      "objects_and_materials": [
+        "bức tranh",
+        "khung gỗ",
+        "bảng chú thích",
+        "bức tường"
+      ],
+      "possible_process_stage": "finishing",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "tranh minh họa",
+        "lột giấy",
+        "đếm giấy",
+        "giấy dó",
+        "bảng chú thích",
+        "làng nghề"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "",
+      "asset_id": "img-025",
+      "source_path": "assets/images/2aOboQl1kF7L9DkN4cdq9GPgGCvxmPBZHjp2A82q.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 639510,
+      "sha256": "e4f109c503d54d6078645645e12170b94c0498751a6f9d1fd519d6e522b815fd",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 3,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFMKP5RBLwWoc1TF4xzViizqxY971jbE.jpg",
+      "display_type": "illustration",
+      "description_vi": "Một bức tranh vẽ màu đơn sắc tông nâu vàng mô tả cảnh hai người đàn ông làm khô giấy dưới một mái nhà tranh. Một người đàn ông cởi trần đang ngồi xổm bên trái lò, người còn lại đứng khoác khăn trên vai đang vuốt phẳng tờ giấy lên bề mặt lò sấy lớn. Dưới bức tranh có gắn nhãn bằng giấy thủ công mép thô ghi thông tin bằng hai thứ tiếng.",
+      "caption_vi": "Tranh minh họa công đoạn can giấy lên lò sấy để làm khô",
+      "visible_text": [
+        {
+          "text": "Can giấy để làm khô",
+          "certainty": "high"
+        },
+        {
+          "text": "Pasting the sheet for drying",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "hai người đàn ông trong bức vẽ công đoạn sấy giấy"
+      ],
+      "objects_and_materials": [
+        "bức tranh",
+        "nhãn giấy",
+        "bức tường"
+      ],
+      "possible_process_stage": "drying",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "glare"
+        ]
+      },
+      "keywords_vi": [
+        "sấy giấy",
+        "can giấy",
+        "lò sấy",
+        "tranh minh họa",
+        "giấy dó",
+        "thủ công"
+      ],
+      "confidence": 0.98,
+      "uncertainty_vi": "Không thể thấy rõ chi tiết dụng cụ chổi quét hoặc kỹ thuật vuốt giấy cụ thể trong tranh vẽ do phong cách vẽ phác thảo.",
+      "asset_id": "img-026",
+      "source_path": "assets/images/2aOboQl1kFMKP5RBLwWoc1TF4xzViizqxY971jbE.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 824655,
+      "sha256": "afc99906ccdda76f06d2105097e90ffaa2e40fe31756f877366b6e143ffde0bf",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 3,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFMKP5RBLwWoc1VLTYGS5W20HO0w6xCy.jpg",
+      "display_type": "illustration",
+      "description_vi": "Một bức tranh minh họa có màu sắc sinh động mô tả cảnh người đàn ông cởi trần đang dùng đòn bẩy gỗ để ép nước khỏi xấp giấy đặt trên bệ ép ngoài trời. Phía sau có hình ảnh người gánh hàng đội nón lá đi ngang qua và một số ngôi nhà. Phía dưới khung tranh màu đỏ nâu gắn bảng chú thích cùng màu với chữ viết trắng giải thích công đoạn này.",
+      "caption_vi": "Tranh minh họa công đoạn ép nước khỏi mớ giấy uốn bằng đòn bẩy gỗ",
+      "visible_text": [
+        {
+          "text": "CÔNG ĐOẠN",
+          "certainty": "high"
+        },
+        {
+          "text": "CÂY ÉP UỐN, ĐẶT TỪNG MỚ UỐN LÊN NHAU RỒI DÙNG CÂY GỖ ( LÀM CÁCH TAY ĐÒN ) ÉP NƯỚC Ở MỚ UỐN CHẢY TỪ TỪ SAO CHO VỪA TẦM KHÔNG KHÔ, KHÔNG ƯỚT, ĐEM VÀO BÓC UỐN, RỒI ĐEM CAN TRÊN TƯỜNG BỒI CHO KHÔ.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "người đàn ông trong tranh vẽ đang ép giấy",
+        "người đội nón lá gánh hàng phía xa trong tranh vẽ"
+      ],
+      "objects_and_materials": [
+        "bức tranh",
+        "bảng chú thích",
+        "bức tường"
+      ],
+      "possible_process_stage": "pressing",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "tranh minh họa",
+        "ép giấy",
+        "cây ép uốn",
+        "đòn bẩy",
+        "giấy dó",
+        "thủ công"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "",
+      "asset_id": "img-027",
+      "source_path": "assets/images/2aOboQl1kFMKP5RBLwWoc1VLTYGS5W20HO0w6xCy.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 753045,
+      "sha256": "dca10a57d865dc8ec2eb6e17a02631b90bfbe20201316236bdbc19f227664e32",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 3,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFNhXqORyD7V9onORb1y3WdtUgIYTgzQ.jpg",
+      "display_type": "illustration",
+      "description_vi": "Một bức tranh minh họa trong khung gỗ mô tả quy trình làm việc gồm ba người trong nhà xưởng cạnh lò sấy giấy lớn. Một người cởi trần đang ngồi xổm bên trái lò, một người mặc áo vàng đang đứng can giấy lên mặt lò sấy màu trắng, và một người phụ nữ mặc áo xanh đang ngồi bóc uốn trên phản gỗ. Phía dưới khung tranh là bảng chú thích màu đỏ nâu với chữ viết trắng.",
+      "caption_vi": "Tranh minh họa công đoạn lắp bồi, can giấy và bóc uốn trong xưởng làm giấy",
+      "visible_text": [
+        {
+          "text": "CÔNG ĐOẠN",
+          "certainty": "high"
+        },
+        {
+          "text": "LẮP BỒI, CAN GIẤY VÀ BÓC UỐN",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "người đàn ông cởi trần ngồi xổm bên bếp lò trong tranh vẽ",
+        "người đàn ông mặc áo vàng đứng can giấy trong tranh vẽ",
+        "người phụ nữ mặc áo xanh ngồi bóc uốn trong tranh vẽ"
+      ],
+      "objects_and_materials": [
+        "bức tranh",
+        "bảng chú thích",
+        "bức tường"
+      ],
+      "possible_process_stage": "drying",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "tranh minh họa",
+        "lắp bồi",
+        "can giấy",
+        "bóc uốn",
+        "lò sấy giấy",
+        "giấy dó",
+        "thủ công"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "",
+      "asset_id": "img-028",
+      "source_path": "assets/images/2aOboQl1kFNhXqORyD7V9onORb1y3WdtUgIYTgzQ.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 580449,
+      "sha256": "056588d8b581b157141f29818b5ecc64fd3a91e8d785edde47df6c68ff338f33",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 3,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFNhXqORyD7V9osXbd9QkhFsDVBCNs12.jpg",
+      "display_type": "illustration",
+      "description_vi": "Một bức tranh minh họa đóng khung gỗ mô tả công đoạn seo giấy thủ công trong nhà xưởng đơn sơ. Bức tranh vẽ cảnh một người phụ nữ đầu quấn khăn đang múc bột dó từ bể gỗ lớn bằng khuôn và liềm seo, người phụ nữ còn lại đang xếp từng tờ giấy ướt thành chồng bên cạnh. Phía dưới khung tranh màu đỏ nâu gắn bảng chú thích cùng màu với chữ viết trắng.",
+      "caption_vi": "Tranh minh họa công đoạn seo giấy bằng khuôn và liềm seo bên bể bột giấy",
+      "visible_text": [
+        {
+          "text": "CÔNG ĐOẠN",
+          "certainty": "high"
+        },
+        {
+          "text": "SEO GIẤY GỒM KHUÔN SEO, LIỀM SEO MÚC BỘT DÓ DÙNG CHO ĐỀU MẶT GIẤY, NÂNG LÊN ĐẶT XUỐNG ĐÓN SEO THÀNH TỪNG MỚ, ĐEM ÉP, GỌI LÀ ÉP UỐN",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "người phụ nữ múc bột dó bằng khuôn seo trong tranh vẽ",
+        "người phụ nữ xếp các tấm giấy ẩm lên bệ gỗ trong tranh vẽ"
+      ],
+      "objects_and_materials": [
+        "bức tranh",
+        "bảng chú thích",
+        "bức tường"
+      ],
+      "possible_process_stage": "sheet_forming",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "tranh minh họa",
+        "seo giấy",
+        "bể seo",
+        "khuôn seo",
+        "liềm seo",
+        "bột dó",
+        "thủ công"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "",
+      "asset_id": "img-029",
+      "source_path": "assets/images/2aOboQl1kFNhXqORyD7V9osXbd9QkhFsDVBCNs12.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 674511,
+      "sha256": "4520ce294254d5e7e64a43e771975c09e175465bd8cf0891a9465eb7d7296197",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 3,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFNhXqORyD7V9ou063bjS7ucrSsq2exc.jpg",
+      "display_type": "illustration",
+      "description_vi": "Một bức tranh màu đơn sắc sepia mô tả cảnh người đàn ông cởi trần đang sử dụng hệ thống đòn bẩy gỗ lớn gắn vào thân cây để ép nước ra khỏi xấp giấy ẩm ngoài trời. Bối cảnh gồm các nhà tranh đơn sơ và đống đá cuội trên nền đất. Dưới bức tranh gắn một nhãn giấy thủ công viết tay bằng hai thứ tiếng và một góc khung tre cong xuất hiện ở tiền cảnh bên trái.",
+      "caption_vi": "Tranh minh họa công đoạn ép uốn để ráo nước giấy thủ công",
+      "visible_text": [
+        {
+          "text": "Ép uốn để ráo nước",
+          "certainty": "high"
+        },
+        {
+          "text": "Pressing water out of the post",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "người đàn ông cởi trần đang ép nước giấy trong tranh vẽ"
+      ],
+      "objects_and_materials": [
+        "bức tranh",
+        "nhãn giấy",
+        "khung tre",
+        "bức tường"
+      ],
+      "possible_process_stage": "pressing",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "ép uốn",
+        "ép nước",
+        "đòn bẩy",
+        "tranh minh họa",
+        "giấy dó",
+        "thủ công"
+      ],
+      "confidence": 0.98,
+      "uncertainty_vi": "Vật thể dạng khung gỗ/tre hình chữ A cong ở tiền cảnh góc dưới bên trái không rõ công dụng đầy đủ do chỉ xuất hiện một phần.",
+      "asset_id": "img-030",
+      "source_path": "assets/images/2aOboQl1kFNhXqORyD7V9ou063bjS7ucrSsq2exc.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 786001,
+      "sha256": "f30f19580d1f3a8be0581c45662960f9d7580f512306529f9969030ebdd22946",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 3,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFOxO8Wa4r5cAbblHoF5DW9hdRvuVkq8.jpg",
+      "display_type": "text_panel",
+      "description_vi": "Bức tranh vẽ cảnh công đoạn kéo tàu trong quy trình làm giấy thủ công truyền thống. Trong tranh, hai người đàn ông cởi trần đứng hai bên một bể gỗ chứa nước bột giấy, mỗi người dùng một thanh tre dài để khuấy đều. Phía dưới bức tranh có một bảng thông tin màu đỏ chữ vàng ghi nội dung giải thích về công đoạn kéo tàu.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn kéo tàu khuấy bột giấy dó trong bể gỗ.",
+      "visible_text": [
+        {
+          "text": "CÔNG ĐOẠN",
+          "certainty": "high"
+        },
+        {
+          "text": "KÉO TÀU, CHO BỘT DÓ VÀO MỘT CÁI TÀU GỖ",
+          "certainty": "high"
+        },
+        {
+          "text": "( HOẶC XI MĂNG ) HAI NGƯỜI ĐỨNG HAI BÊN ĐÁNH ĐỀU",
+          "certainty": "high"
+        },
+        {
+          "text": "BẰNG MỘT ĐOẠN TRE NGỌN GỌI LÀ KÉO TÀU.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "một người đàn ông mặc áo xanh đứng phía bên trái quan sát bể gỗ",
+        "hai người đàn ông cởi trần đang cầm thanh tre khuấy bột giấy"
+      ],
+      "objects_and_materials": [
+        "bể gỗ chứa nước bột giấy",
+        "thanh tre",
+        "mái lợp bằng lá",
+        "bảng thông tin màu đỏ chữ vàng",
+        "khung tranh màu nâu"
+      ],
+      "possible_process_stage": "pulp_preparation",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "kéo tàu",
+        "bột dó",
+        "bể gỗ",
+        "khuấy bột",
+        "làm giấy dó",
+        "giấy thủ công",
+        "tranh minh họa"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác địa điểm hoặc bảo tàng đang trưng bày bức tranh này.",
+      "asset_id": "img-031",
+      "source_path": "assets/images/2aOboQl1kFOxO8Wa4r5cAbblHoF5DW9hdRvuVkq8.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 694894,
+      "sha256": "a431559902f731caf44026177abf5d2797afb135596de0512c92db7b310a74a1",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 4,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFOxO8Wa4r5cAbcoUVKl47cwoE8C5lk8.jpg",
+      "display_type": "illustration",
+      "description_vi": "Bức tranh đơn sắc vẽ cảnh công đoạn seo giấy trong quy trình làm giấy truyền thống. Một người phụ nữ đứng bên bể nước đang thực hiện thao tác seo giấy, trong khi một người đàn ông đứng cạnh đang xếp các tờ giấy mới lên một chồng giấy phẳng. Phía dưới bức tranh có đính nhãn thông tin bằng chữ viết tay tiếng Việt và tiếng Anh.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn seo giấy thủ công.",
+      "visible_text": [
+        {
+          "text": "Seo giấy",
+          "certainty": "high"
+        },
+        {
+          "text": "Forming the sheet",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "một người phụ nữ đội khăn, mặc áo truyền thống đang đứng bên bể nước để seo giấy",
+        "một người đàn ông đội mũ vải, mặc áo ngắn tay đang xếp tờ giấy lên chồng giấy"
+      ],
+      "objects_and_materials": [
+        "khuôn seo giấy",
+        "bể nước làm bằng gỗ dưới mái che lợp lá",
+        "chồng giấy mới seo",
+        "nhãn giấy viết tay"
+      ],
+      "possible_process_stage": "sheet_forming",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "seo giấy",
+        "forming the sheet",
+        "khuôn seo",
+        "làm giấy thủ công",
+        "giấy dó",
+        "bể seo",
+        "tranh vẽ"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chất liệu nền vẽ của bức tranh từ hình ảnh.",
+      "asset_id": "img-032",
+      "source_path": "assets/images/2aOboQl1kFOxO8Wa4r5cAbcoUVKl47cwoE8C5lk8.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 789488,
+      "sha256": "bb2a6e488195cbc2d9ca944457d80c0e05c3ac4f01d4dbc7fb49fdfee3513ebb",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 4,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFjzGXDls9a0dGqyaJ7lcBtOocwK2X8S.jpg",
+      "display_type": "illustration",
+      "description_vi": "Bức tranh đơn sắc tái hiện cảnh đãi bìa dó bên cạnh một nguồn nước tự nhiên. Một người đội nón lá đứng trên bờ đất bưng một chiếc rổ tre lớn, và một người khác cởi trần lội dưới nước đang đãi vỏ dó bằng một chiếc rổ nhỏ hơn. Dưới bức tranh có dán một nhãn giấy nhỏ ghi thông tin công đoạn bằng chữ viết tay tiếng Việt và tiếng Anh.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn đãi bìa dó lọc vỏ cây.",
+      "visible_text": [
+        {
+          "text": "Đãi bìa Dó",
+          "certainty": "high"
+        },
+        {
+          "text": "Filtering Dó bark",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "một người đội nón lá mặc quần cộc đang bưng rổ tre trên bờ sông",
+        "một người cởi trần đang lội dưới nước và cúi người đãi vỏ dó"
+      ],
+      "objects_and_materials": [
+        "rổ tre tròn",
+        "mái nhà tranh ở góc xa",
+        "cây chuối bên bờ nước",
+        "nhãn giấy viết tay"
+      ],
+      "possible_process_stage": "washing",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "glare"
+        ]
+      },
+      "keywords_vi": [
+        "đãi bìa dó",
+        "filtering dó bark",
+        "rổ tre",
+        "rửa vỏ dó",
+        "làm giấy dó",
+        "dòng sông",
+        "tranh minh họa"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể nhìn rõ toàn bộ các nét vẽ ở khu vực trung tâm bức tranh do bị phản chiếu ánh sáng mạnh.",
+      "asset_id": "img-033",
+      "source_path": "assets/images/2aOboQl1kFjzGXDls9a0dGqyaJ7lcBtOocwK2X8S.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 758562,
+      "sha256": "5a2134ec3466a378053d1035d92040c07714103ede1bb3ddff91041c0b98b242",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 4,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFk6Z02uNmCaAHbyaEcgXcNcTWGRTMQK.jpg",
+      "display_type": "illustration",
+      "description_vi": "Bức tranh đơn sắc vẽ cảnh công đoạn kéo tàu khuấy bột trong quy trình làm giấy truyền thống. Hai người đàn ông cởi trần đứng hai bên một bể gỗ lớn chứa nước bột giấy, mỗi người cầm một thanh tre dài để khuấy đều. Phía dưới bức tranh có đính kèm nhãn giấy viết tay ghi thông tin công đoạn.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn kéo tàu khuấy bột giấy.",
+      "visible_text": [
+        {
+          "text": "Kéo tàu",
+          "certainty": "high"
+        },
+        {
+          "text": "Steering the pulp",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "một người đàn ông mặc quần sẫm màu đứng trên bục gỗ bên trái bể bột",
+        "một người đàn ông cởi trần đứng đối diện ở phía sau bên phải bể bột"
+      ],
+      "objects_and_materials": [
+        "bể gỗ lớn chứa bột giấy",
+        "hai thanh tre dài",
+        "bục đứng bằng gỗ",
+        "mái che lợp lá",
+        "nhãn giấy viết tay"
+      ],
+      "possible_process_stage": "pulp_preparation",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "kéo tàu",
+        "steering the pulp",
+        "khuấy bột",
+        "bể gỗ",
+        "làm giấy dó",
+        "giấy thủ công",
+        "tranh vẽ"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác dung tích của bể gỗ đựng bột giấy từ nét vẽ trong tranh.",
+      "asset_id": "img-034",
+      "source_path": "assets/images/2aOboQl1kFk6Z02uNmCaAHbyaEcgXcNcTWGRTMQK.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 786112,
+      "sha256": "32bc81e98e9c4d9c93b23dc11a2c9814eab06d65c15bf95ee4b2470d595bca41",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 4,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFk8zozHsz4m0cOVeqtABnYCmwQ3zsZc.jpg",
+      "display_type": "text_panel",
+      "description_vi": "Bức tranh vẽ tái hiện cảnh công đoạn đãi bìa trong quy trình làm giấy thủ công. Một người đàn ông cởi trần đang khom lưng đãi bìa dó dưới nước, và một người khác đội nón lá, cởi trần đang bưng một chiếc rổ lớn chứa bột dó đi bên bờ sông. Phía dưới bức tranh là bảng thông tin màu đỏ chữ trắng ghi nội dung giải thích về công đoạn đãi bìa.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn đãi bìa lọc bột dó.",
+      "visible_text": [
+        {
+          "text": "CÔNG ĐOẠN",
+          "certainty": "high"
+        },
+        {
+          "text": "ĐÃI BÌA ( ĐÃI BỘT DÓ RỒI ĐƯA VÀO TÀU SEO )",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "một người đàn ông cởi trần mặc quần tối màu đang đứng dưới nước đãi bìa bằng rổ",
+        "một người đàn ông cởi trần, đội nón lá đang đi trên bờ và bưng một rổ lớn đựng bột dó"
+      ],
+      "objects_and_materials": [
+        "rổ tre tròn đựng vỏ dó",
+        "con sông hoặc ao nước",
+        "mái nhà tranh ở phía xa",
+        "bảng thông tin màu đỏ",
+        "khung tranh màu nâu"
+      ],
+      "possible_process_stage": "washing",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "đãi bìa",
+        "bột dó",
+        "tàu seo",
+        "làm giấy dó",
+        "giấy thủ công",
+        "rửa vỏ dó",
+        "tranh minh họa"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác thời gian vẽ và người thực hiện bức tranh minh họa này.",
+      "asset_id": "img-035",
+      "source_path": "assets/images/2aOboQl1kFk8zozHsz4m0cOVeqtABnYCmwQ3zsZc.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 575157,
+      "sha256": "bb1160170429cfd0a653e2d178b0437c5bf0a38268621819464dfd9437f0e124",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 4,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFk8zozHsz4m0cU9ekou1RJgKTZm8xA8.jpg",
+      "display_type": "text_panel",
+      "description_vi": "Bức tranh vẽ tái hiện cảnh công đoạn giã dó bằng hệ thống cối giã đạp chân. Một người đàn ông ngồi ở cối đá bên trái để đảo lật vỏ dó, trong khi hai người đàn ông khác đứng trên cần giã bên phải để dùng sức nặng cơ thể đạp cối. Góc dưới bên trái có bảng thông tin màu đỏ bị tróc một phần giấy dán.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn giã vỏ dó thành bột giấy.",
+      "visible_text": [
+        {
+          "text": "CÔNG ĐOẠN",
+          "certainty": "high"
+        },
+        {
+          "text": "GIÃ DÓ ( CHO BÌA VÀO CỐI GIÃ THÀNH BỘT )",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "một người đàn ông ngồi cạnh cối đá lật đảo vỏ dó",
+        "hai người đàn ông đứng trên cần cối giã đạp chân bằng gỗ để thực hiện thao tác giã"
+      ],
+      "objects_and_materials": [
+        "cối giã chân bằng gỗ",
+        "cối đá hình tròn",
+        "mái nhà che cối giã",
+        "bàn gỗ thấp và ấm trà",
+        "bảng thông tin màu đỏ bị tróc một phần"
+      ],
+      "possible_process_stage": "pounding",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "glare"
+        ]
+      },
+      "keywords_vi": [
+        "giã dó",
+        "cối giã chân",
+        "cối đá",
+        "bột giấy",
+        "làm giấy dó",
+        "giấy thủ công",
+        "tranh minh họa"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác lực tác động và trọng lượng của đầu giã từ tranh vẽ.",
+      "asset_id": "img-036",
+      "source_path": "assets/images/2aOboQl1kFk8zozHsz4m0cU9ekou1RJgKTZm8xA8.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 719540,
+      "sha256": "3511d8bade8c58e1ee8c93a6e598f5ff96b8481f18f784c53398c0e61f755873",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 4,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFlMPIB2UQAhB4GkonwQ8HFPToIot7ui.jpg",
+      "display_type": "text_panel",
+      "description_vi": "Bức tranh vẽ cảnh công đoạn làm bìa và phân loại vỏ dó. Hai người phụ nữ ngồi trước hiên nhà gỗ để nhặt bìa và phân loại vỏ dó trắng đen, phía xa bên trái là một người đàn ông đứng làm việc cạnh một thiết bị. Phía dưới bức tranh là bảng thông tin màu đỏ giải thích về công đoạn làm bìa.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn làm bìa và phân loại vỏ cây dó.",
+      "visible_text": [
+        {
+          "text": "CÔNG ĐOẠN",
+          "certainty": "high"
+        },
+        {
+          "text": "LÀM BÌA ( PHÂN LOẠI TRẮNG ĐEN ) RỒI NHẶT BÌA, ĐẠP BÌA",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "hai người phụ nữ mặc trang phục truyền thống ngồi trước hiên nhà nhặt vỏ dó",
+        "một người đàn ông cởi trần đứng bên một thiết bị giã ở góc trái phía xa"
+      ],
+      "objects_and_materials": [
+        "đống vỏ dó màu đen",
+        "các rổ tre tròn đựng vỏ dó",
+        "ngôi nhà tranh",
+        "bảng thông tin màu đỏ"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "làm bìa",
+        "phân loại",
+        "vỏ dó",
+        "nhặt bìa",
+        "đạp bìa",
+        "làm giấy dó",
+        "tranh minh họa"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định loại thiết bị mà người đàn ông phía xa bên trái đang vận hành.",
+      "asset_id": "img-037",
+      "source_path": "assets/images/2aOboQl1kFlMPIB2UQAhB4GkonwQ8HFPToIot7ui.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 630218,
+      "sha256": "9faa78c433dc4d29766fef49dcfbc75c04182e6f1babd4916e090d0dfa3c7240",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 4,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFlMPIB2UQAhB4HtffnoEf0Bi0EODKoy.jpg",
+      "display_type": "text_panel",
+      "description_vi": "Bức tranh vẽ minh họa công đoạn vạc nấu dó trong quy trình làm giấy truyền thống. Lò vạc lớn đang bốc khói với một người đứng trên cao xếp vỏ dó vào vạc, một người đứng bên cạnh dùng gậy đẩy củi, và hai người phụ nữ phía trước đang ngâm rửa vỏ dưới nước sông. Phía dưới bức tranh có bảng thông tin màu đỏ giải thích chi tiết.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn vạc nấu dó và ngâm nước phân loại.",
+      "visible_text": [
+        {
+          "text": "CÔNG ĐOẠN",
+          "certainty": "high"
+        },
+        {
+          "text": "VẠC NẤU DÓ. ĐƯA DÓ VÀO VẠC RỒI ĐỐT LỬA .",
+          "certainty": "high"
+        },
+        {
+          "text": "ĐUN TRONG HAI NGÀY VỚT RA NGÂM NƯỚC, PHÂN LOẠI DÓ.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "một người đứng trên miệng vạc nấu lớn xếp vỏ cây dó",
+        "một người mặc áo đen đứng cạnh lò dùng gậy dài điều khiển",
+        "hai người phụ nữ mặc áo đen thẫm, đội nón lá đang ngâm rửa vỏ dó dưới mép nước"
+      ],
+      "objects_and_materials": [
+        "lò nấu vạc lớn xây bằng gạch đất",
+        "khói bốc lên từ vạc",
+        "gậy dài bằng gỗ",
+        "con sông nước",
+        "bảng thông tin màu đỏ"
+      ],
+      "possible_process_stage": "boiling",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "vạc nấu dó",
+        "đốt lửa",
+        "đun hai ngày",
+        "ngâm nước",
+        "phân loại dó",
+        "làm giấy dó",
+        "tranh vẽ"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác cấu tạo bên trong lò và nhiệt độ đạt được khi đun nấu vỏ dó.",
+      "asset_id": "img-038",
+      "source_path": "assets/images/2aOboQl1kFlMPIB2UQAhB4HtffnoEf0Bi0EODKoy.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 653153,
+      "sha256": "04717155c7ba56765983396442a8e918c00e0e65f08fa610de88c51e9fff1af1",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 4,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFlRGw3nUpv4rkBt7ONObLZhnv2FGogS.jpg",
+      "display_type": "illustration",
+      "description_vi": "Bức tranh đơn sắc vẽ công đoạn giã bìa dó bằng cối đạp chân truyền thống dưới mái nhà lợp lá. Ở phía bên trái, hai người đàn ông đứng trên cần gỗ dài để đạp cối giã, trong khi một người đàn ông cởi trần ngồi trên bục gỗ quay lưng lại để đảo vỏ dó trong cối đá bên phải. Phía dưới tranh đính kèm một mảnh giấy nhãn viết tay.",
+      "caption_vi": "Tranh vẽ minh họa công đoạn giã bìa dó bằng cối đạp chân truyền thống.",
+      "visible_text": [
+        {
+          "text": "Giã bìa Dó",
+          "certainty": "high"
+        },
+        {
+          "text": "Pounding Dó bark",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "hai người đàn ông đứng trên thanh gỗ cối giã đạp chân để dậm cối",
+        "một người đàn ông cởi trần đang ngồi quay lưng lại để đảo vỏ dó ở cối đá"
+      ],
+      "objects_and_materials": [
+        "cối giã chân bằng gỗ",
+        "cối đá",
+        "rổ tre tròn lớn đựng vỏ dó hoặc bột giấy",
+        "phản gỗ thấp có ấm chén",
+        "mái nhà lợp lá",
+        "nhãn giấy viết tay"
+      ],
+      "possible_process_stage": "pounding",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "glare"
+        ]
+      },
+      "keywords_vi": [
+        "giã bìa dó",
+        "pounding dó bark",
+        "cối giã chân",
+        "cối đá",
+        "làm giấy dó",
+        "giấy thủ công",
+        "tranh vẽ"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác chất liệu đá dùng làm cối từ bức tranh vẽ đơn sắc.",
+      "asset_id": "img-039",
+      "source_path": "assets/images/2aOboQl1kFlRGw3nUpv4rkBt7ONObLZhnv2FGogS.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 863518,
+      "sha256": "e7194645473036f27ce0ca4de2123a584213a795777f3796bcb40e51d32dc445",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 4,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kFlRGw3nUpv4rkJQvR101dtWIV3GIACW.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình sa bàn trưng bày trong bảo tàng tái hiện công đoạn hoàn thiện sản phẩm giấy truyền thống. Bức tượng mô phỏng một người thợ làm giấy có nước da ngăm, quấn khăn trên đầu, mặc quần áo nâu đang hai tay ôm một xấp giấy thô lớn. Xung quanh có các xấp giấy khác đặt trên bàn gỗ dài, và bức tường phía sau được vẽ tranh minh họa ngôi nhà tranh và rừng cây.",
+      "caption_vi": "Mô hình tượng người thợ làm giấy ôm xấp giấy mới trong không gian trưng bày tái hiện.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "tượng mô phỏng một người đàn ông trung niên da ngăm, có ria mép, mặc quần áo nâu và đầu quấn khăn tối màu"
+      ],
+      "objects_and_materials": [
+        "tượng nhân vật bằng nhựa hoặc thạch cao",
+        "các xấp giấy thô màu sáng",
+        "bàn gỗ dài",
+        "bức tường sơn tranh phong cảnh",
+        "nền nhà bê tông"
+      ],
+      "possible_process_stage": "finishing",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "mô hình",
+        "tượng người thợ",
+        "xấp giấy",
+        "giấy dó",
+        "hoàn thiện",
+        "bảo tàng",
+        "trưng bày"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không thể xác định chính xác công đoạn được tái hiện là ép giấy hay phân loại kiểm tra chất lượng giấy thô do thiếu bảng tên ghi chú.",
+      "asset_id": "img-040",
+      "source_path": "assets/images/2aOboQl1kFlRGw3nUpv4rkJQvR101dtWIV3GIACW.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 904935,
+      "sha256": "e0c11e780ec36d43443634c9ce347303d07504992cfe629125e1188a79041288",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 4,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kG8OLatYxJEpgvSWDlX3ZMpr1myf5dfE.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình tượng mô phỏng một phụ nữ đang thực hiện công đoạn làm giấy thủ công. Nhân vật mặc áo màu xanh lá cây và thắt lưng vải màu trắng. Hai tay nhân vật đang nâng một chiếc khuôn lưới bằng gỗ hình chữ nhật trên mặt phẳng phủ nhiều bụi bặm.",
+      "caption_vi": "Mô hình tượng mô phỏng công đoạn seo giấy dó bằng khuôn lưới gỗ",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Tượng người phụ nữ mặc áo xanh lá cây đang seo giấy"
+      ],
+      "objects_and_materials": [
+        "tượng",
+        "khuôn gỗ seo giấy",
+        "bột giấy khô",
+        "bụi"
+      ],
+      "possible_process_stage": "sheet_forming",
+      "process_stage_basis": "visible_action",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "seo giấy",
+        "khuôn seo giấy",
+        "tượng làm giấy",
+        "giấy dó truyền thống",
+        "nghề thủ công"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định chính xác chất liệu cấu thành phần bột giấy giả lập hoặc địa điểm cụ thể đặt mô hình.",
+      "asset_id": "img-041",
+      "source_path": "assets/images/2aOboQl1kG8OLatYxJEpgvSWDlX3ZMpr1myf5dfE.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 707426,
+      "sha256": "c2662af8037029dd3eb54199a86ce8042e0ce4210eb8f6ced5ba38802132ad79",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 5,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kG8OLatYxJEpgvVXlXrAwSznpGLccUUq.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình tượng tái hiện công đoạn hoàn thiện sản phẩm giấy thủ công. Bức tượng người đàn ông phía trước mặc áo nâu đang cúi người dùng dụng cụ cạo hoặc cắt các khối giấy lớn màu xám nhạt đặt trên các bệ gỗ. Phía sau có một tượng khác đang quay lưng đứng bên cạnh.",
+      "caption_vi": "Mô hình tượng mô phỏng công đoạn cắt xén hoặc xén thành phẩm giấy thủ công",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Tượng người đàn ông mặc áo nâu đang xén giấy",
+        "Tượng người đàn ông quay lưng ở phía sau"
+      ],
+      "objects_and_materials": [
+        "tượng",
+        "khối giấy dó thành phẩm",
+        "bàn gỗ",
+        "dụng cụ xén giấy bằng kim loại"
+      ],
+      "possible_process_stage": "finishing",
+      "process_stage_basis": "visible_action",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "cắt giấy dó",
+        "xén giấy thành phẩm",
+        "tượng làm giấy",
+        "giấy dó",
+        "hoàn thiện giấy"
+      ],
+      "confidence": 0.85,
+      "uncertainty_vi": "Không thể xác định cơ chế hoạt động chi tiết hoặc tên gọi dân gian chính xác của công cụ xén giấy thủ công này.",
+      "asset_id": "img-042",
+      "source_path": "assets/images/2aOboQl1kG8OLatYxJEpgvVXlXrAwSznpGLccUUq.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 797276,
+      "sha256": "f4dbcfc383a011a6f3c2c41c7fccba9df9ca14d5279f2b9aafd7fb11a4e98416",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 5,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kGMHUSDl8oeSWFKfOcR6NR7Dxn0k8V8q.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình tượng mô phỏng công đoạn seo giấy thủ công trong một bể chứa xi măng lớn. Tượng người phụ nữ mặc áo xanh lá cây, đầu đội mũ màu nâu đang cúi người nâng khuôn seo giấy. Bức tường phía sau được trang trí bằng tranh vẽ mô tả phong cảnh một xưởng sản xuất giấy thủ công với các nhân vật khác.",
+      "caption_vi": "Mô hình tượng người phụ nữ đang thực hiện seo giấy bên bể xi măng",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Tượng người phụ nữ mặc áo xanh đang làm động tác seo giấy",
+        "Các nhân vật nam làm giấy vẽ trên tranh tường"
+      ],
+      "objects_and_materials": [
+        "tượng",
+        "bể xi măng giả lập máng seo",
+        "khuôn gỗ",
+        "bột giấy khô bụi",
+        "tranh tường"
+      ],
+      "possible_process_stage": "sheet_forming",
+      "process_stage_basis": "visible_action",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "seo giấy",
+        "máng seo giấy",
+        "tượng",
+        "tranh tường",
+        "giấy dó thủ công"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định loại bột giấy mô phỏng bên trong bể chứa xi măng.",
+      "asset_id": "img-043",
+      "source_path": "assets/images/2aOboQl1kGMHUSDl8oeSWFKfOcR6NR7Dxn0k8V8q.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 751378,
+      "sha256": "a99516b837bea1003c7644e058fa6835038d039ab5ac90dd02ebda4bc91046bd",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 5,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kGMHUSDl8oeSWFLhTgKREtU8EwWk0TwW.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình tượng mô phỏng công đoạn bóc tách từng tờ giấy dó sau khi ép. Hai bức tượng phụ nữ mặc áo dài truyền thống màu nâu, đầu quấn khăn đang đứng cúi người thao tác bên hai chồng giấy dày màu trắng xám đặt trên bàn gỗ. Bức tường phía sau vẽ tranh minh họa các ngôi nhà tranh truyền thống của làng quê.",
+      "caption_vi": "Mô hình tượng tái hiện công đoạn bóc tách tờ giấy dó từ xấp giấy ướt",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Hai tượng phụ nữ mặc áo nâu truyền thống đang bóc giấy"
+      ],
+      "objects_and_materials": [
+        "tượng",
+        "chồng giấy dó ẩm",
+        "bàn gỗ",
+        "tranh tường trang trí"
+      ],
+      "possible_process_stage": "drying",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "bóc giấy dó",
+        "tách giấy dó",
+        "tượng phụ nữ",
+        "làng nghề thủ công",
+        "giấy dó truyền thống"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không thể xác định chính xác công đoạn bóc tách này diễn ra trước hay sau bước ép nước hoàn toàn của xấp giấy.",
+      "asset_id": "img-044",
+      "source_path": "assets/images/2aOboQl1kGMHUSDl8oeSWFLhTgKREtU8EwWk0TwW.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 777560,
+      "sha256": "95483e98bd971a57baf135a88fe4a1044e6282d375601ecdc128089fb7cd5ae9",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 5,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kGNjUr3mlUzWkigilldi8Ydy9YVUcBOq.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình tượng mô phỏng công đoạn giã nguyên liệu vỏ cây để làm giấy dó. Bức tượng người nam thanh niên cởi trần mặc quần lửng màu nâu nhạt đang dùng chày gỗ lớn giã vào cối đá đặt trên nền bê tông. Ở góc trái có khung cửa kính lớn nhìn ra khu vực hành lang bên ngoài.",
+      "caption_vi": "Mô hình tượng tái hiện công đoạn giã vỏ cây bằng chày gỗ và cối đá",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Tượng người nam thanh niên cởi trần đang giã vỏ cây",
+        "Hình vẽ người lao động trên tranh tường phía sau"
+      ],
+      "objects_and_materials": [
+        "tượng",
+        "chày gỗ",
+        "cối đá",
+        "cửa kính",
+        "tranh tường"
+      ],
+      "possible_process_stage": "pounding",
+      "process_stage_basis": "visible_action",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "giã bột giấy",
+        "giã vỏ cây",
+        "chày và cối",
+        "giấy dó",
+        "tượng",
+        "làng nghề"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định chính xác chất liệu cấu thành phần sợi/vỏ cây mô phỏng bên trong lòng cối đá.",
+      "asset_id": "img-045",
+      "source_path": "assets/images/2aOboQl1kGNjUr3mlUzWkigilldi8Ydy9YVUcBOq.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 896989,
+      "sha256": "36dd537a443aa9aaafa61ce678bbf4b4c638ff39d86165a85d5deb1845509ae6",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 5,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kGNoMUwXlujuROgq03GDnVWzMXxvm3Oq.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình tượng tái hiện công đoạn làm sạch nguyên liệu gỗ để sản xuất giấy dó. Bức tượng người đàn ông có râu quai nón mặc quần áo nâu, đầu đội khăn đang ngồi xổm dùng dao cạo hai tay cầm để lột vỏ khúc gỗ tròn đặt dưới chân. Phía sau bức tượng là một bức tường vẽ tranh sinh hoạt làng quê.",
+      "caption_vi": "Mô hình tượng mô phỏng công đoạn cạo vỏ gỗ ngoài làm giấy thủ công",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Tượng người đàn ông đang cạo vỏ khúc gỗ",
+        "Phần chân của tượng khác ở góc trái phía sau"
+      ],
+      "objects_and_materials": [
+        "tượng",
+        "khúc gỗ tròn",
+        "dụng cụ cạo vỏ bằng sắt",
+        "màng nhện",
+        "tranh vẽ trên tường"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "visible_action",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "cạo vỏ cây",
+        "bóc vỏ gỗ",
+        "dụng cụ cạo vỏ",
+        "tượng",
+        "giấy dó",
+        "nguyên liệu giấy"
+      ],
+      "confidence": 0.85,
+      "uncertainty_vi": "Không thể xác định loại gỗ cụ thể của khúc cây mô phỏng đang được cạo vỏ trong hình.",
+      "asset_id": "img-046",
+      "source_path": "assets/images/2aOboQl1kGNoMUwXlujuROgq03GDnVWzMXxvm3Oq.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1097674,
+      "sha256": "ae4abfbcb3805e3994ffade9bd4bea738fde82731354197c569ef54395b9d43f",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 5,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kGNoMUwXlujuROnMcZmg5BBIUWuEHHl2(1).jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình tượng người đàn ông đang ngồi cạo vỏ cây để làm giấy thủ công. Bức tượng được phủ một lớp bụi và mạng nhện mỏng trên tay và chân. Nhân vật đang cầm một chiếc dao cạo hai đầu cán gỗ cạo dọc theo thân khúc gỗ tròn đặt trên sàn bê tông.",
+      "caption_vi": "Mô hình tượng mô phỏng công đoạn cạo vỏ ngoài của khúc cây làm giấy dó",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Tượng người đàn ông đang cạo vỏ khúc gỗ",
+        "Phần chân tượng ở góc trái phía sau"
+      ],
+      "objects_and_materials": [
+        "tượng",
+        "khúc gỗ tròn",
+        "dụng cụ cạo",
+        "màng nhện"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "visible_action",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "duplicate_like"
+        ]
+      },
+      "keywords_vi": [
+        "cạo vỏ gỗ",
+        "bóc vỏ cây",
+        "giấy dó thủ công",
+        "tượng",
+        "nguyên liệu làm giấy"
+      ],
+      "confidence": 0.85,
+      "uncertainty_vi": "Ảnh này trùng lặp hoàn toàn với ảnh 2aOboQl1kGNoMUwXlujuROnMcZmg5BBIUWuEHHl2(1).jpg.",
+      "asset_id": "img-047",
+      "source_path": "assets/images/2aOboQl1kGNoMUwXlujuROnMcZmg5BBIUWuEHHl2(1).jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1200537,
+      "sha256": "f0d13c0d88fe7e6973ef1c3d630c8dbdab5d98091754c1c3cdfad55f28548321",
+      "duplicate_group": "sha256:f0d13c0d88fe7e6973ef1c3d630c8dbdab5d98091754c1c3cdfad55f28548321",
+      "duplicate_of": "2aOboQl1kGNoMUwXlujuROnMcZmg5BBIUWuEHHl2.jpg",
+      "is_primary": false,
+      "scan_batch": 5,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified",
+      "annotation_canonicalized_from": "2aOboQl1kGNoMUwXlujuROnMcZmg5BBIUWuEHHl2.jpg"
+    },
+    {
+      "filename": "2aOboQl1kGNoMUwXlujuROnMcZmg5BBIUWuEHHl2.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình tượng người đàn ông đang ngồi cạo vỏ cây để làm giấy thủ công. Bức tượng được phủ một lớp bụi và mạng nhện mỏng trên tay và chân. Nhân vật đang cầm một chiếc dao cạo hai đầu cán gỗ cạo dọc theo thân khúc gỗ tròn đặt trên sàn bê tông.",
+      "caption_vi": "Mô hình tượng mô phỏng công đoạn cạo vỏ ngoài của khúc cây làm giấy dó",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Tượng người đàn ông đang cạo vỏ khúc gỗ",
+        "Phần chân tượng ở góc trái phía sau"
+      ],
+      "objects_and_materials": [
+        "tượng",
+        "khúc gỗ tròn",
+        "dụng cụ cạo",
+        "màng nhện"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "visible_action",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "duplicate_like"
+        ]
+      },
+      "keywords_vi": [
+        "cạo vỏ gỗ",
+        "bóc vỏ cây",
+        "giấy dó thủ công",
+        "tượng",
+        "nguyên liệu làm giấy"
+      ],
+      "confidence": 0.85,
+      "uncertainty_vi": "Ảnh này trùng lặp hoàn toàn với ảnh 2aOboQl1kGNoMUwXlujuROnMcZmg5BBIUWuEHHl2(1).jpg.",
+      "asset_id": "img-048",
+      "source_path": "assets/images/2aOboQl1kGNoMUwXlujuROnMcZmg5BBIUWuEHHl2.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1200537,
+      "sha256": "f0d13c0d88fe7e6973ef1c3d630c8dbdab5d98091754c1c3cdfad55f28548321",
+      "duplicate_group": "sha256:f0d13c0d88fe7e6973ef1c3d630c8dbdab5d98091754c1c3cdfad55f28548321",
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 5,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kGjhkyM4dmSVTTzA2P3lS6y3c7sBh7lg(1).jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình tượng người đàn ông cởi trần đứng cạnh hố đá mô phỏng công đoạn ngâm vỏ cây sản xuất giấy dó. Nhân vật cầm một cây sào gỗ chọc xuống sàn đất rải đầy lá cây khô màu nâu. Phía bên trái bức tượng có một khung cửa kính nhìn ra ngoài hành lang.",
+      "caption_vi": "Mô hình tượng tái hiện công đoạn ngâm vỏ cây trong bể hoặc hố ngâm",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Tượng người đàn ông cởi trần cầm sào gỗ",
+        "Hình vẽ phong cảnh nông thôn trên tranh tường"
+      ],
+      "objects_and_materials": [
+        "tượng",
+        "sào gỗ",
+        "lá khô",
+        "mô hình hố đá",
+        "khung cửa kính"
+      ],
+      "possible_process_stage": "soaking",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "duplicate_like"
+        ]
+      },
+      "keywords_vi": [
+        "ngâm vỏ cây",
+        "bể ngâm nguyên liệu",
+        "tượng",
+        "lá khô",
+        "giấy dó thủ công"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Ảnh này trùng lặp hoàn toàn với ảnh 2aOboQl1kGjhkyM4dmSVTTzA2P3lS6y3c7sBh7lg(1).jpg.",
+      "asset_id": "img-049",
+      "source_path": "assets/images/2aOboQl1kGjhkyM4dmSVTTzA2P3lS6y3c7sBh7lg(1).jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1410939,
+      "sha256": "06459bc1c5ca8f3dd7e9249183ddf3af4dc11c6b5bf99b73e7093e6d1d4debad",
+      "duplicate_group": "sha256:06459bc1c5ca8f3dd7e9249183ddf3af4dc11c6b5bf99b73e7093e6d1d4debad",
+      "duplicate_of": "2aOboQl1kGjhkyM4dmSVTTzA2P3lS6y3c7sBh7lg.jpg",
+      "is_primary": false,
+      "scan_batch": 5,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified",
+      "annotation_canonicalized_from": "2aOboQl1kGjhkyM4dmSVTTzA2P3lS6y3c7sBh7lg.jpg"
+    },
+    {
+      "filename": "2aOboQl1kGjhkyM4dmSVTTzA2P3lS6y3c7sBh7lg.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình tượng người đàn ông cởi trần đứng cạnh hố đá mô phỏng công đoạn ngâm vỏ cây sản xuất giấy dó. Nhân vật cầm một cây sào gỗ chọc xuống sàn đất rải đầy lá cây khô màu nâu. Phía bên trái bức tượng có một khung cửa kính nhìn ra ngoài hành lang.",
+      "caption_vi": "Mô hình tượng tái hiện công đoạn ngâm vỏ cây trong bể hoặc hố ngâm",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Tượng người đàn ông cởi trần cầm sào gỗ",
+        "Hình vẽ phong cảnh nông thôn trên tranh tường"
+      ],
+      "objects_and_materials": [
+        "tượng",
+        "sào gỗ",
+        "lá khô",
+        "mô hình hố đá",
+        "khung cửa kính"
+      ],
+      "possible_process_stage": "soaking",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "duplicate_like"
+        ]
+      },
+      "keywords_vi": [
+        "ngâm vỏ cây",
+        "bể ngâm nguyên liệu",
+        "tượng",
+        "lá khô",
+        "giấy dó thủ công"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Ảnh này trùng lặp hoàn toàn với ảnh 2aOboQl1kGjhkyM4dmSVTTzA2P3lS6y3c7sBh7lg(1).jpg.",
+      "asset_id": "img-050",
+      "source_path": "assets/images/2aOboQl1kGjhkyM4dmSVTTzA2P3lS6y3c7sBh7lg.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1410939,
+      "sha256": "06459bc1c5ca8f3dd7e9249183ddf3af4dc11c6b5bf99b73e7093e6d1d4debad",
+      "duplicate_group": "sha256:06459bc1c5ca8f3dd7e9249183ddf3af4dc11c6b5bf99b73e7093e6d1d4debad",
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 5,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kGjhkyM4dmSVTU0D8Fuy0ADQ3Ia9cFzU(1).jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình sa bàn tái hiện cảnh một người đàn ông đóng khố, đầu quấn khăn đang đứng cúi người. Hai tay nhân vật cầm một gậy gỗ dài cắm xuống hố đất có rải rác nhiều lá khô. Phía sau tượng là bức tranh tường vẽ ngôi nhà tranh cổ xưa dưới tán cây.",
+      "caption_vi": "Sa bàn mô phỏng công đoạn xử lý hoặc chuẩn bị nguyên liệu làm giấy.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "tượng một người đàn ông cởi trần, đóng khố, đầu quấn khăn"
+      ],
+      "objects_and_materials": [
+        "tượng người đóng khố",
+        "gậy gỗ",
+        "lá cây khô",
+        "tranh tường vẽ nhà tranh"
+      ],
+      "possible_process_stage": "soaking",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "duplicate_like"
+        ]
+      },
+      "keywords_vi": [
+        "sa bàn",
+        "mô hình",
+        "giấy dó",
+        "người đóng khố",
+        "gậy gỗ",
+        "lá khô",
+        "tranh tường"
+      ],
+      "confidence": 0.7,
+      "uncertainty_vi": "Không thể xác định chắc chắn công đoạn cụ thể chỉ qua gậy gỗ và lá khô trên nền đất nếu không có nhãn thông tin đi kèm.",
+      "asset_id": "img-051",
+      "source_path": "assets/images/2aOboQl1kGjhkyM4dmSVTU0D8Fuy0ADQ3Ia9cFzU(1).jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1435263,
+      "sha256": "35d598fc6b938ec67545f6f997cb96082bf2fb76c0d1c2d8518501a90d0af68b",
+      "duplicate_group": "sha256:35d598fc6b938ec67545f6f997cb96082bf2fb76c0d1c2d8518501a90d0af68b",
+      "duplicate_of": "2aOboQl1kGjhkyM4dmSVTU0D8Fuy0ADQ3Ia9cFzU.jpg",
+      "is_primary": false,
+      "scan_batch": 6,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified",
+      "annotation_canonicalized_from": "2aOboQl1kGjhkyM4dmSVTU0D8Fuy0ADQ3Ia9cFzU.jpg"
+    },
+    {
+      "filename": "2aOboQl1kGjhkyM4dmSVTU0D8Fuy0ADQ3Ia9cFzU.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình sa bàn tái hiện cảnh một người đàn ông đóng khố, đầu quấn khăn đang đứng cúi người. Hai tay nhân vật cầm một gậy gỗ dài cắm xuống hố đất có rải rác nhiều lá khô. Phía sau tượng là bức tranh tường vẽ ngôi nhà tranh cổ xưa dưới tán cây.",
+      "caption_vi": "Sa bàn mô phỏng công đoạn xử lý hoặc chuẩn bị nguyên liệu làm giấy.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "tượng một người đàn ông cởi trần, đóng khố, đầu quấn khăn"
+      ],
+      "objects_and_materials": [
+        "tượng người đóng khố",
+        "gậy gỗ",
+        "lá cây khô",
+        "tranh tường vẽ nhà tranh"
+      ],
+      "possible_process_stage": "soaking",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "duplicate_like"
+        ]
+      },
+      "keywords_vi": [
+        "sa bàn",
+        "mô hình",
+        "giấy dó",
+        "người đóng khố",
+        "gậy gỗ",
+        "lá khô",
+        "tranh tường"
+      ],
+      "confidence": 0.7,
+      "uncertainty_vi": "Không thể xác định chắc chắn công đoạn cụ thể chỉ qua gậy gỗ và lá khô trên nền đất nếu không có nhãn thông tin đi kèm.",
+      "asset_id": "img-052",
+      "source_path": "assets/images/2aOboQl1kGjhkyM4dmSVTU0D8Fuy0ADQ3Ia9cFzU.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1435263,
+      "sha256": "35d598fc6b938ec67545f6f997cb96082bf2fb76c0d1c2d8518501a90d0af68b",
+      "duplicate_group": "sha256:35d598fc6b938ec67545f6f997cb96082bf2fb76c0d1c2d8518501a90d0af68b",
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 6,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kGlCCC8TlfflYI2HocuYrNEpFu9HEf5c.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình sa bàn tái hiện hình ảnh một người phụ nữ quấn khăn mỏ quạ, mặc trang phục truyền thống màu nâu đen. Nhân vật đang cúi người dùng hai tay xử lý các sợi vỏ cây hoặc xơ thực vật. Bên cạnh tượng có một bể chứa nước hình tròn lớn bằng đá hoặc bê tông.",
+      "caption_vi": "Sa bàn tái hiện việc ngâm vỏ cây trong bể nước làm giấy truyền thống.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "tượng người phụ nữ mặc áo tứ thân và quấn khăn mỏ quạ"
+      ],
+      "objects_and_materials": [
+        "tượng người phụ nữ",
+        "vỏ cây dó",
+        "bể đá tròn",
+        "cây leo xanh"
+      ],
+      "possible_process_stage": "soaking",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "sa bàn",
+        "mô hình",
+        "giấy dó",
+        "tượng người phụ nữ",
+        "bể đá",
+        "vỏ cây",
+        "xơ thực vật"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không thể xác định chắc chắn đây là công đoạn ngâm vỏ cây hay rửa vỏ cây vì thiếu nhãn thông tin cụ thể.",
+      "asset_id": "img-053",
+      "source_path": "assets/images/2aOboQl1kGlCCC8TlfflYI2HocuYrNEpFu9HEf5c.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1298657,
+      "sha256": "5d635194861aaa0a396ec861968ede33218aaec4c2116a579c3eb3ceff0b5473",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 6,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kICt8Sd4QLkTGo53AJIrKLuKIFwlJrt2.jpg",
+      "display_type": "diorama",
+      "description_vi": "Mô hình sa bàn tái hiện cảnh một nam thanh niên cởi trần, đóng khố. Nhân vật đang đứng dùng chày gỗ lớn giã nguyên liệu trong một cối đá hình tròn để làm bột giấy. Phía sau tượng là bức tranh tường vẽ cảnh sinh hoạt sản xuất giấy truyền thống.",
+      "caption_vi": "Sa bàn tái hiện công đoạn giã vỏ cây làm bột giấy bằng cối và chày.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "tượng một người đàn ông cởi trần, đóng khố"
+      ],
+      "objects_and_materials": [
+        "tượng người đóng khố",
+        "chày gỗ lớn",
+        "cối đá tròn",
+        "tranh tường sinh hoạt"
+      ],
+      "possible_process_stage": "pounding",
+      "process_stage_basis": "visible_action",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "sa bàn",
+        "mô hình",
+        "giã bột giấy",
+        "cối đá",
+        "chày gỗ",
+        "người đóng khố",
+        "giấy truyền thống"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không xác định được tên gọi kỹ thuật của chiếc cối đá và chày gỗ trong mô hình.",
+      "asset_id": "img-054",
+      "source_path": "assets/images/2aOboQl1kICt8Sd4QLkTGo53AJIrKLuKIFwlJrt2.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 704380,
+      "sha256": "a13a7d38dd05c4c2eda397951f395f5847b416458104361552ff61ea886f153a",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 6,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kJyTPIVrHIy1yDvzaU1AnTbhD89eyrHE.jpg",
+      "display_type": "gallery_overview",
+      "description_vi": "Bục trưng bày hình tròn màu trắng trong không gian triển lãm trong nhà. Trên bục đặt các cuốn sách nghiên cứu của Henri Oger mang tên 'Kỹ thuật của người An Nam'. Bên cạnh sách là một giá treo ba cây bút lông bằng gỗ và một tiêu bản hoa lá khô nhỏ.",
+      "caption_vi": "Góc triển lãm giới thiệu sách 'Kỹ thuật của người An Nam' và bút viết lông.",
+      "visible_text": [
+        {
+          "text": "HENRI OGER",
+          "certainty": "high"
+        },
+        {
+          "text": "Technique du peuple Annamite",
+          "certainty": "high"
+        },
+        {
+          "text": "Mechanics and Crafts of the Annamites",
+          "certainty": "high"
+        },
+        {
+          "text": "Kỹ thuật của người An Nam",
+          "certainty": "high"
+        },
+        {
+          "text": "Première édition 1909",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "sách",
+        "giá bút lông",
+        "bút lông",
+        "tiêu bản hoa lá",
+        "giấy dó",
+        "tủ kính trưng bày"
+      ],
+      "possible_process_stage": "museum_overview",
+      "process_stage_basis": "not_applicable",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "triển lãm",
+        "bảo tàng",
+        "Henri Oger",
+        "Kỹ thuật của người An Nam",
+        "bút lông",
+        "giá bút",
+        "giấy dó"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Nội dung chi tiết trên các trang sách và tài liệu trưng bày trong tủ kính phía sau không thể đọc được.",
+      "asset_id": "img-055",
+      "source_path": "assets/images/2aOboQl1kJyTPIVrHIy1yDvzaU1AnTbhD89eyrHE.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 753959,
+      "sha256": "9ab846f40c760be42abac49929ff97dfb3a8303d4988233bd8546bb35ddd5310",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 6,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kK4F04vaGpS73m7m3Si0pZnCE8LaNNNg.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh nằm trên khung tre hoặc gỗ. Phía trên dán nhãn giấy ghi thông tin bằng tiếng Anh giải thích về việc hấp cành cây dưỡng và cây dó sau khi thu hoạch. Phía dưới dán một bức ảnh chụp bó cành cây màu nâu vàng đang được hấp trong hơi nước.",
+      "caption_vi": "Trang album minh họa công đoạn hấp cành cây dưỡng và cây dó.",
+      "visible_text": [
+        {
+          "text": "Material steaming",
+          "certainty": "high"
+        },
+        {
+          "text": "Duong & Do branches are steamed within one week after harvesting.",
+          "certainty": "high"
+        },
+        {
+          "text": "The bundles are put carefully on the steaming pot. Water is always kept about 20 cm.",
+          "certainty": "high"
+        },
+        {
+          "text": "The wooden lid should be very strong and do not let the air go in & out.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "album ảnh",
+        "nhãn giấy",
+        "ảnh chụp",
+        "bó cành cây",
+        "khung tre"
+      ],
+      "possible_process_stage": "boiling",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion"
+        ]
+      },
+      "keywords_vi": [
+        "hấp nguyên liệu",
+        "cành cây dó",
+        "cành cây dưỡng",
+        "album ảnh",
+        "quy trình làm giấy",
+        "giấy dó"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể quan sát thấy cấu tạo chi tiết bên trong nồi hấp nguyên liệu do hơi nước che khuất.",
+      "asset_id": "img-056",
+      "source_path": "assets/images/2aOboQl1kK4F04vaGpS73m7m3Si0pZnCE8LaNNNg.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 981608,
+      "sha256": "c8d3ff75657b4a29f1d92c2b22490a7a588da0c6b991cb9a6bedbd68a46e7b9c",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 6,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kK7qnfYSZvrgimozoT3HiB8jMzBxhHto.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh nằm trên khay tre hoặc gỗ. Phía trên dán nhãn giấy tiếng Anh hướng dẫn kỹ thuật cắt cành cây dưỡng và cây dó để bảo vệ rễ cây. Phía dưới dán bức ảnh chụp một người đàn ông mặc áo ba lỗ trắng đang thu hoạch cành cây ngoài thực địa.",
+      "caption_vi": "Trang album hướng dẫn kỹ thuật thu hoạch cành cây làm giấy.",
+      "visible_text": [
+        {
+          "text": "Cutting \"Duong\" & \"Do\" trees",
+          "certainty": "high"
+        },
+        {
+          "text": "The material collector should also cut down the unqualified branches in order to encourage the young shoots to grow again, so that they can harvest the next round in 6-8 months.",
+          "certainty": "high"
+        },
+        {
+          "text": "The cutting process should be done very carefully to avoid scratches on the outer bark of the branch and to avoid any harm for the tree roots.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "người đàn ông mặc áo ba lỗ trắng và quần dài tối màu"
+      ],
+      "objects_and_materials": [
+        "album ảnh",
+        "nhãn giấy",
+        "ảnh chụp",
+        "người thu hoạch",
+        "khay tre"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion"
+        ]
+      },
+      "keywords_vi": [
+        "cắt cành",
+        "thu hoạch",
+        "cây dó",
+        "cây dưỡng",
+        "album ảnh",
+        "nguyên liệu làm giấy"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không nhìn rõ loại dao hoặc công cụ cắt cành cây mà người đàn ông sử dụng.",
+      "asset_id": "img-057",
+      "source_path": "assets/images/2aOboQl1kK7qnfYSZvrgimozoT3HiB8jMzBxhHto.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1075967,
+      "sha256": "72bc0aad4872abd43abc33774cf3858c4a55b3683b381495f0187436f8e35ebf",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 6,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKCMY9q3SoNenY0Ra7QPBke1ogn4fJYW(1).jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh nằm trên khay tre. Phía trên dán nhãn giấy tiếng Anh giới thiệu thông tin và đặc điểm của giấy Dó và giấy Dưỡng. Phía dưới dán bức ảnh chụp cận cảnh các lá cây màu xanh lục có răng cưa.",
+      "caption_vi": "Trang album giới thiệu đặc điểm lá cây dó và cây dưỡng.",
+      "visible_text": [
+        {
+          "text": "The Leaf",
+          "certainty": "high"
+        },
+        {
+          "text": "Dó paper",
+          "certainty": "high"
+        },
+        {
+          "text": "Made from Dó bark, local plant in the forest and can only found in the North of Vietnam and South of China. Do paper is renowned for being very durable, resilient and with a subtly textured surface. It could be used for many different purposes: writing, painting, drawing scripture...etc...It is produced by a traditional village in Bac Ninh province of Vietnam.",
+          "certainty": "high"
+        },
+        {
+          "text": "Duong Paper",
+          "certainty": "high"
+        },
+        {
+          "text": "Made from Dưỡng bark, a local plant in the North of Vietnam, similar to mulberry tree. This paper is less smooth but it is a perfect solution for gift wrapping, interior decoration or Art. An ethnic minority group in Hoa Binh province produces it.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "album ảnh",
+        "nhãn giấy",
+        "ảnh chụp lá cây",
+        "lá cây dó",
+        "khay tre"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion",
+          "duplicate_like"
+        ]
+      },
+      "keywords_vi": [
+        "lá cây",
+        "cây dó",
+        "cây dưỡng",
+        "giấy dó",
+        "giấy dưỡng",
+        "album ảnh",
+        "nguyên liệu"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể phân biệt cụ thể đâu là lá cây dó và đâu là lá cây dưỡng trong bức ảnh minh họa.",
+      "asset_id": "img-058",
+      "source_path": "assets/images/2aOboQl1kKCMY9q3SoNenY0Ra7QPBke1ogn4fJYW(1).jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 984329,
+      "sha256": "5b939bbe7ff1630645fa2a7dadf3a824e4b4ed515a36b995b4042cf2d5f54d56",
+      "duplicate_group": "sha256:5b939bbe7ff1630645fa2a7dadf3a824e4b4ed515a36b995b4042cf2d5f54d56",
+      "duplicate_of": "2aOboQl1kKCMY9q3SoNenY0Ra7QPBke1ogn4fJYW.jpg",
+      "is_primary": false,
+      "scan_batch": 6,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified",
+      "annotation_canonicalized_from": "2aOboQl1kKCMY9q3SoNenY0Ra7QPBke1ogn4fJYW.jpg"
+    },
+    {
+      "filename": "2aOboQl1kKCMY9q3SoNenY0Ra7QPBke1ogn4fJYW.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh nằm trên khay tre. Phía trên dán nhãn giấy tiếng Anh giới thiệu thông tin và đặc điểm của giấy Dó và giấy Dưỡng. Phía dưới dán bức ảnh chụp cận cảnh các lá cây màu xanh lục có răng cưa.",
+      "caption_vi": "Trang album giới thiệu đặc điểm lá cây dó và cây dưỡng.",
+      "visible_text": [
+        {
+          "text": "The Leaf",
+          "certainty": "high"
+        },
+        {
+          "text": "Dó paper",
+          "certainty": "high"
+        },
+        {
+          "text": "Made from Dó bark, local plant in the forest and can only found in the North of Vietnam and South of China. Do paper is renowned for being very durable, resilient and with a subtly textured surface. It could be used for many different purposes: writing, painting, drawing scripture...etc...It is produced by a traditional village in Bac Ninh province of Vietnam.",
+          "certainty": "high"
+        },
+        {
+          "text": "Duong Paper",
+          "certainty": "high"
+        },
+        {
+          "text": "Made from Dưỡng bark, a local plant in the North of Vietnam, similar to mulberry tree. This paper is less smooth but it is a perfect solution for gift wrapping, interior decoration or Art. An ethnic minority group in Hoa Binh province produces it.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "album ảnh",
+        "nhãn giấy",
+        "ảnh chụp lá cây",
+        "lá cây dó",
+        "khay tre"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": [
+          "perspective_distortion",
+          "duplicate_like"
+        ]
+      },
+      "keywords_vi": [
+        "lá cây",
+        "cây dó",
+        "cây dưỡng",
+        "giấy dó",
+        "giấy dưỡng",
+        "album ảnh",
+        "nguyên liệu"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể phân biệt cụ thể đâu là lá cây dó và đâu là lá cây dưỡng trong bức ảnh minh họa.",
+      "asset_id": "img-059",
+      "source_path": "assets/images/2aOboQl1kKCMY9q3SoNenY0Ra7QPBke1ogn4fJYW.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 984329,
+      "sha256": "5b939bbe7ff1630645fa2a7dadf3a824e4b4ed515a36b995b4042cf2d5f54d56",
+      "duplicate_group": "sha256:5b939bbe7ff1630645fa2a7dadf3a824e4b4ed515a36b995b4042cf2d5f54d56",
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 6,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKGRXblToPHWabLsMMr5cE9uOORB8Z5k.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album giới thiệu quy trình làm giấy truyền thống. Phía trên trang sách đính một mẫu giấy dó thực tế mỏng và mờ, lộ rõ các vân sợi thực vật đan xen. Phía dưới dán một bức ảnh chụp cận cảnh hai bàn tay của người thợ đang cạo lớp vỏ ngoài của cành cây bằng dao.",
+      "caption_vi": "Trang album đính kèm mẫu giấy dó thực tế và ảnh minh họa cạo vỏ cây.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "hai bàn tay của người thợ thủ công"
+      ],
+      "objects_and_materials": [
+        "album ảnh",
+        "mẫu giấy dó",
+        "ảnh chụp đôi tay",
+        "công cụ cạo vỏ",
+        "thanh gỗ"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "mẫu giấy dó",
+        "đôi bàn tay",
+        "cạo vỏ cây",
+        "vỏ cây dó",
+        "thủ công",
+        "album ảnh"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không rõ vỏ cây được cạo trước khi nấu hay cạo vỏ chín sau khi nấu do không có chú thích bằng chữ.",
+      "asset_id": "img-060",
+      "source_path": "assets/images/2aOboQl1kKGRXblToPHWabLsMMr5cE9uOORB8Z5k.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 964091,
+      "sha256": "2aaf2fddcc51b551364cbd5ffa5b01c1ca091db6d6a36790171617fbd2de06f7",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 6,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKLrEzhnH3tt57HnyXskspa9mZT2J1ge.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh màu đen đặt trên một khung lưới xeo giấy bằng tre và gỗ. Trên trang album có hai bức ảnh: ảnh phía trên chụp đôi bàn tay đang vận hành thiết bị nghiền bột giấy thủ công có động cơ, ảnh phía dưới chụp cận cảnh hai bàn tay đang nhặt và kiểm tra xơ sợi màu trắng trong chậu màu xanh.",
+      "caption_vi": "Trang album ảnh minh họa quá trình xử lý sợi và nghiền bột giấy làm giấy thủ công.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Đôi bàn tay đang cầm khung gỗ điều khiển máy nghiền",
+        "Đôi bàn tay đang nhặt xơ sợi màu trắng"
+      ],
+      "objects_and_materials": [
+        "Trang album ảnh",
+        "Ảnh chụp",
+        "Máy nghiền bột giấy có động cơ",
+        "Chậu nhựa",
+        "Bột giấy màu trắng",
+        "Khung gỗ của máy nghiền",
+        "Khung xeo giấy bằng gỗ và nan tre",
+        "Điện thoại di động ở góc trên bên phải"
+      ],
+      "possible_process_stage": "pulp_preparation",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "album ảnh",
+        "nghiền bột giấy",
+        "xử lý sợi",
+        "làm giấy thủ công",
+        "khung xeo",
+        "bột giấy"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định chính xác vị trí địa lý của xưởng sản xuất và danh tính của những người thực hiện trong ảnh.",
+      "asset_id": "img-061",
+      "source_path": "assets/images/2aOboQl1kKLrEzhnH3tt57HnyXskspa9mZT2J1ge.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 965108,
+      "sha256": "60d0549b0a307cadbd62c6ee79d6730674cad22176b352a57bc083732f349e0a",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 7,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKQKYf30ejXfJXa8NdwWtV3kSTmHKZyy.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh màu đen đặt trên bề mặt mành tre. Bức ảnh trên trang album chụp một người mặc áo chấm bi đen trắng đang dùng hai tay giữ hoặc điều chỉnh mép của một tấm mành xeo giấy bằng gỗ và tre.",
+      "caption_vi": "Ảnh chụp cận cảnh đôi bàn tay đang thao tác với mành xeo giấy.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Một người mặc áo chấm bi đen trắng (chỉ thấy phần thân và đôi bàn tay)"
+      ],
+      "objects_and_materials": [
+        "Trang album ảnh",
+        "Ảnh chụp",
+        "Mành xeo giấy bằng tre và gỗ",
+        "Áo chấm bi",
+        "Mành tre nền"
+      ],
+      "possible_process_stage": "sheet_forming",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "album ảnh",
+        "mành xeo",
+        "làm giấy thủ công",
+        "thao tác xeo giấy",
+        "khung xeo"
+      ],
+      "confidence": 0.85,
+      "uncertainty_vi": "Không thể nhìn thấy rõ toàn bộ khuôn xeo và bối cảnh xung quanh nơi thực hiện công việc.",
+      "asset_id": "img-062",
+      "source_path": "assets/images/2aOboQl1kKQKYf30ejXfJXa8NdwWtV3kSTmHKZyy.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 911056,
+      "sha256": "4fbd085a8773e1e17a4e888409df78a227fc1f9cb0a98c2de9d3d63f785d9285",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 7,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKQWilkuAlucXDqxRofNvXucYWTuPXcm.jpg",
+      "display_type": "text_panel",
+      "description_vi": "Một tấm bìa màu nâu nhạt in chữ tiếng Anh được dán trên trang giấy màu đen của một cuốn album. Tấm bìa giải thích về công đoạn đập nguyên liệu (Material beating) bằng chày gỗ hoặc cối để làm tăng độ bền của xơ sợi giấy.",
+      "caption_vi": "Tấm bảng thông tin tiếng Anh mô tả quy trình đập nguyên liệu trong sản xuất giấy thủ công.",
+      "visible_text": [
+        {
+          "text": "Material beating",
+          "certainty": "high"
+        },
+        {
+          "text": "The material is put into a steady wooden board and beaten with wooden cane during 1 hour.",
+          "certainty": "high"
+        },
+        {
+          "text": "The mortar can be used.",
+          "certainty": "high"
+        },
+        {
+          "text": "This manual process makes the paper fiber stronger.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "Bìa giấy màu đen",
+        "Tấm thẻ giấy màu nâu nhạt",
+        "Chữ in",
+        "Mành tre nền",
+        "Điện thoại di động ở góc trên bên phải"
+      ],
+      "possible_process_stage": "pounding",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "bảng thông tin",
+        "đập nguyên liệu",
+        "giấy thủ công",
+        "quy trình làm giấy",
+        "sợi giấy",
+        "tiếng Anh"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định nguồn gốc xuất xứ của tài liệu thông tin này từ hình ảnh.",
+      "asset_id": "img-063",
+      "source_path": "assets/images/2aOboQl1kKQWilkuAlucXDqxRofNvXucYWTuPXcm.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 614791,
+      "sha256": "3fd02899330996536dc971532a9b7417bb51b609ee786fa3a6a43f8fb4dc34ad",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 7,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKZElAn3urx1w3NKgJjR19j5PR7ehiqm.jpg",
+      "display_type": "gallery_overview",
+      "description_vi": "Không gian trưng bày bên trong một bảo tàng về giấy thủ công với sàn lát gạch màu đỏ. Một khách tham quan nam mặc áo xanh quần trắng đeo ba lô đang ngồi trên ghế gỗ cạnh bàn trà bằng tre gỗ, trong khi một khách tham quan khác mặc đồ đen đang đứng xem tủ kính trưng bày ở bên phải. Phòng trưng bày có nhiều hiện vật như cối đá đựng vỏ cây khô ở tiền cảnh, các tủ kính trưng bày và hàng tranh tư liệu treo trên tường phía sau.",
+      "caption_vi": "Toàn cảnh phòng trưng bày hiện vật lịch sử và quy trình sản xuất giấy thủ công.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Một nam khách tham quan mặc áo xanh, quần trắng, đeo ba lô đang ngồi trên ghế",
+        "Một khách tham quan mặc đồ đen đang đứng quan sát tủ kính ở bên phải"
+      ],
+      "objects_and_materials": [
+        "Cối đá tròn",
+        "Sợi vỏ cây khô",
+        "Bàn gỗ mặt tre",
+        "Ghế băng gỗ",
+        "Tủ kính trưng bày",
+        "Tranh tư liệu treo tường",
+        "Hiện vật gốm và gỗ trên bục",
+        "Hệ thống đèn rọi trần",
+        "Sàn gạch đỏ"
+      ],
+      "possible_process_stage": "museum_overview",
+      "process_stage_basis": "not_applicable",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "phòng trưng bày",
+        "bảo tàng giấy",
+        "hiện vật lịch sử",
+        "khách tham quan",
+        "cối đá",
+        "tranh tư liệu"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định tên cụ thể của bảo tàng hoặc địa điểm chính xác từ các chi tiết có trong ảnh.",
+      "asset_id": "img-064",
+      "source_path": "assets/images/2aOboQl1kKZElAn3urx1w3NKgJjR19j5PR7ehiqm.jpg",
+      "width": 2568,
+      "height": 1926,
+      "orientation": "landscape",
+      "bytes": 880845,
+      "sha256": "717d1e5afd96dba3ab52f1f69d45a7762dd7175879df1134d6bab9bb56b65d67",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 7,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKeZauqcN6p0jtUwbktbsKyFV344TTxg.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh màu đen đặt trên bề mặt mành tre. Bức ảnh dán trên trang album chụp một người đàn ông cởi trần đang cúi người điều chỉnh chồng giấy đặt dưới một máy ép trục vít ren lớn bằng kim loại có bề mặt hoen gỉ.",
+      "caption_vi": "Ảnh chụp công đoạn ép nước từ các tờ giấy mới xeo bằng máy ép trục vít.",
+      "visible_text": [
+        {
+          "text": "elasticity.",
+          "certainty": "medium"
+        },
+        {
+          "text": "will be cracked",
+          "certainty": "medium"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "Một người đàn ông cởi trần, tóc đen, đang thao tác bên máy ép"
+      ],
+      "objects_and_materials": [
+        "Trang album ảnh màu đen",
+        "Ảnh chụp",
+        "Máy ép trục vít bằng kim loại",
+        "Chồng giấy thủ công",
+        "Mành tre nền"
+      ],
+      "possible_process_stage": "pressing",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "album ảnh",
+        "máy ép giấy",
+        "ép nước",
+        "trục vít",
+        "giấy thủ công",
+        "thao tác thủ công"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định chất liệu chính xác của chồng giấy đang được ép và danh tính người đàn ông từ bức ảnh.",
+      "asset_id": "img-065",
+      "source_path": "assets/images/2aOboQl1kKeZauqcN6p0jtUwbktbsKyFV344TTxg.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 879960,
+      "sha256": "9180ac51cc86b5ca27cf1df668547edbc1cd8bd39eb05fde3ca8910e6490eab2",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 7,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKlHZPrRRcHg5X4EkIPc7gwAZE5wydLk.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh màu đen đặt trên bề mặt mành tre. Bức ảnh dán trên trang album chụp một người đàn ông mặc áo ba lỗ trắng đang cẩn thận bóc tách một tờ giấy ẩm màu trắng khỏi chồng giấy, phía tiền cảnh có tay của một người khác mặc áo màu xanh lá đang hỗ trợ giữ mép giấy.",
+      "caption_vi": "Ảnh chụp công đoạn bóc tách tờ giấy ẩm sau khi ép để chuẩn bị đem phơi hoặc sấy.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Một người đàn ông mặc áo ba lỗ trắng đang bóc giấy",
+        "Cánh tay của một người khác mặc áo màu xanh lá ở phía tiền cảnh"
+      ],
+      "objects_and_materials": [
+        "Trang album ảnh màu đen",
+        "Ảnh chụp",
+        "Tờ giấy ẩm màu trắng",
+        "Bàn gỗ hoặc giá đỡ bằng gỗ",
+        "Kết cấu mái tre gỗ phía sau",
+        "Mành tre nền"
+      ],
+      "possible_process_stage": "drying",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "album ảnh",
+        "bóc giấy",
+        "giấy ẩm",
+        "phơi giấy",
+        "làm giấy thủ công",
+        "áo ba lỗ"
+      ],
+      "confidence": 0.85,
+      "uncertainty_vi": "Không thể xác định chính xác phương pháp làm khô tiếp theo (phơi nắng hay sấy trên lò) từ bức ảnh này.",
+      "asset_id": "img-066",
+      "source_path": "assets/images/2aOboQl1kKlHZPrRRcHg5X4EkIPc7gwAZE5wydLk.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 919650,
+      "sha256": "25fa62acea34eea1860ca5f1a7a2999cae54021de2f6d1d5a3cd71f7ab3f142a",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 7,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKoNkKFOD1Klm9zXhpMdV63175sZZbYO.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh màu đen đặt trên bề mặt mành tre. Bức ảnh dán trên trang album chụp một bàn ép giấy thủ công bằng gỗ truyền thống đặt trước bức tường màu vàng có cửa sổ khung gỗ sơn đỏ và các ô kính màu xanh lá cây.",
+      "caption_vi": "Ảnh chụp bàn ép giấy bằng gỗ truyền thống dùng trong xưởng sản xuất giấy thủ công.",
+      "visible_text": [],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "Trang album ảnh màu đen",
+        "Ảnh chụp",
+        "Bàn ép giấy bằng gỗ",
+        "Chồng giấy gỗ ép",
+        "Cửa sổ khung gỗ kính màu",
+        "Tường quét vôi màu vàng",
+        "Mành tre nền"
+      ],
+      "possible_process_stage": "pressing",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "album ảnh",
+        "bàn ép gỗ",
+        "ép giấy",
+        "xưởng giấy thủ công",
+        "cửa sổ kính màu",
+        "ép nước"
+      ],
+      "confidence": 0.9,
+      "uncertainty_vi": "Không thể xác định chính xác cơ chế tăng lực ép của bàn gỗ (dùng đá đè hay nêm gỗ) từ góc chụp này.",
+      "asset_id": "img-067",
+      "source_path": "assets/images/2aOboQl1kKoNkKFOD1Klm9zXhpMdV63175sZZbYO.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 916315,
+      "sha256": "40b33964fb7f433ad739c9a588bd7ec607592bc3f84c0abae9e2760c2ac64e24",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 7,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKq6mTg4M9nAuzRr8Yn9x8Gy7Kz9aPDc.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh màu đen đặt trên một khung xeo giấy bằng tre gỗ. Trên trang album có hai bức ảnh: ảnh phía trên chụp một người đàn ông cởi trần đang dùng chổi quét để dán tờ giấy ẩm lên tường lò sấy để sấy khô, ảnh phía dưới chụp cận cảnh chồng giấy ẩm có xơ sợi lộ rõ ở mép và một phần bàn tay người đang chạm vào chồng giấy.",
+      "caption_vi": "Trang album ảnh minh họa công đoạn sấy khô giấy trên vách lò sấy và chồng giấy ẩm chuẩn bị sấy.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Một người đàn ông cởi trần, quần ngắn, tóc đen đang sấy giấy lên tường lò",
+        "Bàn tay người đang chạm vào chồng giấy ẩm ở ảnh phía dưới"
+      ],
+      "objects_and_materials": [
+        "Trang album ảnh màu đen",
+        "Ảnh chụp",
+        "Chổi quét giấy",
+        "Lò sấy giấy bằng đất/vôi",
+        "Chồng giấy ẩm",
+        "Khung xeo giấy tre gỗ",
+        "Xơ sợi giấy"
+      ],
+      "possible_process_stage": "drying",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "album ảnh",
+        "sấy giấy",
+        "phơi giấy",
+        "chổi quét giấy",
+        "giấy thủ công",
+        "xơ sợi giấy"
+      ],
+      "confidence": 0.95,
+      "uncertainty_vi": "Không thể xác định chính xác chất liệu cấu tạo của vách tường sấy giấy và nhiệt độ hoạt động của lò từ bức ảnh.",
+      "asset_id": "img-068",
+      "source_path": "assets/images/2aOboQl1kKq6mTg4M9nAuzRr8Yn9x8Gy7Kz9aPDc.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 798818,
+      "sha256": "2da1d03e3573ea59f4321a15ed8cef958ff4ab1e702fb06180c74c1373476b30",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 7,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKrzXusGW7kLRASRAYkcF4zylkPSZYau.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh màu đen đặt trên khung mành tre gỗ. Trang phía trên dán một tấm thẻ giấy màu nâu nhạt in thông tin tiếng Anh về quy trình sấy giấy (Paper drying), trang phía dưới có bức ảnh chụp một người đàn ông cởi trần đang dùng chổi quét dán giấy lên tường vôi lò sấy để làm khô.",
+      "caption_vi": "Trang album ảnh kết hợp thẻ thông tin tiếng Anh mô tả quy trình sấy giấy thủ công.",
+      "visible_text": [
+        {
+          "text": "Paper drying",
+          "certainty": "high"
+        },
+        {
+          "text": "Paper can be dried naturally in summer time or in the drying oven in winter time.",
+          "certainty": "high"
+        },
+        {
+          "text": "The paper is put on the smooth surface, until it becomes totally dry.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "Một người đàn ông cởi trần, mặc quần short xám, đang sấy giấy lên tường lò"
+      ],
+      "objects_and_materials": [
+        "Trang album ảnh màu đen",
+        "Thẻ thông tin giấy màu nâu nhạt",
+        "Chữ in",
+        "Ảnh chụp",
+        "Chổi quét giấy",
+        "Tường lò sấy",
+        "Xô/thùng trên bậc thang",
+        "Khung mành tre nền"
+      ],
+      "possible_process_stage": "drying",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "album ảnh",
+        "sấy giấy",
+        "thẻ thông tin",
+        "lò sấy giấy",
+        "phơi giấy",
+        "giấy thủ công"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định loại nhiên liệu được sử dụng để đốt nóng lò sấy trong nhà từ bức ảnh.",
+      "asset_id": "img-069",
+      "source_path": "assets/images/2aOboQl1kKrzXusGW7kLRASRAYkcF4zylkPSZYau.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 703075,
+      "sha256": "a579079ff957214e1139584f01c13fab1d3a4998459d94ce2ef1865e9a8f839a",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 7,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKs1yjoe1KcXHVKaffrOsKz0GnorrBPU.jpg",
+      "display_type": "album_page",
+      "description_vi": "Trang album ảnh màu đen đặt trên bề mặt mành tre. Bức ảnh chụp một người đàn ông cởi trần mặc quần đùi đứng trên bậc thang gỗ đang dùng chổi quét để dán tờ giấy ẩm lên tường lò sấy để làm khô, bóng của người đàn ông đổ lớn trên mảng tường phía trên đầu anh ta.",
+      "caption_vi": "Ảnh chụp góc đứng cận cảnh công đoạn sấy khô giấy thủ công bằng lò sấy trong nhà.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Một người đàn ông cởi trần, mặc quần đùi xám kẻ ô, đang sấy giấy lên tường lò"
+      ],
+      "objects_and_materials": [
+        "Trang album ảnh màu đen",
+        "Ảnh chụp",
+        "Chổi quét giấy",
+        "Bóng người trên tường",
+        "Tường lò sấy",
+        "Bậc thang gỗ",
+        "Xô/thùng nhựa màu trắng",
+        "Mành tre nền"
+      ],
+      "possible_process_stage": "drying",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "album ảnh",
+        "sấy giấy",
+        "lò sấy giấy",
+        "bóng trên tường",
+        "phơi giấy",
+        "giấy thủ công"
+      ],
+      "confidence": 0.95,
+      "uncertainty_vi": "Không thể xác định chính xác nhiệt độ của lò sấy và kích thước cụ thể của tờ giấy được sấy từ hình ảnh này.",
+      "asset_id": "img-070",
+      "source_path": "assets/images/2aOboQl1kKs1yjoe1KcXHVKaffrOsKz0GnorrBPU.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 684681,
+      "sha256": "a361082c499826e18866fcf00418f26b7cc3abb4c1db2365a31d68e8ce983d70",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 7,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kKtg9FMZA3KYjfGbGhoPkl9mnvqBNkTA.jpg",
+      "display_type": "album_page",
+      "description_vi": "Một trang album mở đặt trên một chiếc mành tre mịn có viền khung gỗ. Trang phía trên dán một nhãn giấy màu nâu ghi nội dung tiếng Anh tiêu đề 'Material drying and storage' mô tả việc phơi khô tự nhiên ngoài trời và lưu trữ nguyên liệu giấy. Trang phía dưới dán một bức ảnh màu mô tả một người thợ đang phơi các dải sợi nguyên liệu màu trắng trên giàn tre ngoài trời.",
+      "caption_vi": "Trang album ảnh mô tả quy trình phơi khô tự nhiên ngoài trời và lưu trữ nguyên liệu làm giấy.",
+      "visible_text": [
+        {
+          "text": "Material drying and storage",
+          "certainty": "high"
+        },
+        {
+          "text": "The material is naturally drying under the sunshine",
+          "certainty": "high"
+        },
+        {
+          "text": "by hang on a steel wire.",
+          "certainty": "high"
+        },
+        {
+          "text": "After the drying process, they are stored indoor.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "Một người thợ đang khom lưng phơi nguyên liệu trên giàn phơi trong ảnh chụp"
+      ],
+      "objects_and_materials": [
+        "album ảnh",
+        "nhãn giấy màu nâu",
+        "bức ảnh chụp",
+        "mành tre",
+        "khung gỗ",
+        "giàn tre",
+        "sợi nguyên liệu màu trắng",
+        "dây phơi"
+      ],
+      "possible_process_stage": "drying",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "phơi nguyên liệu",
+        "sấy khô",
+        "vật liệu làm giấy",
+        "giấy thủ công",
+        "album ảnh"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác danh tính người thợ và địa điểm chụp ảnh cụ thể.",
+      "asset_id": "img-071",
+      "source_path": "assets/images/2aOboQl1kKtg9FMZA3KYjfGbGhoPkl9mnvqBNkTA.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 928140,
+      "sha256": "e515406b9d19cf3df2431ff9f5595136957539884ba3557909e448be3c4b7267",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 8,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kLBDWWG19s1x4KLlohSR39VIpWIfjWjo.jpg",
+      "display_type": "album_page",
+      "description_vi": "Một trang album ảnh mở được đặt trên mành tre và khung gỗ. Trang bên trái dán một bức ảnh cận cảnh một bàn tay người thợ đang cầm và kéo mành xeo bằng tre để tạo lớp bột giấy ẩm. Phần trang bên phải lộ ra hình ảnh phác thảo sơ đồ kỹ thuật mờ.",
+      "caption_vi": "Ảnh cận cảnh bàn tay người thợ thao tác xeo giấy trên mành xeo trong trang album.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Bàn tay và cánh tay của người thợ đang thao tác với mành xeo trong ảnh chụp"
+      ],
+      "objects_and_materials": [
+        "album ảnh",
+        "bức ảnh chụp",
+        "mành tre",
+        "mành xeo",
+        "khung gỗ"
+      ],
+      "possible_process_stage": "sheet_forming",
+      "process_stage_basis": "inference",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "mành xeo",
+        "xeo giấy",
+        "làm giấy thủ công",
+        "bàn tay người thợ",
+        "album ảnh"
+      ],
+      "confidence": 0.8,
+      "uncertainty_vi": "Không có bất kỳ nhãn văn bản hay chú thích nào đi kèm trong trang ảnh này để khẳng định giai đoạn sản xuất.",
+      "asset_id": "img-072",
+      "source_path": "assets/images/2aOboQl1kLBDWWG19s1x4KLlohSR39VIpWIfjWjo.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 633235,
+      "sha256": "1041b0901c74bce74a34a564f404f7a9c1ce6d0c9fdb55ab4279442a050448bd",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 8,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kLBDWWG19s1x4KRRqBJuFz1gh5qJyuAa.jpg",
+      "display_type": "album_page",
+      "description_vi": "Một trang album mở đặt trên nền mành tre. Trang phía trên dán nhãn giấy màu nâu ghi nội dung tiếng Anh tiêu đề 'Paper splitting' mô tả kỹ thuật bóc tách từng tờ giấy sau khi ép nước. Trang phía dưới dán bức ảnh cận cảnh đôi tay của người thợ đang khéo léo bóc một tờ giấy ẩm màu trắng từ một xấp giấy. Ở mép trái có ngón tay người thực đang giữ album.",
+      "caption_vi": "Trang album ảnh mô tả kỹ thuật bóc tách giấy thủ công sau khi ép nước.",
+      "visible_text": [
+        {
+          "text": "Paper splitting",
+          "certainty": "high"
+        },
+        {
+          "text": "After pressing, the piles of paper wait for about 1-2 days before",
+          "certainty": "high"
+        },
+        {
+          "text": "splitting them into separate sheets of paper.",
+          "certainty": "high"
+        },
+        {
+          "text": "The splitting process need to be done carefully.",
+          "certainty": "high"
+        },
+        {
+          "text": "Producers usually put a small piece of tape between two sheets,",
+          "certainty": "high"
+        },
+        {
+          "text": "so that the splitting process is very easy.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "Ngón tay của một người xem giữ mép album",
+        "Đôi tay người thợ đang bóc tách giấy ẩm trong ảnh chụp"
+      ],
+      "objects_and_materials": [
+        "album ảnh",
+        "nhãn giấy màu nâu",
+        "bức ảnh chụp",
+        "mành tre",
+        "khung gỗ",
+        "tờ giấy ẩm"
+      ],
+      "possible_process_stage": "drying",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "bóc tách giấy",
+        "giấy thủ công",
+        "giấy ẩm",
+        "quy trình sản xuất",
+        "album ảnh"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác danh tính người thợ và vị trí địa lý của xưởng sản xuất từ hình ảnh.",
+      "asset_id": "img-073",
+      "source_path": "assets/images/2aOboQl1kLBDWWG19s1x4KRRqBJuFz1gh5qJyuAa.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 743206,
+      "sha256": "04d253bca450cd761823d3cc081273b563708f3c786fe216cf02ade12116c340",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 8,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kLCYESGuGvkRlnB8pXfmtMYGwp7GBSCW.jpg",
+      "display_type": "album_page",
+      "description_vi": "Một trang album mở đặt trên mành tre và khung gỗ. Trang phía trên dán nhãn giấy màu nâu chứa văn bản tiếng Anh tiêu đề 'Paper making' hướng dẫn cách nhúng khuôn vào bể bột giấy và thêm hoa văn trang trí. Trang phía dưới dán bức ảnh chụp một người phụ nữ đang đứng xeo giấy cạnh bể nước. Góc trên bên phải có một phần tay của người cầm điện thoại.",
+      "caption_vi": "Trang album ảnh mô tả kỹ thuật xeo giấy thủ công bằng khuôn lưới.",
+      "visible_text": [
+        {
+          "text": "Paper making",
+          "certainty": "high"
+        },
+        {
+          "text": "The beaten materials are put into a tank with water. The",
+          "certainty": "high"
+        },
+        {
+          "text": "materials should be stirred very carefully.",
+          "certainty": "high"
+        },
+        {
+          "text": "Hold them both together and submerge both under the water",
+          "certainty": "high"
+        },
+        {
+          "text": "with the pulp in it to capture the pulp on the screen.",
+          "certainty": "high"
+        },
+        {
+          "text": "Withdraw the mould and deckle slowly and evenly allowing the",
+          "certainty": "high"
+        },
+        {
+          "text": "water to drain back in to your tank.",
+          "certainty": "high"
+        },
+        {
+          "text": "During this process, many decorative items can be added such as",
+          "certainty": "high"
+        },
+        {
+          "text": "dried flowers, colorful thread, souvenir items so that they can",
+          "certainty": "high"
+        },
+        {
+          "text": "stick between two layers of paper.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "Bàn tay của người cầm điện thoại ở góc trên bên phải",
+        "Một người phụ nữ đang đứng xeo giấy cạnh bể nước trong ảnh chụp"
+      ],
+      "objects_and_materials": [
+        "album ảnh",
+        "nhãn giấy màu nâu",
+        "bức ảnh chụp",
+        "mành tre",
+        "khung gỗ",
+        "bể nước",
+        "khuôn xeo",
+        "điện thoại thông minh"
+      ],
+      "possible_process_stage": "sheet_forming",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "xeo giấy",
+        "làm giấy thủ công",
+        "bể xeo giấy",
+        "khuôn xeo",
+        "album ảnh"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác danh tính người phụ nữ đang xeo giấy và địa điểm chụp ảnh.",
+      "asset_id": "img-074",
+      "source_path": "assets/images/2aOboQl1kLCYESGuGvkRlnB8pXfmtMYGwp7GBSCW.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 964435,
+      "sha256": "ffb00a1999b212c65ea2db263ccc7d35ecf03cb5fa28fdb0becaa315e1c467ff",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 8,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kLCYESGuGvkRlnCN4t3vKNMyBvTck4G0.jpg",
+      "display_type": "album_page",
+      "description_vi": "Một trang album mở đặt trên nền mành tre mịn có khung gỗ. Trang phía trên trống không, chỉ có vết hằn nhẹ của một bức ảnh đã được tháo ra. Trang phía dưới dán một nhãn giấy màu nâu in chữ tiếng Anh tiêu đề 'Material cooking' mô tả quy trình nấu vỏ cây dó và cây dưỡng bằng vôi và tro.",
+      "caption_vi": "Trang album ảnh giới thiệu quy trình nấu nguyên liệu làm giấy thủ công.",
+      "visible_text": [
+        {
+          "text": "Material cooking",
+          "certainty": "high"
+        },
+        {
+          "text": "The Do & Duong materials are put into a cooking pot with water.",
+          "certainty": "high"
+        },
+        {
+          "text": "The might use lime and ash to cook the material.",
+          "certainty": "high"
+        },
+        {
+          "text": "The Duong & Do material is cooked within 4 hours.",
+          "certainty": "high"
+        },
+        {
+          "text": "Once again, the weather and the quality of the material also",
+          "certainty": "high"
+        },
+        {
+          "text": "influence the duration of the cooking time. The supervisor",
+          "certainty": "high"
+        },
+        {
+          "text": "should take note of the time put in and out.",
+          "certainty": "high"
+        },
+        {
+          "text": "Besides, they must stir the materials every 30 minutes; check the",
+          "certainty": "high"
+        },
+        {
+          "text": "material every 15 minutes after the first cooking hour.",
+          "certainty": "high"
+        },
+        {
+          "text": "They check the material by tearing it into two pieces;",
+          "certainty": "high"
+        },
+        {
+          "text": "if two parts have short saw-tooth, then it is ok.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [],
+      "objects_and_materials": [
+        "album ảnh",
+        "nhãn giấy màu nâu",
+        "mành tre",
+        "khung gỗ"
+      ],
+      "possible_process_stage": "boiling",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "nấu nguyên liệu",
+        "vỏ cây dó",
+        "cây dưỡng",
+        "làm giấy",
+        "album ảnh"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Trang album này thiếu bức ảnh minh họa đi kèm cho quy trình nấu nguyên liệu.",
+      "asset_id": "img-075",
+      "source_path": "assets/images/2aOboQl1kLCYESGuGvkRlnCN4t3vKNMyBvTck4G0.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1032385,
+      "sha256": "dcf683a163fac0fbaefb989f62768e61f8be578b8e61949cf49cb81868e6ed33",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 8,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kLCYESGuGvkRlnEBtuOuSYz4VBXXpRGS.jpg",
+      "display_type": "album_page",
+      "description_vi": "Một trang album mở nằm trên mành tre và khung gỗ. Trang phía trên dán nhãn tiếng Anh tiêu đề 'Material whitening' giải thích kỹ thuật làm trắng nguyên liệu tự nhiên bằng nước chảy và phơi nắng. Trang phía dưới dán một bức ảnh cận cảnh đôi tay đang rửa hoặc làm sạch các thớ sợi nguyên liệu màu nâu vàng trong nước chảy.",
+      "caption_vi": "Trang album ảnh mô tả quy trình rửa sạch và làm trắng tự nhiên nguyên liệu giấy.",
+      "visible_text": [
+        {
+          "text": "Material whitening",
+          "certainty": "high"
+        },
+        {
+          "text": "Natural whitening is done in the river",
+          "certainty": "high"
+        },
+        {
+          "text": "or in the running-water tank.",
+          "certainty": "high"
+        },
+        {
+          "text": "The quality of water has great impact",
+          "certainty": "high"
+        },
+        {
+          "text": "on the degree of whiteness.",
+          "certainty": "high"
+        },
+        {
+          "text": "Sun drying is also recommended in the summer",
+          "certainty": "high"
+        },
+        {
+          "text": "for natural dry and whitening process.",
+          "certainty": "high"
+        },
+        {
+          "text": "Rain water is on the contrary forbidden",
+          "certainty": "high"
+        },
+        {
+          "text": "in the materials as it may change the color.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "Đôi tay của người thợ rửa nguyên liệu trong nước chảy trong ảnh chụp"
+      ],
+      "objects_and_materials": [
+        "album ảnh",
+        "nhãn giấy màu nâu",
+        "bức ảnh chụp",
+        "mành tre",
+        "khung gỗ",
+        "sợi nguyên liệu",
+        "nước"
+      ],
+      "possible_process_stage": "washing",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "rửa sạch nguyên liệu",
+        "làm trắng nguyên liệu",
+        "giấy thủ công",
+        "sợi vỏ cây",
+        "album ảnh"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác danh tính người thực hiện thao tác và địa điểm xưởng làm việc.",
+      "asset_id": "img-076",
+      "source_path": "assets/images/2aOboQl1kLCYESGuGvkRlnEBtuOuSYz4VBXXpRGS.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1033455,
+      "sha256": "209c85f4202ec111884e6b58961cc917b8f022b0803258a9201919247e37eabb",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 8,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kLCYESGuGvkRlnEfWubByAd1k6hUr2RM.jpg",
+      "display_type": "album_page",
+      "description_vi": "Một trang album mở đặt trên nền mành tre có khung gỗ. Trang phía trên dán nhãn giấy màu nâu ghi nội dung tiếng Anh tiêu đề 'Peeling and scraping' mô tả quy trình bóc vỏ và cạo lớp vỏ xanh bên ngoài của cây. Trang phía dưới dán bức ảnh chụp cận cảnh các dải vỏ cây khô màu nâu nhạt xếp chồng lên nhau. Mép bên phải xuất hiện ngón tay của người xem.",
+      "caption_vi": "Trang album ảnh giới thiệu kỹ thuật bóc vỏ và cạo vỏ ngoài của cây làm nguyên liệu giấy.",
+      "visible_text": [
+        {
+          "text": "Peeling and scraping",
+          "certainty": "high"
+        },
+        {
+          "text": "The scraping and cleaning process is very important to make",
+          "certainty": "high"
+        },
+        {
+          "text": "qualified paper.",
+          "certainty": "high"
+        },
+        {
+          "text": "The outer bark is put on a steady wooden board, and then is",
+          "certainty": "high"
+        },
+        {
+          "text": "scratched by a small knife to make the outer green color off.",
+          "certainty": "high"
+        },
+        {
+          "text": "All the notches and dirty pieces are cut off. The qualified material",
+          "certainty": "high"
+        },
+        {
+          "text": "is a nice & white piece.",
+          "certainty": "high"
+        }
+      ],
+      "depicted_people_or_figures": [
+        "Ngón tay của một người xem xuất hiện ở mép phải khung hình"
+      ],
+      "objects_and_materials": [
+        "album ảnh",
+        "nhãn giấy màu nâu",
+        "bức ảnh chụp",
+        "mành tre",
+        "khung gỗ",
+        "vỏ cây khô"
+      ],
+      "possible_process_stage": "raw_material",
+      "process_stage_basis": "visible_label",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "bóc vỏ cây",
+        "cạo vỏ cây",
+        "vỏ cây dó",
+        "nguyên liệu giấy",
+        "album ảnh"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể xác định chính xác loại cây cụ thể chỉ dựa trên hình ảnh vỏ cây khô trong ảnh.",
+      "asset_id": "img-077",
+      "source_path": "assets/images/2aOboQl1kLCYESGuGvkRlnEfWubByAd1k6hUr2RM.jpg",
+      "width": 1920,
+      "height": 2560,
+      "orientation": "portrait",
+      "bytes": 1034550,
+      "sha256": "dccb6b989720e2b217ee38caa7bb722c0e93c952eac06b5aae5e1b280bb39c53",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 8,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    },
+    {
+      "filename": "2aOboQl1kLj7IPnY3HD0PYOthjaSo01Av96bYBRA.jpg",
+      "display_type": "gallery_overview",
+      "description_vi": "Một phòng trưng bày triển lãm trong bảo tàng với sàn nhà lát gạch đỏ bóng loáng. Dọc bức tường trắng phía sau là hệ thống các bức tranh vẽ quy trình làm giấy thủ công và các hiện vật như chậu đá, giỏ tre. Giữa phòng bố trí ba bục trưng bày hình trụ tròn màu trắng đặt các cuốn sách và tài liệu giới thiệu. Một góc bên phải có cánh tay và vai của một vị khách tham quan.",
+      "caption_vi": "Không gian trưng bày giới thiệu lịch sử và quy trình làm giấy thủ công trong bảo tàng.",
+      "visible_text": [],
+      "depicted_people_or_figures": [
+        "Một phần cơ thể (vai và cánh tay) của một khách tham quan ở góc bên phải"
+      ],
+      "objects_and_materials": [
+        "sàn gạch đỏ",
+        "bục triển lãm",
+        "bát đá",
+        "giỏ tre",
+        "tranh treo tường",
+        "tài liệu trưng bày",
+        "tủ kính"
+      ],
+      "possible_process_stage": "museum_overview",
+      "process_stage_basis": "not_applicable",
+      "visual_quality": {
+        "usable": true,
+        "issues": []
+      },
+      "keywords_vi": [
+        "bảo tàng giấy",
+        "phòng triển lãm",
+        "không gian trưng bày",
+        "triển lãm giấy",
+        "hiện vật"
+      ],
+      "confidence": 1.0,
+      "uncertainty_vi": "Không thể đọc rõ các nhãn văn bản nhỏ trên các bức tranh và tài liệu trưng bày do góc chụp xa.",
+      "asset_id": "img-078",
+      "source_path": "assets/images/2aOboQl1kLj7IPnY3HD0PYOthjaSo01Av96bYBRA.jpg",
+      "width": 2568,
+      "height": 1926,
+      "orientation": "landscape",
+      "bytes": 977137,
+      "sha256": "71cc4e1eef54dfd9528cd5958193062558fe7796463494059fd6f6f11f11c502",
+      "duplicate_group": null,
+      "duplicate_of": null,
+      "is_primary": true,
+      "scan_batch": 8,
+      "scan_model": "haiku",
+      "evidence_scope": "image_only",
+      "evidence_status": "derived_unverified"
+    }
+  ]
+}
