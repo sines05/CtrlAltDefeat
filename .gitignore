@@ -1,0 +1,5 @@
+# >>> harness (generated runtime — never commit) >>>
+harness/state/
+harness/standards/.snapshots/
+harness/e2e/RUN-LOG.md
+# <<< harness <<<

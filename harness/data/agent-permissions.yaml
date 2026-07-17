@@ -1,0 +1,86 @@
+# agent-permissions.yaml — per-agent_type write-lane table for agent_rbac_guard.
+#
+# The gate reads `agent_type` (the subagent's frontmatter name) from the PreToolUse
+# payload and refuses a Write/Edit/MultiEdit whose target falls outside the role's
+# declared globs. The top-level agent (role `_parent`) is unrestricted UNLESS an
+# explicit `_parent` entry appears below.
+#
+# SHIPS INERT: with no roles declared the gate is a NO-OP (additive-skip) — a fresh
+# install never blocks. Declare roles below to activate. Globs are fnmatch,
+# repo-relative; `*` spans `/`, so `plans/**` matches anything under plans/.
+#
+# KEYS ARE BARE agent names (the agent frontmatter `name:`, e.g. `developer`). The
+# runtime `agent_type` is invocation-path-dependent: a plugin-qualified spawn arrives
+# `hs:developer`, a bare `/hs:team` spawn arrives `developer`. The gate de-namespaces
+# (`hs:developer` → key `developer`) so both land in the same lane — so key by the
+# BARE name. An exact key (incl. an `hs:`-prefixed one) still wins if you add it.
+#
+# LANE GLOBS MUST BE MULTI-SEGMENT for containment. A slash-free glob (e.g. `*.md`)
+# matches by basename and therefore spans the WHOLE tree — it is NOT a directory
+# lane. Every lane below is multi-segment (`harness/**`, `plans/**`, `docs/**`).
+#
+# TRUST: `agent_type` is a platform-set ATTRIBUTION label, not a credential — this
+# disciplines a cooperative fleet on a TRUSTED host; it is NOT insider-proof and
+# does not judge intent. It sees tool Writes, not Bash-spelled writes. Hostile
+# multi-tenant authz stays on the separate server-issued-token path.
+#
+# `default_deny: true` => a role not listed here may write nothing (deny-by-default).
+# A present-but-MALFORMED table fails closed (the gate blocks loudly), softened to a
+# warn under the lenient guard policy (registered _ENFORCE).
+#
+# Example (uncomment + tune to activate):
+# default_deny: true
+# roles:
+#   _parent: ["**"]                          # top-level agent: unrestricted
+#   general-purpose: ["plans/**", "docs/**"]
+#   cook: ["harness/**", "plans/**", "tests/**"]
+#   code-review: []                          # read-only role: no write lane
+#   scout: []
+
+# ACTIVE table (ratified). default_deny:true → an agent_type not listed below may
+# write nothing. Read-only agents (Explore/Plan/claude-code-guide carry no Write
+# tool) never reach this gate, so deny-by-default does not affect them. The lanes:
+# builders write artifacts under plans/**; the PROJECT CODE lane (harness/** in the
+# harness's OWN repo, or a downstream repo's src tree) is granted per-repo via the
+# overlay (HARNESS_AGENT_PERMISSIONS_OVERLAY). The shipped table NEVER grants
+# harness/** so a downstream install cannot let an agent rewrite the installed
+# harness binary. The top-level agent (_parent) is unrestricted. Keyed by BARE
+# agent name (the gate de-namespaces an hs:-prefixed runtime role onto these keys).
+#
+# Every hs agent role (26 of them) plus general-purpose additionally carries
+# "plans/**" + ".claude/agent-memory/**" so a `memory: project` field actually
+# persists instead of being silently blocked by default_deny (agent memory is
+# Read/Write/Edit auto-granted by CC when `memory:` is set — every subagent learns
+# its live lanes from the RBAC reminder injected at spawn by subagent_init.py, which
+# points at check_permission.py). gemini-relayer is the sole exception:
+# it has no memory field (courier contract) so it carries only "plans/**".
+default_deny: true
+roles:
+  _parent: ["**"]                          # top-level agent: unrestricted
+  developer: ["plans/**", ".claude/agent-memory/**"]                # builder: artifacts+memory; code lane via overlay
+  code-simplifier: ["plans/**", ".claude/agent-memory/**"]
+  debugger: ["plans/**", ".claude/agent-memory/**"]
+  tester: ["plans/**", ".claude/agent-memory/**"]             # test artifacts; harness/tests/** lane via overlay
+  docs-manager: ["docs/**", "plans/**", ".claude/agent-memory/**"]
+  planner: ["plans/**", ".claude/agent-memory/**"]
+  researcher: ["plans/**", ".claude/agent-memory/**"]
+  project-manager: ["plans/**", ".claude/agent-memory/**"]
+  journal-writer: ["plans/**", "docs/**", ".claude/agent-memory/**"]
+  code-reviewer: ["plans/**", ".claude/agent-memory/**"]              # review artifacts under plans/ only
+  red-teamer: ["plans/**", ".claude/agent-memory/**"]
+  independent-revalidator: ["plans/**", ".claude/agent-memory/**"]
+  critique-consolidator: ["plans/**", ".claude/agent-memory/**"]
+  brainstormer: ["plans/**", ".claude/agent-memory/**"]
+  advisor: ["plans/**", ".claude/agent-memory/**"]  # interview-driven advisory; state-file + report under plans/
+  escalation-consultant: ["plans/**", ".claude/agent-memory/**"]  # advisory-only counsel; report-under-plans lane
+  decision-reconciler: ["plans/**", ".claude/agent-memory/**"]   # Tier-2 DEC reconcile; harness/** (clean code-leaks) via overlay in the harness's own repo, NOT shipped
+  market-fit-critic: ["plans/**", ".claude/agent-memory/**"]     # critique lens, default in critique.yaml
+  product-value-critic: ["plans/**", ".claude/agent-memory/**"] # critique lens, default in critique.yaml
+  workflow-orchestrator: ["plans/**", ".claude/agent-memory/**"] # strategy planner; carries no Write tool today
+  gemini-relayer: ["plans/**"]   # courier has no memory field (exception) and no Write tool
+  partner-relayer: ["plans/**"]   # ccs-lane courier; same exception — no memory field, no Write tool
+  workflow-subagent: ["plans/**"]   # Workflow-tool subagent: reports/artifacts only; code-fix lane via HARNESS_AGENT_PERMISSIONS_OVERLAY
+  git-manager: ["plans/**", ".claude/agent-memory/**"]                          # git ops only — no code-file writes
+  ui-ux-designer: ["plans/**", ".claude/agent-memory/**"]   # design agent; showcase/**+harness/** via overlay in this repo
+  general-purpose: ["plans/**", ".claude/agent-memory/**"]
+  claude: ["plans/**"]
