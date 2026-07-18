@@ -33,7 +33,7 @@ Mobile browser
 
 - Vite bundle giải quyết dependency browser của Three.js và phục vụ `apps/web/src/main.js` qua build output.
 - Bootstrap lấy scene, tour, rồi media manifest; lỗi manifest chỉ đưa wall/model về degraded state, không làm gãy tour, QA, hoặc TTS.
-- Model FBX/GLB và video MP4 giữ URL public hiện hữu, `preload: "none"`, và chỉ tải khi runtime kích hoạt chúng.
+- Video MP4 giữ URL public hiện hữu và `preload: "none"`; phần lớn media path đang đi theo lazy/degraded contract, dù guide animated assets vẫn còn một lệch pha đã biết và được ghi ở mục deferred issues.
 
 ### Node HTTP API
 
@@ -52,13 +52,32 @@ Mobile browser
 - Server phục vụ `/asset`, `/guide_girl`, `/making_step`, và `/assets/avatar` từ build output.
 - Static binaries không đi qua API media manifest; manifest chỉ cung cấp asset ID, role, format, public path, và lazy-load metadata.
 
+## Why this architecture exists
+
+Kiến trúc hiện tại không tối ưu cho một demo 3D “hào nhoáng” nhất thời; nó tối ưu cho một bài toán di sản khó hơn vẻ bề ngoài:
+- người xem phải vào được nhanh trên điện thoại;
+- nội dung văn hóa phải đi từ approved sources thay vì prompt tự do;
+- voice chỉ có ý nghĩa khi nó bám một answer path đáng tin;
+- media hoặc AI lỗi vẫn không được làm gãy toàn bộ hành trình.
+
+Trong 48 giờ, việc ghép cùng lúc web runtime 3D, content architecture, grounded QA/TTS, voice path, và fallback behavior là một scope lớn bất thường so với một MVP chỉ ship một lớp đơn lẻ. Vì vậy repo ưu tiên trust, recoverability, và demo continuity trước khi tối ưu hết mọi media/runtime edge.
+
 ## Luồng runtime
 
 1. Browser mở root Vite-built app và render fallback scene shell trước.
 2. Client lấy scene và tour, sau đó lấy `/api/media/{sceneId}`.
 3. Adapter map process station sang MP4 được manifest tham chiếu; `VideoDisplay.play()` mới đặt `src` cho video.
-4. Model registry resolve role sang asset metadata và tải FBX/GLB sau khi scene đã render hoặc khi role được kích hoạt.
+4. Model registry resolve role sang asset metadata và promote media vào scene theo runtime path hiện có; một phần lazy-loading mục tiêu vẫn còn deferred ở guide/prop paths.
 5. Nếu asset hoặc manifest lỗi, fallback geometry/mock station vẫn giữ tour 5 bước và các luồng QA/TTS hoạt động.
+
+## Deferred runtime issues
+
+Các điểm dưới đây là **known trade-offs của pass hiện tại**, không phải claim đã được sửa:
+
+- Guide animated assets vẫn được promote sớm hơn mục tiêu lazy-load ban đầu, nên contract `preload: "none"` hiện mới đúng hoàn toàn ở video path hơn là toàn bộ guide path.
+- Scene-prop lazy activation trong guided flow còn cần siết lại để một số prop không phụ thuộc quá nhiều vào movement path hiện tại.
+- Shared model registry còn nợ một pass alignment quanh GLB role/loader handling trước khi mọi avatar/media role đi chung một seam.
+- Một số issue media-service/static-serving cấp thấp hơn đã được nhận diện nhưng chưa nằm trong pass này vì repo đang ưu tiên clarity framing thay vì sửa logic runtime.
 
 ## Fallback ladder
 

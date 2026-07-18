@@ -204,6 +204,8 @@ function buildAbstainedPacket({ traceId, reason, confidence = 'low' }) {
 }
 
 export async function resolveGroundingContext({ sceneId, question, traceId = randomUUID() }) {
+  // This seam keeps the product honest: voice, text, and local fallback all meet the same
+  // approved-content boundary before they can speak for the exhibit.
   const normalizedQuestion = String(question ?? '').trim();
 
   if (!normalizedQuestion) {

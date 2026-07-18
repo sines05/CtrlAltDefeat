@@ -57,6 +57,8 @@ export async function fetchBootstrapContent({
   fetchImpl = fetch,
   timeoutMs = DEFAULT_TIMEOUT_MS,
 } = {}) {
+  // Scene and tour define the minimum story the visitor must be able to follow. Media is
+  // fetched after that baseline so a content-rich but degraded room still works under stress.
   if (!sceneId || !tourId) {
     throw new Error('sceneId and tourId are required.');
   }
@@ -66,6 +68,9 @@ export async function fetchBootstrapContent({
 
   let media = null;
   let mediaError = null;
+
+  // Media failure is isolated on purpose: the walkthrough, grounded answer path, and text
+  // fallback should stay intact even when heavier assets are slow or unavailable.
 
   try {
     media = await fetchMediaManifest(sceneId, { fetchImpl, timeoutMs });

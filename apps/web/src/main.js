@@ -49,6 +49,9 @@ let liveCapability = {
   model: 'gemini-3.1-flash-live-preview',
 };
 
+// Voice is an access layer over approved museum content, not a second truth source.
+// The guide can speak answers more naturally, but the answer contract still comes from
+// the same grounded QA / TTS pipeline that protects the cultural facts underneath.
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -59,6 +62,8 @@ function blobToBase64(blob) {
 }
 
 async function presentGuideAnswer(turn) {
+  // The dialogue bubble is the non-negotiable path: even if autoplay, TTS, or Live audio
+  // degrades, the visitor still gets a readable grounded answer instead of a silent failure.
   const answer = turn?.qaPacket?.answer ?? turn?.ttsState?.outputTranscript ?? '';
   if (!answer) {
     uiController.showToast(turn?.ttsState?.recoveryMessage ?? 'Không nhận được câu trả lời.');
@@ -663,6 +668,8 @@ async function promoteAnimatedCharacters() {
 }
 
 function maybeLoadSceneProps() {
+  // These props are additive context for the room, not a requirement for comprehension.
+  // Fallback geometry stays in place until a real asset is safe to promote into the scene.
   if (!character || !modelRegistry) {
     return;
   }
@@ -693,6 +700,8 @@ function maybeLoadSceneProps() {
 }
 
 async function bootstrapApprovedMedia() {
+  // Scene and tour are the mandatory walkthrough contract. Media is intentionally layered on
+  // afterwards so a culturally meaningful path still exists when heavier assets or services fail.
   let approvedContent;
 
   try {

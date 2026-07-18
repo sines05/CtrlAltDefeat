@@ -136,6 +136,8 @@ export class UIController {
   }
 
   async startRecording() {
+    // Voice input is optional convenience, not a gate. If permissions, browser support, or
+    // live services fail, the same cultural walkthrough must remain reachable through typing.
     if (!this.questionHandlers?.submitAudio) {
       this.showToast('Voice assistant is unavailable.');
       return;

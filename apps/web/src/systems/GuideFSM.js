@@ -23,6 +23,9 @@ export class GuideFSM {
   }
 
   async playAnswerAudio(audio) {
+    // Talking animation is a trust/accessibility cue for the visitor: the guide should feel
+    // responsive when answer audio is available, but the experience must still degrade cleanly
+    // back to readable text if playback cannot start.
     if (!audio || typeof audio.play !== 'function') {
       return false;
     }
