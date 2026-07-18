@@ -1,106 +1,92 @@
 # API contract
 
-Cập nhật: 2026-07-17
+Cập nhật: 2026-07-18
 
 ## Trạng thái
 
-- [OBSERVED] Repo có backend Node HTTP cho `scene`, `tour`, `qa`, và `tts`.
-- [OBSERVED] `POST /api/qa` đang là đường grounded answer cho room hiện tại và được nâng từ exact-match sang retrieval-backed chat.
-- [ASSUMED] Credential/provider production cho chat và TTS vẫn phụ thuộc môi trường deploy.
+- [OBSERVED] Node HTTP API phục vụ `scene`, `tour`, `media`, `qa`, `tts`, và Live QA voice.
+- [ASSUMED] Production credential/provider cho chat và TTS vẫn phụ thuộc môi trường deploy.
 
 ## Nguyên tắc
 
 - JSON over HTTPS.
-- Client chỉ dựa vào contract, không dựa vào provider trực tiếp nếu có backend.
-- Mọi lỗi dùng shape thống nhất từ `docs/code-standards.md`.
+- Client phụ thuộc vào API contract, không vào provider internals.
+- Error response dùng shape thống nhất.
+- Binary FBX/GLB/MP4 được phục vụ qua public static path; `/api/media` chỉ trả metadata.
 
-## Endpoints đề xuất [PROPOSED]
+## Endpoints
 
 ### `GET /api/scene/{sceneId}`
 
-Trả metadata cho cảnh chính.
-
-Response
-```json
-{
-  "sceneId": "artisan-woodblock",
-  "title": "Nghệ nhân / giấy dó",
-  "entryMode": "qr",
-  "fallbackMode": "viewer",
-  "assets": [],
-  "tourId": "tour-01"
-}
-```
+Trả metadata cảnh và `tourId`.
 
 ### `GET /api/tour/{tourId}`
 
-Trả 5 bước tour.
+Trả đúng 5 approved tour steps cho tour hiện tại.
 
-Response
+### `GET /api/media/{sceneId}`
+
+Trả approved metadata cho model/video của một scene.
+
+Response:
+
 ```json
 {
-  "tourId": "tour-01",
-  "steps": [
-    { "stepId": "1", "title": "Mở cảnh", "body": "..." }
+  "manifestId": "scene-media-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "status": "approved",
+  "version": 1,
+  "assets": [
+    {
+      "assetId": "process-video-01",
+      "kind": "video",
+      "format": "mp4",
+      "publicPath": "/making_step/Buoc1_nau_do.mp4",
+      "preload": "none"
+    }
+  ],
+  "processStations": [
+    {
+      "stationId": "process-01",
+      "order": 1,
+      "title": "Nấu vỏ cây Dó",
+      "narration": "...",
+      "assetId": "process-video-01"
+    }
   ]
+}
+```
+
+Unknown scene trả HTTP 404:
+
+```json
+{
+  "error": {
+    "code": "MEDIA_MANIFEST_NOT_FOUND",
+    "message": "Media manifest not found.",
+    "retryable": false,
+    "traceId": "..."
+  }
 }
 ```
 
 ### `POST /api/qa`
 
-Nhận câu hỏi text, retrieve chunk theo `sceneId`, rồi dùng chat model để trả lời grounded hoặc abstain nếu bằng chứng không đủ.
-
-Request
-```json
-{
-  "sceneId": "artisan-woodblock",
-  "question": "Giấy dó khác gì giấy thường?"
-}
-```
-
-Response
-```json
-{
-  "answer": "...",
-  "citations": [
-    { "label": "Nguồn chuyên gia 1", "ref": "content/approved/source-1" }
-  ],
-  "confidence": "medium",
-  "abstained": false,
-  "abstainReason": null
-}
-```
+Nhận `sceneId` và `question`, sau đó trả grounded answer, citations, confidence, và boundary response không fabricated khi approved content không chứng minh được fact.
 
 ### `POST /api/tts`
 
-Sinh hoặc trả về audio cho transcript ngắn, thường là câu trả lời vừa được grounded từ `/api/qa` hoặc một câu tour ngắn.
+Nhận transcript ngắn và voice option, trả audio hoặc transcript-only degraded response.
 
-Request
-```json
-{
-  "text": "...",
-  "voice": "default"
-}
-```
+### `POST /api/qa/live`
 
-Response
-```json
-{
-  "audioUrl": "https://...",
-  "transcript": "..."
-}
-```
+Nhận typed/audio turn theo capability runtime; khi Live không khả dụng, client/API vẫn giữ REST grounded fallback và transcript.
 
 ### `GET /api/health`
 
-Kiểm tra service sống để demo.
+Trả capability/health metadata để demo runtime.
 
-Response
-```json
-{ "ok": true }
-```
-
-## Error model [PROPOSED]
+## Error model
 
 ```json
 {
@@ -115,6 +101,6 @@ Response
 
 ## Notes
 
-- Nếu không chốt backend runtime, có thể mock contract bằng static JSON để demo.
-- Citation phải map về dữ liệu chuyên gia đã duyệt.
-- Không để API trả nội dung chưa grounded ở đường QA bắt buộc.
+- Citation phải map về approved expert content.
+- Approved 5-step tour độc lập với 10 media process stations.
+- API không trả factual QA content ngoài approved evidence.

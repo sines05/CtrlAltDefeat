@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 
-const repoRoot = '/home/anoreo/Desktop/CtrlAltDefeat';
+const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
 const sceneId = 'tay-ho-giay-do-room-01';
 const sourceId = 'museum-room-01';
 

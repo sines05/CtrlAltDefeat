@@ -72,7 +72,7 @@ test('test_avatar_asset_manifest_exists', async () => {
   assert.ok(assetStats.size > 0);
   assert.equal(manifest.assetPath, 'assets/avatar/cesium-man.glb');
   assert.equal(manifest.license.spdxLike, 'CC-BY-4.0');
-  assert.match(manifest.source.url, /CesiumMan\.glb$/);
+  assert.match(manifest.source.url, /cesium-man\.glb$/u);
 });
 
 test('test_avatar_animation_clip_advances', async () => {

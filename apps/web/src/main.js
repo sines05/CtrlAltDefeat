@@ -12,6 +12,7 @@ import { VideoActivationSystem } from './systems/VideoActivationSystem/VideoActi
 import { fetchBootstrapContent } from './media/client.js';
 import { adaptMediaManifest, createDegradedMediaState } from './media/manifest-adapter.js';
 import { createModelRegistry } from './media/model-registry.js';
+import { readLiveCapability, submitQuestionTurn } from './qa/live-client.js';
 
 const SCENE_ID = 'tay-ho-giay-do-room-01';
 const TOUR_ID = 'tour-01';
@@ -43,6 +44,55 @@ let bootstrapState = {
 const sceneProps = new Map();
 const scenePropLoadPromises = new Map();
 const loadedScenePropRoles = new Set();
+let liveCapability = {
+  enabled: false,
+  model: 'gemini-3.1-flash-live-preview',
+};
+
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error ?? new Error('Unable to read recorded audio.'));
+    reader.onload = () => resolve(String(reader.result).split(',')[1] ?? '');
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function presentGuideAnswer(turn) {
+  const answer = turn?.qaPacket?.answer ?? turn?.ttsState?.outputTranscript ?? '';
+  if (!answer) {
+    uiController.showToast(turn?.ttsState?.recoveryMessage ?? 'Không nhận được câu trả lời.');
+    return;
+  }
+
+  uiController.showDialogueBubble('Hướng dẫn viên', answer);
+  const audioUrl = turn.ttsState?.audioUrl;
+  if (!audioUrl || !tourManager?.guideFSM) {
+    return;
+  }
+
+  const spoke = await tourManager.guideFSM.playAnswerAudio(new Audio(audioUrl));
+  if (!spoke) {
+    uiController.showToast('Không thể tự phát audio; câu trả lời vẫn hiển thị.');
+  }
+}
+
+async function submitGuideTurn({ question = '', audio = null } = {}) {
+  uiController.showToast('Hướng dẫn viên đang trả lời…');
+
+  try {
+    const turn = await submitQuestionTurn({
+      sceneId: SCENE_ID,
+      capability: liveCapability,
+      question,
+      audio,
+    });
+    await presentGuideAnswer(turn);
+  } catch (error) {
+    console.warn('[GuideVoice] Question turn failed.', error);
+    uiController.showToast('Không thể trả lời ngay lúc này. Hãy thử lại.');
+  }
+}
 
 const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
 camera.position.set(0, 3, -35);
@@ -858,6 +908,30 @@ function animate() {
   controls.update();
   renderer.render(scene, camera);
 }
+
+uiController.setQuestionHandlers({
+  submitText(question) {
+    return submitGuideTurn({ question });
+  },
+  async submitAudio({ blob, mimeType, durationMs }) {
+    if (!liveCapability.enabled) {
+      uiController.showToast('Hỏi bằng giọng nói đang tạm không khả dụng.');
+      return;
+    }
+
+    await submitGuideTurn({
+      audio: {
+        mimeType,
+        dataBase64: await blobToBase64(blob),
+        durationMs,
+      },
+    });
+  },
+});
+
+void readLiveCapability().then((capability) => {
+  liveCapability = capability;
+});
 
 initializeBaseScene();
 void bootstrapApprovedMedia();

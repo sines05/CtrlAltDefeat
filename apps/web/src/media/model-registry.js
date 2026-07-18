@@ -19,8 +19,14 @@ function createDefaultLoaders() {
   };
 }
 
+function getLoaderKey(asset) {
+  return asset.loader ?? asset.format;
+}
+
 export function createModelRegistry(mediaState, { loaders = createDefaultLoaders() } = {}) {
-  const modelAssets = (mediaState?.assets ?? []).filter((asset) => asset.kind === 'fbx' || asset.kind === 'glb');
+  const modelAssets = (mediaState?.assets ?? []).filter((asset) => (
+    asset.kind === 'model' && ['fbx', 'glb'].includes(getLoaderKey(asset))
+  ));
   const assetRecords = new Map(
     modelAssets.map((asset) => [asset.assetId, { ...asset, promise: null, error: null }]),
   );
@@ -55,9 +61,10 @@ export function createModelRegistry(mediaState, { loaders = createDefaultLoaders
       return asset.promise;
     }
 
-    const loader = loaders[asset.kind];
+    const loaderKey = getLoaderKey(asset);
+    const loader = loaders[loaderKey];
     if (!loader || typeof loader.loadAsync !== 'function') {
-      throw new Error(`No loader configured for asset kind: ${asset.kind}`);
+      throw new Error(`No loader configured for media format: ${loaderKey}`);
     }
 
     asset.promise = Promise.resolve()

@@ -1,0 +1,27 @@
+{
+  "stage": "cook",
+  "plan": "260718-1858-media-manifest-vite-runtime",
+  "checks": [
+    {
+      "name": "docs-contract",
+      "status": "PASS"
+    },
+    {
+      "name": "built-runtime-chrome-probe",
+      "status": "PASS"
+    },
+    {
+      "name": "media-api-and-static-assets",
+      "status": "PASS"
+    },
+    {
+      "name": "full-regression",
+      "status": "PASS"
+    }
+  ],
+  "verdict": "PASS",
+  "phase": "P4",
+  "actor": "user:sonnguyenque5@gmail.com",
+  "ts": "2026-07-18T20:55:00+00:00",
+  "run_seq": null
+}

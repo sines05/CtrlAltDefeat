@@ -29,6 +29,11 @@ export class UIController {
 
     this.toast = document.getElementById('toast-notification');
 
+    this.questionHandlers = null;
+    this.mediaRecorder = null;
+    this.recordingStream = null;
+    this.recordingStartedAt = 0;
+    this.discardRecording = false;
     this.isRecording = false;
     this.toastTimeout = null;
 
@@ -107,26 +112,88 @@ export class UIController {
       }
       this.typingTextarea.value = "";
       this.typingModal.classList.remove('visible');
-      this.showToast("AI backend coming soon.");
+      void this.questionHandlers?.submitText?.(question);
     };
 
     // Voice Modal listeners
     this.voiceClose.onclick = () => {
-      this.stopRecordingSim();
+      this.cancelRecording();
       this.voiceModal.classList.remove('visible');
     };
 
     this.micBtn.onclick = () => {
       if (!this.isRecording) {
-        this.startRecordingSim();
-      } else {
-        this.stopRecordingSim();
-        setTimeout(() => {
-          this.voiceModal.classList.remove('visible');
-          this.showToast("Voice backend coming soon.");
-        }, 1000);
+        void this.startRecording();
+        return;
       }
+
+      this.stopRecording();
     };
+  }
+
+  setQuestionHandlers(handlers) {
+    this.questionHandlers = handlers;
+  }
+
+  async startRecording() {
+    if (!this.questionHandlers?.submitAudio) {
+      this.showToast('Voice assistant is unavailable.');
+      return;
+    }
+
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+      this.showToast('Trình duyệt không hỗ trợ ghi âm.');
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks = [];
+
+      this.recordingStream = stream;
+      this.mediaRecorder = recorder;
+      this.recordingStartedAt = Date.now();
+      this.discardRecording = false;
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+      recorder.onstop = () => {
+        const discard = this.discardRecording;
+        const durationMs = Date.now() - this.recordingStartedAt;
+        const blob = new Blob(chunks, { type: recorder.mimeType });
+
+        stream.getTracks().forEach((track) => track.stop());
+        this.mediaRecorder = null;
+        this.recordingStream = null;
+        this.isRecording = false;
+        this.micBtn.classList.remove('recording');
+
+        if (!discard && blob.size > 0) {
+          this.voiceModal.classList.remove('visible');
+          void this.questionHandlers.submitAudio({ blob, mimeType: blob.type, durationMs });
+        }
+      };
+      recorder.start();
+      this.startRecordingSim();
+    } catch {
+      this.showToast('Không thể dùng micro. Hãy kiểm tra quyền truy cập.');
+    }
+  }
+
+  stopRecording() {
+    if (this.mediaRecorder?.state === 'recording') {
+      this.stopRecordingSim();
+      this.mediaRecorder.stop();
+    }
+  }
+
+  cancelRecording() {
+    this.discardRecording = true;
+    this.stopRecording();
+    this.recordingStream?.getTracks().forEach((track) => track.stop());
   }
 
   openTypingModal() {

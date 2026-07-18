@@ -1,0 +1,62 @@
+edges:
+  - {from: P1, to: P2}
+  - {from: P2, to: P3}
+  - {from: P3, to: P4}
+subtasks:
+  P1:
+    files_to_create:
+      - content/approved/media/tay-ho-giay-do-room-01.json
+      - services/api/src/media/index.js
+      - tests/api/media/media-manifest.contract.test.mjs
+      - tests/content/media-manifest-content.contract.test.mjs
+      - tests/bootstrap/static-media-content-types.test.mjs
+    files_to_modify:
+      - services/api/src/server.js
+      - tests/bootstrap/workspace-bootstrap-contract.test.mjs
+    files_to_delete: []
+    post: [verification-P1.json]
+  P2:
+    files_to_create:
+      - vite.config.mjs
+      - package-lock.json
+      - tests/bootstrap/vite-build-output.contract.test.mjs
+      - tests/e2e/browser-bootstrap-smoke.test.mjs
+    files_to_modify:
+      - package.json
+      - scripts/build.mjs
+      - scripts/run.mjs
+      - scripts/lint.mjs
+      - apps/web/index.html
+      - tests/bootstrap/health-endpoint-smoke.test.mjs
+    files_to_delete: []
+    post: [verification-P2.json]
+  P3:
+    files_to_create:
+      - apps/web/src/media/client.js
+      - apps/web/src/media/manifest-adapter.js
+      - apps/web/src/media/model-registry.js
+      - tests/e2e/media-manifest-runtime.test.mjs
+      - tests/scene/exhibition-wall-media.test.mjs
+      - tests/avatar/avatar-media-manifest.contract.test.mjs
+    files_to_modify:
+      - apps/web/src/main.js
+      - apps/web/src/components/ExhibitionWall/ExhibitionWall.js
+      - apps/web/src/components/ExhibitionStation/ExhibitionStation.js
+      - apps/web/src/components/VideoDisplay/VideoDisplay.js
+      - apps/web/src/systems/VideoActivationSystem/VideoActivationSystem.js
+      - apps/web/src/avatar/manifest.js
+      - apps/web/src/avatar/state.js
+      - apps/web/src/avatar/runtime.js
+    files_to_delete: []
+    post: [verification-P3.json]
+  P4:
+    files_to_create:
+      - tests/docs/media-architecture.contract.test.mjs
+    files_to_modify:
+      - docs/system-architecture.md
+      - docs/code-standards.md
+      - docs/engineering/api-contract.md
+      - tests/mobile/manual-checklist.md
+      - tests/perf/demo-path-budget.test.mjs
+    files_to_delete: []
+    post: [verification-P4.json]

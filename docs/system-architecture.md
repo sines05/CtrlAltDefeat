@@ -1,128 +1,81 @@
 # System architecture
 
-Cập nhật: 2026-07-17
+Cập nhật: 2026-07-18
 
 ## Trạng thái hiện tại
 
-- [OBSERVED] Repo chưa có ứng dụng chạy thực tế; hiện chỉ có harness và tài liệu khởi tạo.
-- [PROPOSED] Kiến trúc dưới đây là bản mỏng để team có thể code trong 40 giờ mà vẫn giữ đường fallback.
+- [OBSERVED] Repo có web runtime Vite tại `apps/web/`, Node HTTP API tại `services/api/`, nội dung đã duyệt tại `content/approved/`, và kiểm thử runtime tại `tests/`.
+- [OBSERVED] Scene giấy dó hiện phục vụ tour 5 bước, grounded QA/TTS, Gemini Live voice có degraded fallback, cùng manifest model/video theo scene.
 
-## Mục tiêu kỹ thuật
-
-- Mở trải nghiệm từ QR hoặc image marker.
-- Hiển thị một cảnh về nghệ nhân hoặc giấy dó.
-- Ưu tiên WebAR hoặc 3D viewer trên web; nếu AR lỗi thì fallback không vỡ luồng.
-- Cung cấp tour 5 bước, Q&A dạng text có grounding, và TTS.
-
-## Sơ đồ mức cao [PROPOSED]
+## Sơ đồ mức cao
 
 ```text
-Người dùng mobile
-  -> QR / image marker
-  -> Web app trải nghiệm
-      -> Scene/tour content
-      -> 3D viewer hoặc WebAR layer
-      -> Q&A UI + TTS controls
-  -> API nhẹ
-      -> Scene service
-      -> Tour service
-      -> Q&A retrieval/chat service
-      -> TTS adapter
-  -> Content store đã duyệt
-      -> scene metadata
-      -> tour steps
-      -> expert Q&A chunks
-      -> citations
-      -> TTS scripts
-  -> Asset store/CDN
-      -> ảnh, audio, GLB/USDZ nếu có
+Mobile browser
+  -> Vite-built web runtime
+      -> GET /api/scene/{sceneId}
+      -> GET /api/tour/{tourId}
+      -> GET /api/media/{sceneId}
+      -> scene/tour/QA/TTS/voice UI
+  -> Node HTTP API
+      -> scene + tour services
+      -> media manifest service
+      -> grounded QA + TTS + Live relay
+  -> approved content store
+      -> scene, tour, chunks, TTS scripts
+      -> media manifest metadata
+  -> static public assets
+      -> FBX, GLB, MP4
 ```
 
 ## Thành phần chính
 
-### 1. Client web [PROPOSED]
+### Client web
 
-Chịu trách nhiệm:
-- mở từ QR hoặc image marker;
-- phát hiện khả năng thiết bị;
-- ưu tiên WebAR nếu đủ điều kiện;
-- fallback sang 3D viewer hoặc nội dung 2D nếu cần;
-- hiển thị tour, Q&A text, và transcript TTS.
+- Vite bundle giải quyết dependency browser của Three.js và phục vụ `apps/web/src/main.js` qua build output.
+- Bootstrap lấy scene, tour, rồi media manifest; lỗi manifest chỉ đưa wall/model về degraded state, không làm gãy tour, QA, hoặc TTS.
+- Model FBX/GLB và video MP4 giữ URL public hiện hữu, `preload: "none"`, và chỉ tải khi runtime kích hoạt chúng.
 
-### 2. API nhẹ [PROPOSED]
+### Node HTTP API
 
-Chịu trách nhiệm:
-- trả scene config cho client;
-- trả dữ liệu tour 5 bước;
-- nhận câu hỏi text và trả lời grounded;
-- gọi provider TTS hoặc phát audio đã chuẩn bị sẵn.
+- `GET /api/scene/{sceneId}` trả metadata cảnh.
+- `GET /api/tour/{tourId}` giữ contract tour 5 bước đã duyệt.
+- `GET /api/media/{sceneId}` trả metadata model/video theo scene, không trả binary hoặc base64.
+- `POST /api/qa`, `POST /api/tts`, và `/api/qa/live` giữ grounded/degraded behavior hiện có.
 
-### 3. Content store đã duyệt [PROPOSED]
+### Approved content store
 
-Chứa dữ liệu có kiểm duyệt:
-- hồ sơ hiện vật/cảnh;
-- khối kiến thức chuyên gia dùng cho grounding;
-- nguồn trích dẫn ngắn, rõ;
-- script TTS.
+- `content/approved/` là nguồn dữ liệu factual cho scene, tour, citations, QA, TTS, và metadata media.
+- `content/approved/media/tay-ho-giay-do-room-01.json` liên kết `assets[]` với `processStations[]`; UI không tự sinh diễn giải quy trình.
 
-### 4. Asset store/CDN [PROPOSED]
+### Static assets
 
-Chứa các file nặng như hình, âm thanh, model 3D nếu team có sẵn.
+- Server phục vụ `/asset`, `/guide_girl`, `/making_step`, và `/assets/avatar` từ build output.
+- Static binaries không đi qua API media manifest; manifest chỉ cung cấp asset ID, role, format, public path, và lazy-load metadata.
 
-## Luồng runtime bắt buộc [PROPOSED]
+## Luồng runtime
 
-1. Người dùng scan QR hoặc marker.
-2. Client mở landing scene.
-3. Client kiểm tra năng lực thiết bị.
-4. Nếu WebAR sẵn sàng thì tải trải nghiệm AR; nếu không thì mở viewer thường.
-5. Người dùng đi qua tour 5 bước.
-6. Người dùng đặt câu hỏi text.
-7. API trả lời grounded kèm citation.
-8. Người dùng nghe TTS hoặc đọc transcript.
+1. Browser mở root Vite-built app và render fallback scene shell trước.
+2. Client lấy scene và tour, sau đó lấy `/api/media/{sceneId}`.
+3. Adapter map process station sang MP4 được manifest tham chiếu; `VideoDisplay.play()` mới đặt `src` cho video.
+4. Model registry resolve role sang asset metadata và tải FBX/GLB sau khi scene đã render hoặc khi role được kích hoạt.
+5. Nếu asset hoặc manifest lỗi, fallback geometry/mock station vẫn giữ tour 5 bước và các luồng QA/TTS hoạt động.
 
-## Fallback ladder [PROPOSED]
+## Fallback ladder
 
-1. WebAR marker-based.
-2. 3D viewer trong web.
-3. Ảnh/slide + hotspot + text.
+1. Media model/video đã duyệt, tải lazy.
+2. Fallback geometry hoặc mock station khi media không khả dụng.
+3. Scene/tour/QA/TTS vẫn usable khi toàn bộ media manifest lỗi.
 
-Stretch feature không được chen vào giữa ladder này.
+## Non-functional baseline
 
-## Decision gates
-
-### Gate A — stack ứng dụng
-
-- [ASSUMED] Chưa có stack được chốt.
-- Cần quyết định: web thuần hay framework frontend; backend serverless hay service riêng.
-- Chỉ sau gate này mới khóa cấu trúc thư mục thật.
-
-### Gate B — 3D/AR asset
-
-- [ASSUMED] Chưa xác nhận có GLB/USDZ hay asset tối ưu mobile.
-- Nếu không có asset đủ chất lượng, demo ưu tiên 2D/3D viewer nhẹ trước.
-
-### Gate C — RAG/TTS provider
-
-- [OBSERVED] Hướng QA/chat đã khóa vào Gemini 3.1 Flash Lite với grounding room/hotspot-first.
-- [ASSUMED] Provider/quota production cho TTS vẫn cần chốt theo môi trường deploy; transcript fallback và mock audio vẫn là degraded path an toàn.
-
-### Gate D — stretch features
-
-- STT, lip-sync, WebAR nâng cao chỉ bật khi luồng bắt buộc đã ổn và có thời gian test thiết bị thật.
-
-## Non-functional baseline [PROPOSED]
-
-- Mobile-first.
-- Khởi động luồng chính nhanh trên mạng di động ổn định.
-- Có degraded mode rõ ràng khi AR hoặc AI service lỗi.
-- Không phụ thuộc micro cho use case bắt buộc.
-- Log tối thiểu cho demo: scene load, fallback hit, QA request, TTS play.
+- Mobile-first; initial route không được eager-load toàn bộ FBX/MP4.
+- Nội dung factual phải đi từ approved content store.
+- Service lỗi phải có degraded state rõ ràng, không phá user journey còn lại.
+- Log runtime tối thiểu cho scene bootstrap và media fallback.
 
 ## Tài liệu liên quan
 
 - [Code standards](./code-standards.md)
-- [Vision](./product/vision.md)
-- [PRD](./product/prd.md)
 - [API contract](./engineering/api-contract.md)
-- [RAG content schema](./engineering/rag-content-schema.md)
+- [Deployment](./operations/deployment.md)
 - [Decision 0001](./decisions/0001-mvp-scope.md)

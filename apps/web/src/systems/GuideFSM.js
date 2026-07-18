@@ -18,6 +18,38 @@ export class GuideFSM {
     if (this.currentAction) {
       this.currentAction.play();
     }
+
+    this.answerAudio = null;
+  }
+
+  async playAnswerAudio(audio) {
+    if (!audio || typeof audio.play !== 'function') {
+      return false;
+    }
+
+    this.answerAudio?.pause?.();
+    this.answerAudio = audio;
+    this.transitionTo(GUIDE_STATES.TALKING);
+
+    const finish = () => {
+      if (this.answerAudio !== audio) {
+        return;
+      }
+
+      this.answerAudio = null;
+      this.transitionTo(GUIDE_STATES.IDLE);
+    };
+
+    audio.addEventListener?.('ended', finish, { once: true });
+    audio.addEventListener?.('error', finish, { once: true });
+
+    try {
+      await audio.play();
+      return true;
+    } catch {
+      finish();
+      return false;
+    }
   }
 
   transitionTo(state) {
