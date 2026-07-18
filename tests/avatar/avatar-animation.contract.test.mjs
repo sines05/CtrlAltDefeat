@@ -7,7 +7,7 @@ import { getAvatarManifest } from '../../apps/web/src/avatar/manifest.js';
 import { createAvatarPlaybackState, advanceAvatarPlayback } from '../../apps/web/src/avatar/state.js';
 import { createSceneAppHtml } from '../../apps/web/src/scene/app.js';
 
-const repoRoot = '/home/sonnq6/CtrlAltDefeat';
+const repoRoot = '/home/anoreo/Desktop/CtrlAltDefeat';
 
 async function readJson(relativePath) {
   return JSON.parse(await readFile(path.join(repoRoot, relativePath), 'utf8'));

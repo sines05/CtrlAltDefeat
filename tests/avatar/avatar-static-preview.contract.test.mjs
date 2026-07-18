@@ -10,7 +10,7 @@ import { createSceneAppHtml } from '../../apps/web/src/scene/app.js';
 import { getSceneConfig } from '../../services/api/src/scene/index.js';
 import { getTourConfig } from '../../services/api/src/tour/index.js';
 
-const repoRoot = '/home/sonnq6/CtrlAltDefeat';
+const repoRoot = '/home/anoreo/Desktop/CtrlAltDefeat';
 
 test('test_static_preview_manifest_exists', async () => {
   const manifest = getAvatarManifest('huongdanvien');

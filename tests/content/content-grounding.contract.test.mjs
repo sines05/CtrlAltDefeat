@@ -3,7 +3,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import test from 'node:test';
 
-const repoRoot = '/home/sonnq6/CtrlAltDefeat';
+const repoRoot = '/home/anoreo/Desktop/CtrlAltDefeat';
 const sceneId = 'tay-ho-giay-do-room-01';
 const sourceId = 'museum-room-01';
 

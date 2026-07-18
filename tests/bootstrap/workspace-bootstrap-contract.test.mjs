@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import test from 'node:test';
 
-const repoRoot = '/home/sonnq6/CtrlAltDefeat';
+const repoRoot = '/home/anoreo/Desktop/CtrlAltDefeat';
 
 async function readJson(relativePath) {
   const absolutePath = path.join(repoRoot, relativePath);
