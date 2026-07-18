@@ -18,22 +18,17 @@ export class VideoActivationSystem {
       const distToGuide = guidePos ? station.group.position.distanceTo(guidePos) : Infinity;
       const dist = Math.min(distToPlayer, distToGuide);
 
-      // 1. Render Culling (Toggle mesh visibility)
-      if (dist >= this.CULL_DISTANCE) {
-        station.group.visible = false;
-        station.videoDisplay.unload();
-        return;
-      }
+      // Always render station meshes; only control video playback
       station.group.visible = true;
 
-      // 2. Playback and Loading State Machine (Preloaded, so only toggle play/pause)
+      // Playback control based on distance
       if (dist < this.ACTIVE_DISTANCE) {
         station.videoDisplay.play();
       } else {
         station.videoDisplay.pause();
       }
 
-      // 3. Update mock screen animation if applicable
+      // Update mock screen animation if applicable
       station.update(time);
     });
   }

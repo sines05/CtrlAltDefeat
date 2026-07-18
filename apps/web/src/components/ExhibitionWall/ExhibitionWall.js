@@ -78,21 +78,47 @@ export function createExhibitionWall(scene) {
   const stations = [];
 
   let videoUrls = [];
+  let isGlobSupported = false;
   try {
-    const videoModules = import.meta.glob('/making_step/*.mp4', { eager: true });
-    videoUrls = Object.values(videoModules).map(mod => mod.default || mod);
+    // If running in a Vite environment, import.meta.glob is defined.
+    // In native browser environment, it will fail.
+    const globFn = import.meta.glob;
+    if (typeof globFn === 'function') {
+      const videoModules = globFn('/making_step/*.mp4', { eager: true });
+      videoUrls = Object.values(videoModules).map(mod => mod.default || mod);
+      isGlobSupported = videoUrls.length > 0;
+    }
   } catch (err) {
-    console.warn("Vite glob import failed or empty. Falling back to canvas mock screens.", err);
+    console.warn("Vite glob import failed, using hardcoded fallback", err);
   }
 
   const detectedVideos = [];
-  videoUrls.forEach(url => {
-    const match = url.match(/Buoc(\d+)/i);
-    if (match) {
-      const stepNum = parseInt(match[1], 10);
-      detectedVideos.push({ stepNum, url });
-    }
-  });
+  if (isGlobSupported) {
+    videoUrls.forEach(url => {
+      const match = url.match(/Buoc(\d+)/i);
+      if (match) {
+        const stepNum = parseInt(match[1], 10);
+        detectedVideos.push({ stepNum, url });
+      }
+    });
+  } else {
+    // Hardcoded fallback for the native browser / Node HTTP server mode
+    const hardcodedSteps = {
+      1: '/making_step/Buoc1_nau_do.mp4',
+      2: '/making_step/Buoc2_lam_bia.mp4',
+      3: '/making_step/Buoc3_gia_do.mp4',
+      4: '/making_step/Buoc4_dap_le_va_bao_go.mp4',
+      5: '/making_step/Buoc5_dai_bia.mp4',
+      6: '/making_step/Buoc6_keo_tau.mp4',
+      7: '/making_step/Buoc7_seo_giấy.mp4',
+      8: '/making_step/Buoc8_ep_do.mp4',
+      9: '/making_step/Buoc9_can_giay.mp4',
+      10: '/making_step/Buoc10_lot_giay.mp4'
+    };
+    Object.entries(hardcodedSteps).forEach(([stepNum, url]) => {
+      detectedVideos.push({ stepNum: parseInt(stepNum, 10), url });
+    });
+  }
 
   detectedVideos.sort((a, b) => a.stepNum - b.stepNum);
 

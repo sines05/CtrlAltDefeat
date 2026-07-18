@@ -217,7 +217,7 @@ export function createMuseumCorridor(scene) {
   // Set bright, warm traditional background and fog
   const bgColor = 0xe8dcbf; // Soft warm beige plaster tint
   scene.background = new THREE.Color(bgColor);
-  scene.fog = new THREE.FogExp2(bgColor, 0.022); // Gentler, more open fog
+  scene.fog = null;
 
   const corridorLength = 70; // 70 meters long
   const corridorWidth = 22;   // 22 meters wide (expanded by ~50% from 15m)
@@ -401,19 +401,19 @@ export function createMuseumCorridor(scene) {
   createPlantPot(scene, halfWidth - 1.0, halfLength - 2.0);
 
   // 8. Ambient and Indirect Lighting
-  const ambientLight = new THREE.AmbientLight(0xffe9be, 1.2); // Warm cozy golden-yellow ambient fill light
+  const ambientLight = new THREE.AmbientLight(0xffe9be, 0.8); // Warm cozy golden-yellow ambient fill light
   scene.add(ambientLight);
 
   // Warm PointLights along the corridor (adjusted to a richer warm amber/yellow color)
-  const pointLight1 = new THREE.PointLight(0xffc875, 3.5, 40, 1.0);
+  const pointLight1 = new THREE.PointLight(0xffc875, 2.5, 40, 1.0);
   pointLight1.position.set(0, height - 1.2, -18);
   scene.add(pointLight1);
 
-  const pointLight2 = new THREE.PointLight(0xffc875, 3.5, 40, 1.0);
+  const pointLight2 = new THREE.PointLight(0xffc875, 2.5, 40, 1.0);
   pointLight2.position.set(0, height - 1.2, 0);
   scene.add(pointLight2);
 
-  const pointLight3 = new THREE.PointLight(0xffc875, 3.5, 40, 1.0);
+  const pointLight3 = new THREE.PointLight(0xffc875, 2.5, 40, 1.0);
   pointLight3.position.set(0, height - 1.2, 18);
   scene.add(pointLight3);
 

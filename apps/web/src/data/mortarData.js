@@ -1,0 +1,36 @@
+export const MORTAR_EXHIBIT = {
+  assetId: 'mortar.fbx',
+  title: 'VỎ CÂY DÓ – NGUYÊN LIỆU LÀM GIẤY',
+  subtitle: 'Điểm khởi đầu của một tờ giấy dó thủ công',
+  category: 'RAW_MATERIAL',
+  shortDescription: 'Dụng cụ chứa các dải vỏ cây dó, nguyên liệu được xử lý để tạo thành bột giấy.',
+  paragraphs: [
+    'Vỏ cây dó là một trong những nguyên liệu quan trọng được sử dụng để tạo nên giấy dó truyền thống. Phần có giá trị nhất nằm ở lớp xơ bên trong vỏ cây. Những sợi xơ này có độ dài và độ dai tự nhiên, góp phần tạo nên đặc tính nhẹ, bền và khó rách của giấy dó.',
+    'Sau khi được thu hoạch, vỏ cây cần trải qua nhiều công đoạn xử lý trước khi có thể trở thành bột giấy. Người thợ loại bỏ phần vỏ ngoài, làm sạch phần xơ, sau đó ngâm và nấu để nguyên liệu mềm hơn. Các dải vỏ đã xử lý tiếp tục được rửa sạch và giã kỹ cho đến khi các sợi xơ tách ra.',
+    'Phần xơ sau khi giã được hòa với nước để tạo thành hỗn hợp bột giấy. Người thợ sử dụng mành xeo để vớt và phân bố các sợi xơ thành một lớp mỏng, sau đó ép nước và phơi khô để tạo thành tờ giấy hoàn chỉnh.',
+    'Chất lượng của vỏ cây, nguồn nước và kỹ thuật xử lý đều ảnh hưởng trực tiếp đến màu sắc, bề mặt, độ dai và tuổi thọ của giấy. Vì vậy, việc lựa chọn và chuẩn bị nguyên liệu là một bước quan trọng trong nghề làm giấy dó.',
+  ],
+  objectDescription: 'Hiện vật mô phỏng một dụng cụ chứa các dải vỏ cây dó trước hoặc trong quá trình xử lý. Những dải vỏ có màu nâu tự nhiên, dạng dài và giàu xơ. Đây là hình ảnh giúp người xem hình dung nguyên liệu ban đầu trước khi trải qua các bước ngâm, nấu, làm sạch và giã thành bột giấy.',
+  quickFacts: [
+    { label: 'Nguyên liệu', value: 'Phần xơ bên trong vỏ cây dó' },
+    { label: 'Đặc điểm', value: 'Sợi dài, dai và có nguồn gốc tự nhiên' },
+    { label: 'Các bước xử lý chính', value: 'Làm sạch, ngâm, nấu, rửa và giã' },
+    { label: 'Vai trò', value: 'Tạo phần xơ liên kết trong tờ giấy' },
+    { label: 'Ảnh hưởng đến thành phẩm', value: 'Độ dai, độ bền, màu sắc và bề mặt giấy' },
+  ],
+  processSteps: [
+    '1. Thu hoạch và bóc vỏ',
+    '2. Loại bỏ phần vỏ ngoài',
+    '3. Ngâm và nấu cho mềm',
+    '4. Rửa sạch và giã thành xơ',
+    '5. Hòa bột để chuẩn bị xeo giấy',
+  ],
+  processNote: 'Từ những dải vỏ thô ban đầu, người thợ phải dành nhiều thời gian và công sức để tạo thành hỗn hợp bột giấy đủ mịn và sạch.',
+  contextualQuestions: [
+    { question: 'Vì sao vỏ cây dó phù hợp để làm giấy?', answer: 'Phần xơ bên trong vỏ cây dó có độ dài và độ dai tự nhiên. Khi được xử lý đúng cách, các sợi xơ liên kết với nhau, giúp tờ giấy nhẹ nhưng vẫn bền và khó rách.' },
+    { question: 'Vỏ cây được xử lý như thế nào?', answer: 'Vỏ cây được làm sạch, ngâm và nấu để trở nên mềm hơn. Sau đó, người thợ rửa kỹ và giã nguyên liệu cho đến khi các sợi xơ tách ra để chuẩn bị tạo bột giấy.' },
+    { question: 'Bộ phận nào của vỏ cây được sử dụng?', answer: 'Người thợ chủ yếu sử dụng lớp xơ nằm bên trong vỏ cây. Phần vỏ ngoài thô và sẫm màu thường được loại bỏ trong quá trình sơ chế.' },
+    { question: 'Nguyên liệu ảnh hưởng thế nào đến chất lượng giấy?', answer: 'Nguyên liệu sạch và có chất lượng tốt giúp giấy có bề mặt đều, màu sắc tự nhiên, độ dai cao và khả năng lưu giữ lâu dài hơn.' },
+  ],
+  proximityRange: 3.0,
+};

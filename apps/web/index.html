@@ -4,6 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Guide Girl 3D</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { overflow: hidden; background: #000; }
@@ -27,37 +35,169 @@
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
     
-    /* Follow button */
-    #follow-btn {
+    /* Guide Proximity Menu */
+    #guide-proximity-menu {
       position: fixed;
-      bottom: 120px;
+      bottom: 150px;
       left: 50%;
-      transform: translateX(-50%) scale(0.9);
-      background: linear-gradient(135deg, #8b5a2b, #b37d4e);
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      color: #fff;
-      padding: 14px 28px;
-      font-size: 16px;
-      font-weight: 600;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(139, 90, 43, 0.3);
-      pointer-events: auto;
+      transform: translateX(-50%) translateY(10px);
+      width: min(480px, calc(100vw - 32px));
+      background: rgba(25, 18, 12, 0.92);
+      border: 1.5px solid rgba(255, 183, 77, 0.25);
+      border-radius: 14px;
+      padding: 20px 24px 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
       opacity: 0;
       visibility: hidden;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      letter-spacing: 0.5px;
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+      z-index: 90;
+      text-align: center;
+      color: #eae3d2;
+      font-family: system-ui, sans-serif;
     }
-    #follow-btn.visible {
+    #guide-proximity-menu.visible {
       opacity: 1;
       visibility: visible;
-      transform: translateX(-50%) scale(1);
+      transform: translateX(-50%) translateY(0);
     }
-    #follow-btn:hover {
+    .guide-menu-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #ffb74d;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+    .guide-menu-desc {
+      font-size: 13px;
+      color: #c5b8a8;
+      margin-bottom: 14px;
+    }
+    .guide-menu-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .guide-menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 183, 77, 0.15);
+      color: #eae3d2;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+      font-family: system-ui, sans-serif;
+    }
+    .guide-menu-btn:hover {
+      background: rgba(255, 183, 77, 0.1);
+      border-color: rgba(255, 183, 77, 0.4);
+      transform: translateY(-1px);
+    }
+    .guide-menu-btn:active {
+      transform: translateY(0);
+    }
+    .guide-num-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      background: linear-gradient(180deg, #ffe0b2, #ffb74d);
+      color: #120c08;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 6px;
+      flex-shrink: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .guide-btn-label {
+      flex: 1;
+    }
+
+    /* Guide Sub-Panels (Q&A placeholder, Tour confirmation) */
+    .guide-sub-panel {
+      position: fixed;
+      bottom: 150px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      width: min(480px, calc(100vw - 32px));
+      background: rgba(25, 18, 12, 0.92);
+      border: 1.5px solid rgba(255, 183, 77, 0.25);
+      border-radius: 14px;
+      padding: 20px 24px 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+      z-index: 90;
+      color: #eae3d2;
+      font-family: system-ui, sans-serif;
+      text-align: left;
+    }
+    .guide-sub-panel.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    .guide-panel-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #ffb74d;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .guide-panel-body p {
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: #c5b8a8;
+      margin-bottom: 10px;
+    }
+    .guide-panel-note {
+      font-style: italic;
+      color: #a89880 !important;
+      font-size: 12.5px !important;
+      margin-top: 4px;
+    }
+    .guide-panel-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+    .guide-sub-btn {
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: system-ui, sans-serif;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: #eae3d2;
+    }
+    .guide-sub-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .guide-sub-btn.primary {
+      background: linear-gradient(135deg, #8b5a2b, #b37d4e);
+      border-color: transparent;
+      color: #fff;
+      font-weight: 600;
+    }
+    .guide-sub-btn.primary:hover {
       background: linear-gradient(135deg, #a06b3a, #c68e5d);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 215, 0, 0.4);
+      box-shadow: 0 4px 15px rgba(139, 90, 43, 0.4);
     }
     
     /* Dialogue Bubble */
@@ -319,41 +459,1265 @@
       box-shadow: 0 1px 2px rgba(0,0,0,0.3);
     }
 
-    /* Guide Head Ask Bubble */
-    #guide-ask-bubble {
+    /* Graphics Quality Toggle */
+    #gfx-toggle {
       position: fixed;
-      background: rgba(22, 15, 10, 0.9);
-      border: 1.5px solid #ffb74d;
-      color: #ffe0b2;
-      padding: 6px 12px;
-      font-size: 13px;
-      font-weight: 600;
+      top: 24px;
+      left: 24px;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(22, 15, 10, 0.8);
+      border: 1px solid rgba(255, 183, 77, 0.2);
       border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6), 0 0 10px rgba(255, 183, 77, 0.2);
-      white-space: nowrap;
-      pointer-events: none;
+      padding: 6px 12px;
+      backdrop-filter: blur(8px);
+    }
+    #gfx-toggle .gfx-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #ffb74d;
+      margin-right: 4px;
+    }
+    #gfx-toggle .gfx-options {
+      display: flex;
+      gap: 4px;
+    }
+    #gfx-toggle .gfx-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 183, 77, 0.15);
+      color: #c5b8a8;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: system-ui, sans-serif;
+    }
+    #gfx-toggle .gfx-btn:hover {
+      background: rgba(255, 183, 77, 0.1);
+      border-color: rgba(255, 183, 77, 0.4);
+      color: #eae3d2;
+    }
+    #gfx-toggle .gfx-btn.active {
+      background: linear-gradient(135deg, #8b5a2b, #b37d4e);
+      border-color: transparent;
+      color: #fff;
+    }
+    #gfx-toggle .gfx-btn.active:hover {
+      background: linear-gradient(135deg, #a06b3a, #c68e5d);
+    }
+
+    /* Graphics Warning Modal */
+    #gfx-warning-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      background: rgba(22, 15, 10, 0.95);
+      border: 1px solid #ffb74d;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 30px rgba(139, 90, 43, 0.2);
+      border-radius: 14px;
+      padding: 28px 32px;
+      width: 90%;
+      max-width: 420px;
       opacity: 0;
       visibility: hidden;
-      transform: translate(-50%, -100%) scale(0.9);
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      z-index: 80;
+      backdrop-filter: blur(20px);
+      text-align: center;
+      z-index: 300;
+      transition: all 0.3s ease;
     }
-    #guide-ask-bubble.visible {
+    #gfx-warning-modal.visible {
       opacity: 1;
       visibility: visible;
-      transform: translate(-50%, -100%) scale(1);
+      transform: translate(-50%, -50%);
     }
-    #guide-ask-bubble::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
+    #gfx-warning-modal .gfx-warning-icon {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    #gfx-warning-modal h3 {
+      font-size: 16px;
+      color: #ffb74d;
+      margin-bottom: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    #gfx-warning-modal p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #c5b8a8;
+      margin-bottom: 18px;
+    }
+    #gfx-warning-modal .gfx-warning-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    #gfx-warning-modal .gfx-warning-actions button {
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: system-ui, sans-serif;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: #eae3d2;
+    }
+    #gfx-warning-modal .gfx-warning-actions button:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    #gfx-warning-modal .gfx-warning-actions button.primary {
+      background: linear-gradient(135deg, #8b5a2b, #b37d4e);
+      border-color: transparent;
+      color: #fff;
+    }
+    #gfx-warning-modal .gfx-warning-actions button.primary:hover {
+      background: linear-gradient(135deg, #a06b3a, #c68e5d);
+      box-shadow: 0 4px 15px rgba(139, 90, 43, 0.4);
+    }
+
+    /* Plaque Prompt */
+    #plaque-prompt {
+      position: fixed;
+      bottom: 180px;
       left: 50%;
-      transform: translateX(-50%);
-      border-width: 6px 6px 0;
-      border-style: solid;
-      border-color: rgba(22, 15, 10, 0.9) transparent;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(22, 15, 10, 0.85);
+      border: 1px solid rgba(255, 183, 77, 0.3);
+      color: #eae3d2;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 99;
+    }
+    #plaque-prompt.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    #plaque-prompt .key-cap {
+      background: linear-gradient(180deg, #ffe0b2, #ffb74d);
+      color: #120c08;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 11px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Plaque Detailed Info Modal */
+    #plaque-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      background-color: #f7f3e8;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,20 Q30,25 40,10 T80,30' fill='none' stroke='rgba(139,90,43,0.06)' stroke-width='1.5'/%3E%3Cpath d='M20,60 Q50,45 60,80 T90,50' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1.2'/%3E%3Cpath d='M5,80 Q25,85 30,70 T70,90' fill='none' stroke='rgba(139,90,43,0.04)' stroke-width='2'/%3E%3Cpath d='M40,30 Q60,40 70,20 T95,45' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+      border: 4px solid #3d240f;
+      outline: 1px solid #c5a059;
+      outline-offset: -8px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      padding: 35px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 85vh;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      z-index: 10000;
+      color: #301e12;
+      font-family: "Georgia", serif;
+      text-align: left;
+    }
+    #plaque-modal.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%);
+    }
+    #plaque-modal h2 {
+      font-size: 26px;
+      color: #3d240f;
+      margin-top: 5px;
+      margin-bottom: 4px;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    #plaque-modal h3.subtitle {
+      font-size: 16px;
+      color: #8c6b3e;
+      text-align: center;
+      margin-bottom: 24px;
+      font-style: italic;
+      font-weight: normal;
+    }
+    #plaque-modal p {
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      color: #4a3424;
+      text-align: justify;
+    }
+    #plaque-modal .facts-section {
+      background: rgba(221, 212, 191, 0.3);
+      border-left: 4px solid #3d240f;
+      border-right: 1px solid rgba(61, 36, 15, 0.15);
+      border-top: 1px solid rgba(61, 36, 15, 0.15);
+      border-bottom: 1px solid rgba(61, 36, 15, 0.15);
+      padding: 16px 20px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+      border-radius: 0 6px 6px 0;
+    }
+    #plaque-modal .facts-section h4 {
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #3d240f;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    #plaque-modal .facts-section ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    #plaque-modal .facts-section li {
+      margin-bottom: 6px;
+      color: #4a3424;
+    }
+    #plaque-modal::-webkit-scrollbar {
+      width: 8px;
+    }
+    #plaque-modal::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    #plaque-modal::-webkit-scrollbar-thumb {
+      background: rgba(61, 36, 15, 0.3);
+      border-radius: 4px;
+    }
+    #plaque-modal::-webkit-scrollbar-thumb:hover {
+      background: rgba(61, 36, 15, 0.5);
+    }
+
+    /* Village Picture Prompt */
+    #village-prompt {
+      position: fixed;
+      bottom: 180px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(22, 15, 10, 0.85);
+      border: 1px solid rgba(255, 183, 77, 0.3);
+      color: #eae3d2;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 99;
+    }
+    #village-prompt.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    #village-prompt .key-cap {
+      background: linear-gradient(180deg, #ffe0b2, #ffb74d);
+      color: #120c08;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 11px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Village Picture Detailed Info Modal (Warm Ivory Dó Paper theme) */
+    #village-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      background-color: #f7f3e8;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,20 Q30,25 40,10 T80,30' fill='none' stroke='rgba(139,90,43,0.06)' stroke-width='1.5'/%3E%3Cpath d='M20,60 Q50,45 60,80 T90,50' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1.2'/%3E%3Cpath d='M5,80 Q25,85 30,70 T70,90' fill='none' stroke='rgba(139,90,43,0.04)' stroke-width='2'/%3E%3Cpath d='M40,30 Q60,40 70,20 T95,45' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+      border: 4px solid #3d240f;
+      outline: 1px solid #c5a059;
+      outline-offset: -8px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      padding: 35px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 85vh;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      z-index: 10000;
+      color: #301e12;
+      font-family: "Georgia", serif;
+      text-align: left;
+    }
+    #village-modal.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%);
+    }
+    #village-modal h2 {
+      font-size: 26px;
+      color: #3d240f;
+      margin-top: 5px;
+      margin-bottom: 4px;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    #village-modal h3.subtitle {
+      font-size: 16px;
+      color: #8c6b3e;
+      text-align: center;
+      margin-bottom: 24px;
+      font-style: italic;
+      font-weight: normal;
+    }
+    #village-modal p {
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      color: #4a3424;
+      text-align: justify;
+    }
+    #village-modal .facts-section {
+      background: rgba(221, 212, 191, 0.3);
+      border-left: 4px solid #3d240f;
+      border-right: 1px solid rgba(61, 36, 15, 0.15);
+      border-top: 1px solid rgba(61, 36, 15, 0.15);
+      border-bottom: 1px solid rgba(61, 36, 15, 0.15);
+      padding: 16px 20px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+      border-radius: 0 6px 6px 0;
+    }
+    #village-modal .facts-section h4 {
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #3d240f;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    #village-modal .facts-section ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    #village-modal .facts-section li {
+      margin-bottom: 6px;
+      color: #4a3424;
+    }
+    #village-modal::-webkit-scrollbar {
+      width: 8px;
+    }
+    #village-modal::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    #village-modal::-webkit-scrollbar-thumb {
+      background: rgba(61, 36, 15, 0.3);
+      border-radius: 4px;
+    }
+    #village-modal::-webkit-scrollbar-thumb:hover {
+      background: rgba(61, 36, 15, 0.5);
+    }
+    #village-modal .dialogue-opt-btn.primary {
+      background: #3d240f;
+      color: #f7f3e8;
+      border: 1px solid #2a180a;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    #village-modal .dialogue-opt-btn.primary:hover {
+      background: #4e321b;
+    }
+
+    /* Product Prompt */
+    #product-prompt {
+      position: fixed;
+      bottom: 180px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(22, 15, 10, 0.85);
+      border: 1px solid rgba(255, 183, 77, 0.3);
+      color: #eae3d2;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 99;
+    }
+    #product-prompt.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    #product-prompt .key-cap {
+      background: linear-gradient(180deg, #ffe0b2, #ffb74d);
+      color: #120c08;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 11px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Product Modal */
+    #product-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      background-color: #f7f3e8;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,20 Q30,25 40,10 T80,30' fill='none' stroke='rgba(139,90,43,0.06)' stroke-width='1.5'/%3E%3Cpath d='M20,60 Q50,45 60,80 T90,50' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1.2'/%3E%3Cpath d='M5,80 Q25,85 30,70 T70,90' fill='none' stroke='rgba(139,90,43,0.04)' stroke-width='2'/%3E%3Cpath d='M40,30 Q60,40 70,20 T95,45' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+      border: 4px solid #3d240f;
+      outline: 1px solid #c5a059;
+      outline-offset: -8px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      padding: 35px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 85vh;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      z-index: 10000;
+      color: #301e12;
+      font-family: "Georgia", serif;
+      text-align: left;
+    }
+    #product-modal.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%);
+    }
+    #product-modal h2 {
+      font-size: 26px;
+      color: #3d240f;
+      margin-top: 5px;
+      margin-bottom: 4px;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    #product-modal h3.subtitle {
+      font-size: 16px;
+      color: #8c6b3e;
+      text-align: center;
+      margin-bottom: 24px;
+      font-style: italic;
+      font-weight: normal;
+    }
+    #product-modal p {
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      color: #4a3424;
+      text-align: justify;
+    }
+    #product-modal .facts-section {
+      background: rgba(221, 212, 191, 0.3);
+      border-left: 4px solid #3d240f;
+      border-right: 1px solid rgba(61, 36, 15, 0.15);
+      border-top: 1px solid rgba(61, 36, 15, 0.15);
+      border-bottom: 1px solid rgba(61, 36, 15, 0.15);
+      padding: 16px 20px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+      border-radius: 0 6px 6px 0;
+    }
+    #product-modal .facts-section h4 {
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #3d240f;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    #product-modal .facts-section ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    #product-modal .facts-section li {
+      margin-bottom: 6px;
+      color: #4a3424;
+    }
+    #product-modal::-webkit-scrollbar {
+      width: 8px;
+    }
+    #product-modal::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    #product-modal::-webkit-scrollbar-thumb {
+      background: rgba(61, 36, 15, 0.3);
+      border-radius: 4px;
+    }
+    #product-modal::-webkit-scrollbar-thumb:hover {
+      background: rgba(61, 36, 15, 0.5);
+    }
+    #product-modal .products-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+    }
+    #product-modal .product-card {
+      background: rgba(221, 212, 191, 0.4);
+      border: 1px solid #c5a059;
+      color: #3d240f;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 13px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    #product-modal .product-card:hover {
+      background: rgba(197, 160, 89, 0.25);
+      border-color: #8c6b3e;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(139, 90, 43, 0.15);
+    }
+    #product-modal .product-card:active {
+      transform: translateY(-1px);
+    }
+    #product-modal .modal-actions {
+      margin-top: 20px;
+    }
+
+    /* Mortar Prompt */
+    #mortar-prompt {
+      position: fixed;
+      bottom: 180px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(22, 15, 10, 0.85);
+      border: 1px solid rgba(255, 183, 77, 0.3);
+      color: #eae3d2;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 99;
+    }
+    #mortar-prompt.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    #mortar-prompt .key-cap {
+      background: linear-gradient(180deg, #ffe0b2, #ffb74d);
+      color: #120c08;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 11px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Mortar Modal */
+    #mortar-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      background-color: #f7f3e8;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,20 Q30,25 40,10 T80,30' fill='none' stroke='rgba(139,90,43,0.06)' stroke-width='1.5'/%3E%3Cpath d='M20,60 Q50,45 60,80 T90,50' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1.2'/%3E%3Cpath d='M5,80 Q25,85 30,70 T70,90' fill='none' stroke='rgba(139,90,43,0.04)' stroke-width='2'/%3E%3Cpath d='M40,30 Q60,40 70,20 T95,45' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+      border: 4px solid #3d240f;
+      outline: 1px solid #c5a059;
+      outline-offset: -8px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      padding: 35px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 85vh;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      z-index: 10000;
+      color: #301e12;
+      font-family: "Georgia", serif;
+      text-align: left;
+    }
+    #mortar-modal.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%);
+    }
+    #mortar-modal h2 {
+      font-size: 26px;
+      color: #3d240f;
+      margin-top: 5px;
+      margin-bottom: 4px;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    #mortar-modal h3.subtitle {
+      font-size: 16px;
+      color: #8c6b3e;
+      text-align: center;
+      margin-bottom: 24px;
+      font-style: italic;
+      font-weight: normal;
+    }
+    #mortar-modal p {
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      color: #4a3424;
+      text-align: justify;
+    }
+    #mortar-modal .facts-section {
+      background: rgba(221, 212, 191, 0.3);
+      border-left: 4px solid #3d240f;
+      border-right: 1px solid rgba(61, 36, 15, 0.15);
+      border-top: 1px solid rgba(61, 36, 15, 0.15);
+      border-bottom: 1px solid rgba(61, 36, 15, 0.15);
+      padding: 16px 20px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+      border-radius: 0 6px 6px 0;
+    }
+    #mortar-modal .facts-section h4 {
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #3d240f;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    #mortar-modal .facts-section ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    #mortar-modal .facts-section li {
+      margin-bottom: 6px;
+      color: #4a3424;
+    }
+    #mortar-modal::-webkit-scrollbar {
+      width: 8px;
+    }
+    #mortar-modal::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    #mortar-modal::-webkit-scrollbar-thumb {
+      background: rgba(61, 36, 15, 0.3);
+      border-radius: 4px;
+    }
+    #mortar-modal::-webkit-scrollbar-thumb:hover {
+      background: rgba(61, 36, 15, 0.5);
+    }
+    #mortar-modal .modal-actions {
+      margin-top: 20px;
+    }
+    #mortar-modal .process-steps {
+      background: rgba(221, 212, 191, 0.25);
+      border: 1px solid rgba(61, 36, 15, 0.12);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+    }
+    #mortar-modal .process-steps p {
+      font-size: 14.5px;
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+
+    /* Paper Prompt */
+    #paper-prompt {
+      position: fixed;
+      bottom: 180px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(22, 15, 10, 0.85);
+      border: 1px solid rgba(255, 183, 77, 0.3);
+      color: #eae3d2;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 99;
+    }
+    #paper-prompt.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    #paper-prompt .key-cap {
+      background: linear-gradient(180deg, #ffe0b2, #ffb74d);
+      color: #120c08;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 11px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Paper Modal */
+    #paper-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      background-color: #f7f3e8;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,20 Q30,25 40,10 T80,30' fill='none' stroke='rgba(139,90,43,0.06)' stroke-width='1.5'/%3E%3Cpath d='M20,60 Q50,45 60,80 T90,50' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1.2'/%3E%3Cpath d='M5,80 Q25,85 30,70 T70,90' fill='none' stroke='rgba(139,90,43,0.04)' stroke-width='2'/%3E%3Cpath d='M40,30 Q60,40 70,20 T95,45' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+      border: 4px solid #3d240f;
+      outline: 1px solid #c5a059;
+      outline-offset: -8px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      padding: 35px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 85vh;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      z-index: 10000;
+      color: #301e12;
+      font-family: "Georgia", serif;
+      text-align: left;
+    }
+    #paper-modal.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%);
+    }
+    #paper-modal h2 {
+      font-size: 26px;
+      color: #3d240f;
+      margin-top: 5px;
+      margin-bottom: 4px;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    #paper-modal h3.subtitle {
+      font-size: 16px;
+      color: #8c6b3e;
+      text-align: center;
+      margin-bottom: 24px;
+      font-style: italic;
+      font-weight: normal;
+    }
+    #paper-modal p {
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      color: #4a3424;
+      text-align: justify;
+    }
+    #paper-modal .facts-section {
+      background: rgba(221, 212, 191, 0.3);
+      border-left: 4px solid #3d240f;
+      border-right: 1px solid rgba(61, 36, 15, 0.15);
+      border-top: 1px solid rgba(61, 36, 15, 0.15);
+      border-bottom: 1px solid rgba(61, 36, 15, 0.15);
+      padding: 16px 20px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+      border-radius: 0 6px 6px 0;
+    }
+    #paper-modal .facts-section h4 {
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #3d240f;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    #paper-modal .facts-section ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    #paper-modal .facts-section li {
+      margin-bottom: 6px;
+      color: #4a3424;
+    }
+    #paper-modal::-webkit-scrollbar {
+      width: 8px;
+    }
+    #paper-modal::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    #paper-modal::-webkit-scrollbar-thumb {
+      background: rgba(61, 36, 15, 0.3);
+      border-radius: 4px;
+    }
+    #paper-modal::-webkit-scrollbar-thumb:hover {
+      background: rgba(61, 36, 15, 0.5);
+    }
+    #paper-modal .modal-actions {
+      margin-top: 20px;
+    }
+    #paper-modal .advantages-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    #paper-modal .advantage-card {
+      background: rgba(221, 212, 191, 0.35);
+      border: 1.5px solid rgba(61, 36, 15, 0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #3d240f;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      font-family: system-ui, sans-serif;
+    }
+    #paper-modal .advantage-card:hover {
+      background: rgba(61, 36, 15, 0.08);
+      border-color: #3d240f;
+      transform: translateY(-1px);
+    }
+    #paper-modal .advantage-card.selected {
+      background: #3d240f;
+      color: #f7f3e8;
+      border-color: #2a180a;
+      box-shadow: 0 4px 8px rgba(61, 36, 15, 0.25);
+    }
+
+    /* Wooden Mould Modal */
+    #wooden-mould-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      background-color: #f7f3e8;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M10,20 Q30,25 40,10 T80,30' fill='none' stroke='rgba(139,90,43,0.06)' stroke-width='1.5'/%3E%3Cpath d='M20,60 Q50,45 60,80 T90,50' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1.2'/%3E%3Cpath d='M5,80 Q25,85 30,70 T70,90' fill='none' stroke='rgba(139,90,43,0.04)' stroke-width='2'/%3E%3Cpath d='M40,30 Q60,40 70,20 T95,45' fill='none' stroke='rgba(139,90,43,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+      border: 4px solid #3d240f;
+      outline: 1px solid #c5a059;
+      outline-offset: -8px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      padding: 35px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 85vh;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      z-index: 10000;
+      color: #301e12;
+      font-family: "Georgia", serif;
+      text-align: left;
+    }
+    #wooden-mould-modal.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%);
+    }
+    #wooden-mould-modal h2 {
+      font-size: 26px;
+      color: #3d240f;
+      margin-top: 5px;
+      margin-bottom: 4px;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+    #wooden-mould-modal h3.subtitle {
+      font-size: 16px;
+      color: #8c6b3e;
+      text-align: center;
+      margin-bottom: 24px;
+      font-style: italic;
+      font-weight: normal;
+    }
+    #wooden-mould-modal p {
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      color: #4a3424;
+      text-align: justify;
+    }
+    #wooden-mould-modal .facts-section {
+      background: rgba(221, 212, 191, 0.3);
+      border-left: 4px solid #3d240f;
+      border-right: 1px solid rgba(61, 36, 15, 0.15);
+      border-top: 1px solid rgba(61, 36, 15, 0.15);
+      border-bottom: 1px solid rgba(61, 36, 15, 0.15);
+      padding: 16px 20px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+      border-radius: 0 6px 6px 0;
+    }
+    #wooden-mould-modal .facts-section h4 {
+      font-family: system-ui, sans-serif;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #3d240f;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+    #wooden-mould-modal .facts-section ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    #wooden-mould-modal .facts-section li {
+      margin-bottom: 6px;
+      color: #4a3424;
+    }
+    #wooden-mould-modal::-webkit-scrollbar {
+      width: 8px;
+    }
+    #wooden-mould-modal::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    #wooden-mould-modal::-webkit-scrollbar-thumb {
+      background: rgba(61, 36, 15, 0.3);
+      border-radius: 4px;
+    }
+    #wooden-mould-modal::-webkit-scrollbar-thumb:hover {
+      background: rgba(61, 36, 15, 0.5);
+    }
+    #wooden-mould-modal .modal-actions {
+      margin-top: 20px;
+    }
+    #wooden-mould-modal .mould-functions-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    #wooden-mould-modal .mould-function-card {
+      background: rgba(221, 212, 191, 0.35);
+      border: 1.5px solid rgba(61, 36, 15, 0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #3d240f;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      font-family: system-ui, sans-serif;
+    }
+    #wooden-mould-modal .mould-function-card:hover {
+      background: rgba(61, 36, 15, 0.08);
+      border-color: #3d240f;
+      transform: translateY(-1px);
+    }
+    #wooden-mould-modal .mould-function-card.selected {
+      background: #3d240f;
+      color: #f7f3e8;
+      border-color: #2a180a;
+      box-shadow: 0 4px 8px rgba(61, 36, 15, 0.25);
+    }
+    /* Wooden Mould Prompt */
+    #wooden-mould-prompt {
+      position: fixed;
+      bottom: 180px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(22, 15, 10, 0.85);
+      border: 1px solid rgba(255, 183, 77, 0.3);
+      color: #eae3d2;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 99;
+    }
+    #wooden-mould-prompt.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    #wooden-mould-prompt .key-cap {
+      background: linear-gradient(180deg, #ffe0b2, #ffb74d);
+      color: #120c08;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 11px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Four New Exhibit Prompts */
+    #pedestal-prompt, #drying-prompt, #printing-prompt, #diorama-prompt {
+      position: fixed;
+      bottom: 180px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: rgba(22, 15, 10, 0.85);
+      border: 1px solid rgba(255, 183, 77, 0.3);
+      color: #eae3d2;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      z-index: 99;
+    }
+    #pedestal-prompt.visible, #drying-prompt.visible, #printing-prompt.visible, #diorama-prompt.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+    #pedestal-prompt .key-cap, #drying-prompt .key-cap, #printing-prompt .key-cap, #diorama-prompt .key-cap {
+      background: linear-gradient(180deg, #ffe0b2, #ffb74d);
+      color: #120c08;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 11px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    /* Four New Exhibit Modals */
+    #pedestal-modal, #drying-modal, #printing-modal, #diorama-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      background-color: #f7f3e8;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath fill='%23e8dcc8' fill-opacity='0.3' d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z'/%3E%3C/svg%3E");
+      border: 4px solid #3d240f;
+      outline: 1px solid #c5a059;
+      outline-offset: -8px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.15);
+      border-radius: 12px;
+      padding: 35px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 85vh;
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      backdrop-filter: blur(8px);
+      transition: all 0.3s ease;
+      z-index: 10000;
+      color: #301e12;
+      font-family: "Georgia", serif;
+      text-align: left;
+    }
+    #pedestal-modal.visible, #drying-modal.visible, #printing-modal.visible, #diorama-modal.visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%);
+    }
+    #pedestal-modal h2, #drying-modal h2, #printing-modal h2, #diorama-modal h2 {
+      font-size: 1.5rem;
+      color: #3d240f;
+      margin-bottom: 4px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    #pedestal-modal .subtitle, #drying-modal .subtitle, #printing-modal .subtitle, #diorama-modal .subtitle {
+      font-size: 0.95rem;
+      color: #8c6b3e;
+      font-weight: normal;
+      margin-bottom: 16px;
+      font-style: italic;
+      border-bottom: 1px solid rgba(197, 160, 89, 0.3);
+      padding-bottom: 10px;
+    }
+    #pedestal-modal p, #drying-modal p, #printing-modal p, #diorama-modal p {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #3d240f;
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+    #pedestal-modal .facts-section, #drying-modal .facts-section, #printing-modal .facts-section, #diorama-modal .facts-section {
+      background: rgba(197, 160, 89, 0.08);
+      border-left: 3px solid #c5a059;
+      border-radius: 4px;
+      padding: 12px 16px;
+      margin: 16px 0;
+    }
+    #pedestal-modal .facts-section h4, #drying-modal .facts-section h4, #printing-modal .facts-section h4, #diorama-modal .facts-section h4 {
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      color: #8c6b3e;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    #pedestal-modal .facts-section ul, #drying-modal .facts-section ul, #printing-modal .facts-section ul, #diorama-modal .facts-section ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    #pedestal-modal .facts-section li, #drying-modal .facts-section li, #printing-modal .facts-section li, #diorama-modal .facts-section li {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #301e12;
+      margin-bottom: 4px;
+    }
+
+    /* Simulation note (diorama) */
+    #diorama-modal .simulation-note {
+      background: #f5edd6;
+      border: 1px solid #c5a059;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #5c3e21;
+    }
+    #diorama-modal .simulation-note strong {
       display: block;
-      width: 0;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      color: #8c6b3e;
+      margin-bottom: 6px;
+    }
+    #diorama-modal .simulation-note p {
+      font-size: 0.85rem !important;
+      margin-bottom: 6px !important;
+      color: #5c3e21 !important;
+    }
+
+    /* Diorama section buttons grid */
+    #diorama-modal .diorama-sections-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 16px 0;
+    }
+    #diorama-modal .diorama-section-btn {
+      background: rgba(197, 160, 89, 0.12);
+      border: 1px solid rgba(197, 160, 89, 0.3);
+      color: #3d240f;
+      padding: 10px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: "Georgia", serif;
+      text-align: left;
+    }
+    #diorama-modal .diorama-section-btn:hover {
+      background: rgba(197, 160, 89, 0.25);
+      border-color: #c5a059;
+      transform: translateY(-1px);
+    }
+    #diorama-modal .diorama-section-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Guide Head Ask Bubble (hidden — replaced by proximity menu) */
+    #guide-ask-bubble {
+      display: none !important;
     }
     
     /* Loading Screen overlay */
@@ -426,23 +1790,64 @@
     <div class="loading-subtext">Vui lòng chờ trong giây lát</div>
   </div>
 
-  <div id="info">WASD để di chuyển · Chuột để xoay camera</div>
+  <div id="info">Click để xoay camera (ESC để hiện chuột) · WASD để di chuyển</div>
   
   <!-- Cancel Follow Notice -->
   <div id="cancel-follow-notice" class="museum-ui">
     Ấn <span class="key-cap">E</span> để hủy theo hướng dẫn viên
   </div>
 
-  <!-- Guide Head Ask Bubble -->
-  <div id="guide-ask-bubble" class="museum-ui">
-    Nếu cần hãy đến hỏi tôi
+  <!-- Graphics Quality Toggle -->
+  <div id="gfx-toggle" class="museum-ui">
+    <div class="gfx-label">ĐỒ HỌA</div>
+    <div class="gfx-options">
+      <button class="gfx-btn" data-quality="low">Thấp</button>
+      <button class="gfx-btn active" data-quality="medium">Trung bình</button>
+      <button class="gfx-btn" data-quality="high">Cao</button>
+    </div>
   </div>
 
-  <!-- Floating Follow Button -->
-  <button id="follow-btn" class="museum-ui">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-    Đi theo hướng dẫn viên
-  </button>
+  <!-- Guide Proximity Menu (two-option panel) -->
+  <div id="guide-proximity-menu" class="museum-ui">
+    <div class="guide-menu-title">NGƯỜI HƯỚNG DẪN</div>
+    <div class="guide-menu-desc">Bạn muốn người hướng dẫn hỗ trợ điều gì?</div>
+    <div class="guide-menu-options">
+      <button class="guide-menu-btn" data-option="1">
+        <span class="guide-num-badge">1</span>
+        <span class="guide-btn-label">Hỏi – Đáp với hướng dẫn viên</span>
+      </button>
+      <button class="guide-menu-btn" data-option="2">
+        <span class="guide-num-badge">2</span>
+        <span class="guide-btn-label">Yêu cầu hướng dẫn viên thuyết minh</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Guide Q&A Placeholder Panel -->
+  <div id="guide-qa-panel" class="museum-ui guide-sub-panel">
+    <div class="guide-panel-title">HỎI – ĐÁP VỚI HƯỚNG DẪN VIÊN</div>
+    <div class="guide-panel-body">
+      <p>Chức năng hỏi – đáp thông minh đang được phát triển.</p>
+      <p>Trong phiên bản tiếp theo, bạn có thể đặt câu hỏi về giấy dó, làng nghề Yên Thái, quy trình sản xuất, các hiện vật và nội dung đang được trưng bày.</p>
+      <p class="guide-panel-note">Hiện tại, vui lòng khám phá các bảng thông tin hoặc chọn chức năng thuyết minh để tìm hiểu thêm.</p>
+    </div>
+    <div class="guide-panel-actions">
+      <button class="guide-sub-btn" id="guide-qa-back">Quay lại</button>
+      <button class="guide-sub-btn primary" id="guide-qa-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Guide Tour Confirmation Panel -->
+  <div id="guide-tour-panel" class="museum-ui guide-sub-panel">
+    <div class="guide-panel-title">THUYẾT MINH QUY TRÌNH LÀM GIẤY DÓ</div>
+    <div class="guide-panel-body">
+      <p>Người hướng dẫn sẽ đưa bạn đến từng khu vực để giới thiệu các công đoạn chính trong quá trình sản xuất giấy dó.</p>
+    </div>
+    <div class="guide-panel-actions">
+      <button class="guide-sub-btn" id="guide-tour-cancel">Để sau</button>
+      <button class="guide-sub-btn primary" id="guide-tour-start">Bắt đầu thuyết minh</button>
+    </div>
+  </div>
   
   <!-- Dialogue Bubble -->
   <div id="dialogue-bubble" class="museum-ui">
@@ -452,6 +1857,7 @@
       <button class="dialogue-opt-btn" id="opt-type">Đặt câu hỏi (Nhập)</button>
       <button class="dialogue-opt-btn" id="opt-voice">Hỏi bằng giọng nói</button>
       <button class="dialogue-opt-btn primary" id="opt-continue">Tiếp tục hành trình</button>
+      <button class="dialogue-opt-btn" id="opt-cancel">Hủy</button>
     </div>
   </div>
   
@@ -476,7 +1882,7 @@
     <h3>Hỏi bằng giọng nói</h3>
     <div class="mic-container">
       <button class="mic-button" id="mic-btn">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
       </button>
       <div class="mic-status" id="mic-status-text">Nhấn nút để bắt đầu ghi âm</div>
     </div>
@@ -487,6 +1893,422 @@
   
   <!-- Toast Notification -->
   <div id="toast-notification" class="museum-ui">Thông báo</div>
+
+  <!-- Plaque Prompt -->
+  <div id="plaque-prompt" class="museum-ui">
+    Ấn <span class="key-cap">Q</span> để tìm hiểu thêm
+  </div>
+
+  <!-- Plaque Modal -->
+  <div id="plaque-modal" class="museum-ui">
+    <h2>LỊCH SỬ GIẤY DÓ</h2>
+    <h3 class="subtitle">Chất liệu lưu giữ ký ức văn hóa Việt Nam</h3>
+    
+    <p>Giấy dó là một trong những chất liệu thủ công truyền thống quan trọng của Việt Nam. Giấy được làm hoàn toàn bằng phương pháp thủ công từ phần xơ bên trong vỏ cây dó và một số loài cây có đặc tính tương tự. Quá trình sản xuất đòi hỏi nhiều thời gian, sự kiên nhẫn và kỹ năng của người thợ, bao gồm các công đoạn ngâm vỏ, nấu, giã, lọc, pha bột, xeo giấy, ép và phơi khô.</p>
+    
+    <p>Trải qua nhiều thế kỷ, giấy dó được trân trọng nhờ đặc tính mềm, nhẹ, dai và có độ bền cao. Khi được bảo quản trong điều kiện phù hợp, giấy có thể tồn tại rất lâu ngay cả trong môi trường khí hậu nhiệt đới ẩm. Nhờ những đặc tính này, giấy dó từng được sử dụng rộng rãi để viết thư pháp, làm văn bản hành chính, chép kinh sách, lưu giữ tư liệu, sáng tác tranh dân gian và thực hiện các nghi lễ truyền thống.</p>
+    
+    <p>Một trong những ứng dụng nổi tiếng nhất của giấy dó là tranh dân gian Đông Hồ. Các nghệ nhân sử dụng giấy để in những hình ảnh nhiều màu sắc, phản ánh đời sống sinh hoạt, tín ngưỡng, phong tục và những giá trị truyền thống của người Việt. Giấy dó còn được dùng để chép thơ, làm sách thủ công, văn bản nghi lễ và các tác phẩm trang trí.</p>
+    
+    <p>Ngày nay, giấy dó không chỉ là một chất liệu lịch sử mà còn là biểu tượng của di sản văn hóa Việt Nam. Nhiều nghệ nhân và nghệ sĩ đương đại đang tiếp tục phục hồi, bảo tồn và sáng tạo với giấy dó trong hội họa, thiết kế, làm sách, nghệ thuật sắp đặt và các hoạt động trưng bày bảo tàng.</p>
+    
+    <p>Gìn giữ giấy dó không chỉ là bảo tồn một kỹ thuật làm giấy thủ công, mà còn là gìn giữ ký ức nghệ thuật, tri thức truyền thống và bản sắc văn hóa của người Việt.</p>
+    
+    <div class="facts-section">
+      <h4>THÔNG TIN CHI TIẾT</h4>
+      <ul>
+        <li>• <strong>Nguyên liệu:</strong> Xơ từ vỏ cây dó và một số loài cây có đặc tính tương tự</li>
+        <li>• <strong>Đặc tính chính:</strong> Nhẹ, dai, bền, thấm hút tốt và có bề mặt thủ công tự nhiên</li>
+        <li>• <strong>Công dụng truyền thống:</strong> Thư pháp, tranh dân gian, sách, kinh văn, văn bản nghi lễ và tài liệu lưu trữ</li>
+        <li>• <strong>Giá trị văn hóa:</strong> Biểu tượng của nghề thủ công, nghệ thuật và di sản truyền thống Việt Nam</li>
+      </ul>
+    </div>
+
+    <div class="modal-actions">
+      <button class="dialogue-opt-btn primary" id="plaque-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Village Picture Prompt -->
+  <div id="village-prompt" class="museum-ui">
+    Nhấn <span class="key-cap">Q</span> để tìm hiểu về làng giấy dó Yên Thái
+  </div>
+
+  <!-- Village Picture Modal (Làng giấy dó Yên Thái) -->
+  <div id="village-modal" class="museum-ui">
+    <h2>LÀNG GIẤY DÓ YÊN THÁI</h2>
+    <h3 class="subtitle">Dấu ấn một làng nghề cổ bên Hồ Tây</h3>
+    
+    <p>Làng Yên Thái thuộc vùng Kẻ Bưởi xưa, nằm bên Hồ Tây và sông Tô Lịch, ngày nay thuộc khu vực phường Bưởi, Hà Nội. Đây từng là một trong những làng làm giấy dó nổi tiếng nhất của kinh thành Thăng Long.</p>
+    
+    <p>Nghề làm giấy dó tại Yên Thái được cho là đã xuất hiện từ thời Lý – Trần và có lịch sử hơn 800 năm. Trong nhiều thế kỷ, tiếng chày giã dó vang lên ngày đêm đã trở thành âm thanh quen thuộc của vùng đất này, được lưu truyền trong câu ca:</p>
+    
+    <p style="text-align: center; font-style: italic; color: #5c3e21; margin: 12px 0;">
+      “Mịt mù khói tỏa ngàn sương,<br>
+      Nhịp chày Yên Thái, mặt gương Tây Hồ.”
+    </p>
+    
+    <p>Giấy dó Yên Thái được làm thủ công từ vỏ cây dó. Người thợ phải trải qua nhiều công đoạn như ngâm vỏ, nấu, rửa, giã thành bột, lọc, xeo giấy, ép và phơi. Quá trình này đòi hỏi sự kiên nhẫn, kinh nghiệm và đôi tay khéo léo.</p>
+    
+    <p>Thành phẩm có đặc điểm mỏng, nhẹ nhưng dai và bền. Giấy ít bị nhòe khi viết, có thể được lưu giữ trong thời gian dài nếu bảo quản tốt. Vì vậy, giấy dó từng được sử dụng để chép kinh sách, in sách cổ, viết văn thư, làm sắc phong, ghi chép tài liệu quan trọng và sáng tác thư pháp.</p>
+    
+    <p>Từ thời Lê đến thời Nguyễn, giấy dó Yên Thái còn được dùng trong nhiều loại hình nghệ thuật và tín ngưỡng. Chất liệu này gắn liền với tranh dân gian Đông Hồ, tranh Hàng Trống và nhiều di sản chữ viết của người Việt.</p>
+    
+    <p>Khi giấy sản xuất công nghiệp trở nên phổ biến, nghề làm giấy thủ công tại Yên Thái dần suy giảm. Đến cuối thế kỷ XX, hoạt động sản xuất gần như không còn được duy trì tại địa phương. Tiếng chày giã dó từng vang khắp làng cũng dần lùi vào ký ức.</p>
+    
+    <p>Ngày nay, nghề giấy dó Yên Thái đang được giới thiệu và phục dựng thông qua các không gian văn hóa, hoạt động trải nghiệm và chương trình giáo dục di sản. Những nỗ lực này giúp công chúng hiểu rõ hơn về kỹ thuật làm giấy truyền thống và gìn giữ ký ức của một làng nghề từng nổi tiếng khắp kinh thành Thăng Long.</p>
+    
+    <div class="facts-section">
+      <h4>THÔNG TIN NHANH</h4>
+      <ul>
+        <li>• <strong>Địa điểm:</strong> Vùng Kẻ Bưởi xưa, khu vực Hồ Tây, Hà Nội</li>
+        <li>• <strong>Tuổi đời:</strong> Hơn 800 năm</li>
+        <li>• <strong>Nguyên liệu chính:</strong> Vỏ cây dó</li>
+        <li>• <strong>Đặc tính:</strong> Mỏng, nhẹ, dai và bền</li>
+        <li>• <strong>Công dụng truyền thống:</strong> Kinh sách, sắc phong, văn thư, thư pháp và tranh dân gian</li>
+        <li>• <strong>Giá trị:</strong> Di sản thủ công và ký ức văn hóa của Thăng Long – Hà Nội</li>
+      </ul>
+    </div>
+
+    <div class="modal-actions">
+      <button class="dialogue-opt-btn primary" id="village-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Product Prompt -->
+  <div id="product-prompt" class="museum-ui">
+    Ấn <span class="key-cap">Q</span> để xem các sản phẩm từ giấy dó
+  </div>
+
+  <!-- Product Modal -->
+  <div id="product-modal" class="museum-ui">
+    <div id="product-top-view">
+      <h2>SẢN PHẨM TỪ GIẤY DÓ</h2>
+      <h3 class="subtitle">Từ chất liệu truyền thống đến những sản phẩm trong đời sống hiện đại</h3>
+      <p>Giấy dó không chỉ được sử dụng để viết, vẽ và lưu giữ tài liệu mà còn có thể được tạo thành nhiều sản phẩm thủ công, trang trí và ứng dụng trong đời sống. Nhờ đặc tính nhẹ, dai, bền, thấm hút tốt và có bề mặt xơ tự nhiên, giấy dó mang đến vẻ đẹp mộc mạc, tinh tế và khác biệt cho mỗi sản phẩm.</p>
+      <p>Từ những tờ giấy được xeo hoàn toàn bằng tay, nghệ nhân có thể cắt, gấp, dán, khâu, in, vẽ, bồi nhiều lớp hoặc kết hợp với gỗ, tre, vải và các vật liệu tự nhiên khác để tạo thành những sản phẩm hoàn chỉnh.</p>
+      <div class="products-grid"></div>
+      <div class="facts-section">
+        <h4>THÔNG TIN NHANH</h4>
+        <ul>
+          <li>• <strong>Đặc tính nổi bật:</strong> Nhẹ, dai, bền, thấm hút tốt và có bề mặt xơ tự nhiên</li>
+          <li>• <strong>Kỹ thuật tạo hình:</strong> Cắt, gấp, dán, khâu, in, vẽ và bồi nhiều lớp</li>
+          <li>• <strong>Sản phẩm phổ biến:</strong> Sách, sổ, tranh, mặt nạ, thiệp, quạt, đèn, hộp và quà lưu niệm</li>
+          <li>• <strong>Vật liệu kết hợp:</strong> Tre, gỗ, vải, sợi tự nhiên và màu thủ công</li>
+          <li>• <strong>Giá trị:</strong> Kết nối nghề thủ công truyền thống với thiết kế và đời sống hiện đại</li>
+        </ul>
+      </div>
+      <p style="margin-bottom: 0;">Mỗi sản phẩm từ giấy dó đều lưu giữ dấu vết của quá trình làm giấy thủ công và bàn tay của người nghệ nhân. Việc sử dụng giấy dó trong các sản phẩm mới không chỉ tạo ra giá trị thẩm mỹ mà còn góp phần duy trì, quảng bá và phát triển một chất liệu văn hóa truyền thống của Việt Nam.</p>
+    </div>
+    <div id="product-detail-view" style="display: none; padding: 15px 0;">
+      <h4 id="product-detail-title" style="color: #8c6b3e; font-size: 1.25rem; margin-bottom: 12px; text-transform: uppercase; border-left: 3px solid #8c6b3e; padding-left: 10px;"></h4>
+      <p id="product-detail-body" style="font-size: 0.95rem; line-height: 1.8; color: #3d240f; margin-bottom: 20px; text-align: justify;"></p>
+    </div>
+    <div class="modal-actions">
+      <button class="dialogue-opt-btn" id="product-back" style="display: none; margin-right: 10px;">Quay lại</button>
+      <button class="dialogue-opt-btn primary" id="product-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Mortar Prompt -->
+  <div id="mortar-prompt" class="museum-ui">
+    Ấn <span class="key-cap">Q</span> để tìm hiểu về vỏ cây dó
+  </div>
+
+  <!-- Mortar Modal -->
+  <div id="mortar-modal" class="museum-ui">
+    <div id="mortar-main-view">
+      <h2>VỎ CÂY DÓ – NGUYÊN LIỆU LÀM GIẤY</h2>
+      <h3 class="subtitle">Điểm khởi đầu của một tờ giấy dó thủ công</h3>
+      <p>Vỏ cây dó là một trong những nguyên liệu quan trọng được sử dụng để tạo nên giấy dó truyền thống. Phần có giá trị nhất nằm ở lớp xơ bên trong vỏ cây. Những sợi xơ này có độ dài và độ dai tự nhiên, góp phần tạo nên đặc tính nhẹ, bền và khó rách của giấy dó.</p>
+      <p>Sau khi được thu hoạch, vỏ cây cần trải qua nhiều công đoạn xử lý trước khi có thể trở thành bột giấy. Người thợ loại bỏ phần vỏ ngoài, làm sạch phần xơ, sau đó ngâm và nấu để nguyên liệu mềm hơn. Các dải vỏ đã xử lý tiếp tục được rửa sạch và giã kỹ cho đến khi các sợi xơ tách ra.</p>
+      <p>Phần xơ sau khi giã được hòa với nước để tạo thành hỗn hợp bột giấy. Người thợ sử dụng mành xeo để vớt và phân bố các sợi xơ thành một lớp mỏng, sau đó ép nước và phơi khô để tạo thành tờ giấy hoàn chỉnh.</p>
+      <p>Chất lượng của vỏ cây, nguồn nước và kỹ thuật xử lý đều ảnh hưởng trực tiếp đến màu sắc, bề mặt, độ dai và tuổi thọ của giấy. Vì vậy, việc lựa chọn và chuẩn bị nguyên liệu là một bước quan trọng trong nghề làm giấy dó.</p>
+      <div class="facts-section">
+        <h4>HIỆN VẬT ĐANG TRƯNG BÀY</h4>
+        <p style="margin-bottom: 0;">Hiện vật mô phỏng một dụng cụ chứa các dải vỏ cây dó trước hoặc trong quá trình xử lý. Những dải vỏ có màu nâu tự nhiên, dạng dài và giàu xơ. Đây là hình ảnh giúp người xem hình dung nguyên liệu ban đầu trước khi trải qua các bước ngâm, nấu, làm sạch và giã thành bột giấy.</p>
+      </div>
+      <div class="facts-section">
+        <h4>THÔNG TIN NHANH</h4>
+        <ul>
+          <li>• <strong>Nguyên liệu:</strong> Phần xơ bên trong vỏ cây dó</li>
+          <li>• <strong>Đặc điểm:</strong> Sợi dài, dai và có nguồn gốc tự nhiên</li>
+          <li>• <strong>Các bước xử lý chính:</strong> Làm sạch, ngâm, nấu, rửa và giã</li>
+          <li>• <strong>Vai trò:</strong> Tạo phần xơ liên kết trong tờ giấy</li>
+          <li>• <strong>Ảnh hưởng đến thành phẩm:</strong> Độ dai, độ bền, màu sắc và bề mặt giấy</li>
+        </ul>
+      </div>
+      <div class="process-steps">
+        <p style="font-weight: bold; color: #3d240f; margin-bottom: 8px;">Quy trình xử lý vỏ cây dó:</p>
+        <p>1. Thu hoạch và bóc vỏ</p>
+        <p>2. Loại bỏ phần vỏ ngoài</p>
+        <p>3. Ngâm và nấu cho mềm</p>
+        <p>4. Rửa sạch và giã thành xơ</p>
+        <p style="margin-bottom: 0;">5. Hòa bột để chuẩn bị xeo giấy</p>
+      </div>
+      <p style="margin-top: 16px; font-style: italic; color: #5c3e21;">Từ những dải vỏ thô ban đầu, người thợ phải dành nhiều thời gian và công sức để tạo thành hỗn hợp bột giấy đủ mịn và sạch.</p>
+    </div>
+    <div class="modal-actions">
+      <button class="dialogue-opt-btn primary" id="mortar-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Paper Prompt -->
+  <div id="paper-prompt" class="museum-ui">
+    Ấn <span class="key-cap">Q</span> để tìm hiểu về giấy dó thành phẩm
+  </div>
+
+  <!-- Paper Modal -->
+  <div id="paper-modal" class="museum-ui">
+    <div id="paper-main-view">
+      <h2>GIẤY DÓ THÀNH PHẨM</h2>
+      <h3 class="subtitle">Mỏng nhẹ, bền chắc và giàu vẻ đẹp thủ công</h3>
+      <p>Sau khi trải qua các công đoạn xử lý nguyên liệu, giã xơ, pha bột, xeo, ép và phơi, giấy dó thành phẩm có bề mặt nhẹ, mềm và mang những đường vân xơ tự nhiên. Do được tạo hoàn toàn bằng phương pháp thủ công, mỗi tờ giấy có sắc độ, kết cấu và dấu vết riêng, không hoàn toàn giống nhau.</p>
+      <p>Ưu điểm nổi bật của giấy dó là trọng lượng nhẹ nhưng có độ dai và độ bền cao. Các sợi xơ dài liên kết với nhau giúp giấy khó bị rách hơn khi gấp, cuộn hoặc sử dụng đúng cách. Khi được bảo quản trong điều kiện phù hợp, giấy có thể tồn tại lâu dài và thích hợp cho việc lưu giữ văn bản, sách, tranh và các tác phẩm nghệ thuật.</p>
+      <p>Bề mặt giấy có khả năng thấm hút tốt, phù hợp với mực tàu, màu nước, màu tự nhiên, thư pháp và nhiều kỹ thuật in thủ công. Mực và màu có thể thấm vào lớp xơ, tạo nên sắc độ mềm mại, tự nhiên và giàu chiều sâu.</p>
+      <p>Giấy dó còn có thể được cắt, gấp, khâu, bồi nhiều lớp hoặc kết hợp với tre, gỗ, vải và các vật liệu tự nhiên khác. Nhờ đó, chất liệu này được sử dụng trong sách thủ công, sổ tay, tranh, thiệp, mặt nạ, quạt, đèn trang trí, hộp quà và nghệ thuật đương đại.</p>
+      <div class="facts-section">
+        <h4>ƯU ĐIỂM NỔI BẬT</h4>
+        <div class="advantages-grid"></div>
+      </div>
+      <div class="facts-section">
+        <h4>THÔNG TIN NHANH</h4>
+        <ul>
+          <li>• <strong>Trạng thái:</strong> Giấy dó đã hoàn thành các bước xeo, ép và phơi</li>
+          <li>• <strong>Đặc tính chính:</strong> Nhẹ, dai, bền và thấm hút tốt</li>
+          <li>• <strong>Bề mặt:</strong> Có vân xơ tự nhiên và dấu vết thủ công</li>
+          <li>• <strong>Kỹ thuật phù hợp:</strong> Viết, vẽ, in, gấp, khâu, dán và bồi nhiều lớp</li>
+          <li>• <strong>Ứng dụng:</strong> Sách, tranh, thư pháp, thiệp, quạt, mặt nạ, đèn và đồ trang trí</li>
+          <li>• <strong>Điều kiện bảo quản:</strong> Nơi khô ráo, sạch, tránh ánh nắng trực tiếp và độ ẩm quá cao</li>
+        </ul>
+      </div>
+      <div class="facts-section">
+        <h4>ĐIỀU GÌ LÀM GIẤY DÓ KHÁC BIỆT?</h4>
+        <p style="margin-bottom: 0;">Khác với nhiều loại giấy công nghiệp có bề mặt đồng đều, giấy dó thể hiện rõ dấu vết của quá trình làm thủ công. Sự khác nhau về vân xơ, độ dày và sắc độ không được xem là khuyết điểm, mà chính là đặc trưng tạo nên giá trị thẩm mỹ của từng tờ giấy.</p>
+      </div>
+      <p style="margin-top: 16px;">Giá trị của giấy dó nằm trong sự kết hợp giữa độ bền, khả năng ứng dụng và vẻ đẹp tự nhiên. Từ một chất liệu truyền thống, giấy dó vẫn có thể tiếp tục xuất hiện trong nghệ thuật, thiết kế và đời sống hiện đại.</p>
+    </div>
+    <div id="paper-detail-view" style="display: none; padding: 15px 0;">
+      <h4 id="paper-detail-title" style="color: #8c6b3e; font-size: 1.1rem; margin-bottom: 12px; text-transform: uppercase; border-left: 3px solid #8c6b3e; padding-left: 10px;"></h4>
+      <p id="paper-detail-body" style="font-size: 0.95rem; line-height: 1.8; color: #3d240f; margin-bottom: 20px; text-align: justify;"></p>
+    </div>
+    <div class="modal-actions">
+      <button class="dialogue-opt-btn" id="paper-back" style="display: none; margin-right: 10px;">Quay lại</button>
+      <button class="dialogue-opt-btn primary" id="paper-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Wooden Mould Prompt -->
+  <div id="wooden-mould-prompt" class="museum-ui">
+    Ấn <span class="key-cap">Q</span> để tìm hiểu về khung xeo giấy dó
+  </div>
+
+  <!-- Wooden Mould Modal -->
+  <div id="wooden-mould-modal" class="museum-ui">
+    <div id="wooden-mould-main-view">
+      <h2>KHUNG XEO VÀ MÀNH XEO GIẤY DÓ</h2>
+      <h3 class="subtitle">Dụng cụ định hình nên từng tờ giấy thủ công</h3>
+      <p>Khung xeo là một trong những dụng cụ quan trọng nhất trong quá trình làm giấy dó. Dụng cụ này thường gồm một khung bằng gỗ hoặc tre và một lớp mành xeo được tạo từ những nan tre nhỏ, sợi đan hoặc vật liệu có khả năng giữ lại xơ giấy nhưng vẫn cho nước thoát qua.</p>
+      <p>Trong công đoạn xeo giấy, người thợ nhúng khung vào bể chứa hỗn hợp nước và bột xơ dó. Sau đó, khung được nâng lên và chao nhẹ theo nhiều hướng để các sợi xơ phân bố đều trên bề mặt mành.</p>
+      <p>Khi nước chảy qua các khe của mành, một lớp xơ mỏng còn lại trên bề mặt. Lớp xơ này chính là hình dạng ban đầu của tờ giấy dó. Người thợ tiếp tục chuyển lớp giấy ướt sang chồng giấy để ép nước và phơi khô.</p>
+      <p>Độ đều của tờ giấy phụ thuộc rất nhiều vào kỹ năng điều khiển khung. Nếu thao tác không cân bằng, giấy có thể bị chỗ dày, chỗ mỏng, xuất hiện lỗ hoặc mép không đều. Vì vậy, công đoạn xeo giấy đòi hỏi sự tập trung, kinh nghiệm và đôi tay khéo léo của người thợ.</p>
+      <div class="facts-section">
+        <h4>HIỆN VẬT ĐANG TRƯNG BÀY</h4>
+        <p style="margin-bottom: 0;">Hiện vật mô phỏng bộ khung và mành xeo được sử dụng để tạo hình tờ giấy dó. Các thanh gỗ hoặc tre tạo nên phần khung chắc chắn, trong khi phần nan mảnh bên trong giúp giữ lại xơ giấy và để nước thoát xuống. Dù có cấu tạo tương đối đơn giản, đây là dụng cụ quyết định trực tiếp đến kích thước, độ dày, độ đều và bề mặt của tờ giấy thành phẩm.</p>
+      </div>
+      <div class="facts-section">
+        <h4>CÔNG DỤNG CHÍNH</h4>
+        <div class="mould-functions-grid"></div>
+      </div>
+      <div class="facts-section">
+        <h4>CÁCH SỬ DỤNG</h4>
+        <p>1. Hòa bột xơ dó với nước trong bể xeo</p>
+        <p>2. Nhúng khung và mành xeo vào hỗn hợp</p>
+        <p>3. Nâng khung lên và chao nhẹ để xơ phân bố đều</p>
+        <p>4. Để nước thoát qua mành</p>
+        <p style="margin-bottom: 0;">5. Chuyển lớp giấy ướt sang chồng giấy để ép và phơi</p>
+      </div>
+      <p style="margin-top: 4px; font-style: italic; color: #5c3e21;">Mỗi lần nhúng và chao khung có thể tạo nên một lớp giấy. Độ dày của giấy phụ thuộc vào lượng bột, số lần xeo và kỹ thuật của người thợ.</p>
+      <div class="facts-section">
+        <h4>THÔNG TIN NHANH</h4>
+        <ul>
+          <li>• <strong>Tên dụng cụ:</strong> Khung xeo và mành xeo</li>
+          <li>• <strong>Chất liệu phổ biến:</strong> Gỗ, tre, trúc và sợi đan</li>
+          <li>• <strong>Công đoạn sử dụng:</strong> Xeo giấy</li>
+          <li>• <strong>Vai trò:</strong> Giữ xơ, thoát nước và định hình tờ giấy</li>
+          <li>• <strong>Yêu cầu kỹ thuật:</strong> Chao đều, giữ thăng bằng và kiểm soát lượng bột</li>
+          <li>• <strong>Ảnh hưởng đến thành phẩm:</strong> Kích thước, độ dày, độ đều và bề mặt giấy</li>
+        </ul>
+      </div>
+      <div class="facts-section">
+        <h4>VÌ SAO DỤNG CỤ NÀY QUAN TRỌNG?</h4>
+        <p style="margin-bottom: 0;">Khung xeo không chỉ là một vật dụng để vớt bột giấy. Đây là công cụ giúp người thợ kiểm soát hình dạng và chất lượng của từng tờ giấy. Hai người cùng sử dụng một loại khung nhưng có kỹ thuật khác nhau vẫn có thể tạo ra những tờ giấy có độ đều và bề mặt khác nhau. Vì vậy, giá trị của giấy dó không chỉ nằm ở nguyên liệu mà còn nằm ở kinh nghiệm sử dụng dụng cụ của người thợ.</p>
+      </div>
+    </div>
+    <div id="wooden-mould-detail-view" style="display: none; padding: 15px 0;">
+      <h4 id="wooden-mould-detail-title" style="color: #8c6b3e; font-size: 1.1rem; margin-bottom: 12px; text-transform: uppercase; border-left: 3px solid #8c6b3e; padding-left: 10px;"></h4>
+      <p id="wooden-mould-detail-body" style="font-size: 0.95rem; line-height: 1.8; color: #3d240f; margin-bottom: 20px; text-align: justify;"></p>
+    </div>
+    <div class="modal-actions">
+      <button class="dialogue-opt-btn" id="wooden-mould-back" style="display: none; margin-right: 10px;">Quay lại</button>
+      <button class="dialogue-opt-btn primary" id="wooden-mould-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Historical Paper Pedestal Prompt -->
+  <div id="pedestal-prompt" class="museum-ui">
+    Ấn <span class="key-cap">Q</span> để tìm hiểu về hiện vật giấy cổ
+  </div>
+
+  <!-- Historical Paper Pedestal Modal -->
+  <div id="pedestal-modal" class="museum-ui">
+    <h2>HIỆN VẬT GIẤY DÓ TRUYỀN THỐNG</h2>
+    <h3 class="subtitle">Dấu tích văn hóa trên chất liệu thủ công</h3>
+    <p>Trong lịch sử, giấy dó từng được sử dụng để chép sách, viết văn bản, lưu giữ tư liệu, sáng tác thư pháp và tạo nên nhiều hiện vật có giá trị văn hóa.</p>
+    <p>Nhờ đặc tính nhẹ, dai và có độ bền cao khi được bảo quản phù hợp, giấy dó trở thành chất liệu quan trọng trong việc lưu giữ tri thức và ký ức qua nhiều thế hệ.</p>
+    <p>Hiện vật này là mô hình phục dựng, giúp người xem hình dung cách giấy dó từng xuất hiện trong sách cổ, văn bản viết tay và các tài liệu truyền thống.</p>
+    <div class="facts-section">
+      <h4>THÔNG TIN NHANH</h4>
+      <ul>
+        <li>• <strong>Loại hiện vật:</strong> Mô hình phục dựng tư liệu giấy cổ</li>
+        <li>• <strong>Chất liệu:</strong> Giấy dó, mực tàu, gỗ</li>
+        <li>• <strong>Công dụng lịch sử:</strong> Chép sách, lưu trữ văn bản, thư pháp</li>
+        <li>• <strong>Đặc tính nổi bật:</strong> Nhẹ, dai, bền và thấm mực tốt</li>
+        <li>• <strong>Bảo quản:</strong> Nơi khô ráo, tránh ánh nắng trực tiếp</li>
+      </ul>
+    </div>
+    <div class="modal-actions">
+      <button class="dialogue-opt-btn primary" id="pedestal-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Drying Rack Prompt -->
+  <div id="drying-prompt" class="museum-ui">
+    Ấn <span class="key-cap">Q</span> để tìm hiểu về phơi giấy dó
+  </div>
+
+  <!-- Drying Rack Modal -->
+  <div id="drying-modal" class="museum-ui">
+    <h2>PHƠI VÀ LÀM KHÔ GIẤY DÓ</h2>
+    <h3 class="subtitle">Công đoạn hoàn thiện sau khi xeo và ép</h3>
+    <p>Sau khi được xeo và ép bớt nước, những tờ giấy còn ướt phải được tách và làm khô cẩn thận.</p>
+    <p>Trong quá trình này, người thợ cần thao tác nhẹ nhàng để giấy không bị rách, nhăn hoặc biến dạng. Điều kiện phơi và cách đặt giấy có thể ảnh hưởng đến độ phẳng, màu sắc và bề mặt của thành phẩm.</p>
+    <p>Khi đã khô hoàn toàn, giấy mới có thể được phân loại, cắt, viết, vẽ, in hoặc sử dụng để làm các sản phẩm thủ công.</p>
+    <div class="facts-section">
+      <h4>THÔNG TIN NHANH</h4>
+      <ul>
+        <li>• <strong>Công đoạn:</strong> Phơi và làm khô giấy</li>
+        <li>• <strong>Dụng cụ:</strong> Giàn phơi tre hoặc gỗ</li>
+        <li>• <strong>Yêu cầu kỹ thuật:</strong> Tách giấy nhẹ nhàng, tránh rách và nhăn</li>
+        <li>• <strong>Yếu tố ảnh hưởng:</strong> Độ ẩm, nhiệt độ, ánh sáng và cách đặt giấy</li>
+        <li>• <strong>Kết quả:</strong> Giấy khô hoàn toàn, sẵn sàng cho các công đoạn tiếp theo</li>
+      </ul>
+    </div>
+    <div class="modal-actions">
+      <button class="dialogue-opt-btn primary" id="drying-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Printing Display Prompt -->
+  <div id="printing-prompt" class="museum-ui">
+    Ấn <span class="key-cap">Q</span> để tìm hiểu về in tranh trên giấy dó
+  </div>
+
+  <!-- Printing Display Modal -->
+  <div id="printing-modal" class="museum-ui">
+    <h2>IN TRANH TRÊN GIẤY DÓ</h2>
+    <h3 class="subtitle">Kỹ thuật in ván khắc thủ công</h3>
+    <p>Giấy dó là chất liệu phù hợp với nhiều kỹ thuật in thủ công nhờ khả năng thấm mực và bề mặt xơ tự nhiên.</p>
+    <p>Trong kỹ thuật in ván khắc, hình ảnh được chạm trên bề mặt gỗ. Mực hoặc màu được phủ lên phần nổi của ván, sau đó được ép lên giấy để tạo thành hình in.</p>
+    <p>Mỗi lớp màu có thể sử dụng một bản khắc riêng. Quá trình căn chỉnh, phủ màu và ép giấy đòi hỏi sự chính xác cùng kinh nghiệm của người thợ.</p>
+    <p>Bề mặt giấy dó giúp màu sắc có độ mềm, tự nhiên và mang dấu ấn thủ công riêng.</p>
+    <div class="facts-section">
+      <h4>THÔNG TIN NHANH</h4>
+      <ul>
+        <li>• <strong>Tên kỹ thuật:</strong> In ván khắc thủ công</li>
+        <li>• <strong>Dụng cụ:</strong> Ván khắc, màu in, dụng cụ ép hoặc miết giấy</li>
+        <li>• <strong>Vai trò của giấy dó:</strong> Nhận mực, giữ màu và tạo bề mặt tự nhiên</li>
+        <li>• <strong>Ứng dụng:</strong> Tranh dân gian, minh họa, thiệp, sách và sản phẩm trang trí</li>
+      </ul>
+    </div>
+    <div class="modal-actions">
+      <button class="dialogue-opt-btn primary" id="printing-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Village Diorama Prompt -->
+  <div id="diorama-prompt" class="museum-ui">
+    Ấn <span class="key-cap">Q</span> để khám phá làng giấy dó Yên Thái
+  </div>
+
+  <!-- Village Diorama Modal -->
+  <div id="diorama-modal" class="museum-ui">
+    <div id="diorama-main-view">
+      <h2>LÀNG GIẤY DÓ YÊN THÁI</h2>
+      <h3 class="subtitle">Không gian làng nghề bên vùng Kẻ Bưởi xưa</h3>
+      <p>Yên Thái thuộc vùng Kẻ Bưởi xưa, gần Hồ Tây, Hà Nội. Nơi đây từng được biết đến như một khu vực làm giấy thủ công nổi tiếng của kinh thành Thăng Long.</p>
+      <p>Nghề làm giấy không chỉ diễn ra trong một căn nhà riêng biệt mà được phân chia qua nhiều khu vực của làng. Vỏ cây được tập kết và sơ chế tại sân; nguyên liệu được ngâm, nấu, rửa và giã tại các khu làm việc; bột giấy được đưa tới bể xeo; những tờ giấy ướt tiếp tục được ép và phơi tại các khoảng sân thoáng.</p>
+      <p>Mỗi công đoạn đòi hỏi kinh nghiệm, sức lao động và sự phối hợp giữa nhiều thành viên trong cộng đồng. Vì vậy, nghề làm giấy từng góp phần hình thành nhịp sống, không gian lao động và ký ức văn hóa riêng của làng Yên Thái.</p>
+
+      <div class="simulation-note">
+        <strong>LƯU Ý VỀ MÔ HÌNH</strong>
+        <p>Đây là mô hình phục dựng mang tính minh họa, được xây dựng nhằm giúp người xem hình dung không gian và các hoạt động cơ bản của làng nghề giấy dó Yên Thái.</p>
+        <p>Cách bố trí nhà cửa, khu sản xuất, cảnh quan, nhân vật và dụng cụ trong mô hình đã được giản lược và sắp xếp lại để phù hợp với mục đích trưng bày. Mô hình không phải là bản tái hiện chính xác tuyệt đối về quy mô, kiến trúc hoặc vị trí lịch sử của làng Yên Thái trong một thời điểm cụ thể.</p>
+      </div>
+
+      <div class="diorama-sections-grid">
+        <button class="diorama-section-btn" data-section="0">A – Không gian làng nghề</button>
+        <button class="diorama-section-btn" data-section="1">B – Nguồn nước</button>
+        <button class="diorama-section-btn" data-section="2">C – Nhịp chày giã dó</button>
+        <button class="diorama-section-btn" data-section="3">D – Xeo giấy</button>
+        <button class="diorama-section-btn" data-section="4">E – Ép và phơi giấy</button>
+        <button class="diorama-section-btn" data-section="5">F – Đời sống cộng đồng</button>
+      </div>
+
+      <div class="facts-section">
+        <h4>CHÚ GIẢI MÔ HÌNH</h4>
+        <ul>
+          <li>• Màu nâu sẫm: Khu nhà và xưởng thủ công</li>
+          <li>• Màu xanh lam nhạt: Nguồn nước mô phỏng</li>
+          <li>• Màu vàng nâu: Khu xử lý nguyên liệu</li>
+          <li>• Màu ngà: Giấy dó đang được xeo hoặc phơi</li>
+          <li>• Biểu tượng người thợ: Hoạt động sản xuất được minh họa</li>
+          <li>• Số thứ tự: Trình tự cơ bản của các công đoạn</li>
+        </ul>
+      </div>
+
+      <div class="facts-section">
+        <h4>THÔNG TIN NHANH</h4>
+        <ul>
+          <li>• <strong>Địa điểm gợi nhắc:</strong> Vùng Kẻ Bưởi xưa, khu vực Hồ Tây, Hà Nội</li>
+          <li>• <strong>Nghề truyền thống:</strong> Làm giấy dó thủ công</li>
+          <li>• <strong>Nguyên liệu chính:</strong> Xơ từ vỏ cây dó</li>
+          <li>• <strong>Không gian sản xuất:</strong> Sân sơ chế, khu giã xơ, bể xeo, khu ép và sân phơi</li>
+          <li>• <strong>Dụng cụ tiêu biểu:</strong> Cối, chày, bể xeo, khung xeo, mành xeo và bàn ép</li>
+          <li>• <strong>Giá trị:</strong> Ký ức làng nghề, tri thức thủ công và di sản văn hóa của Thăng Long – Hà Nội</li>
+        </ul>
+      </div>
+    </div>
+    <div id="diorama-detail-view" style="display: none; padding: 15px 0;">
+      <h4 id="diorama-detail-title" style="color: #8c6b3e; font-size: 1.1rem; margin-bottom: 12px; text-transform: uppercase; border-left: 3px solid #8c6b3e; padding-left: 10px;"></h4>
+      <p id="diorama-detail-body" style="font-size: 0.95rem; line-height: 1.8; color: #3d240f; margin-bottom: 20px; text-align: justify;"></p>
+    </div>
+    <div class="modal-actions">
+      <button class="dialogue-opt-btn" id="diorama-back" style="display: none; margin-right: 10px;">Quay lại</button>
+      <button class="dialogue-opt-btn primary" id="diorama-close">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Graphics Warning Modal -->
+  <div id="gfx-warning-modal">
+    <div class="gfx-warning-icon">⚠️</div>
+    <h3>CHẾ ĐỘ ĐỒ HỌA CAO</h3>
+    <p>Chế độ đồ họa Cao yêu cầu máy tính có cấu hình tương thích để đảm bảo trải nghiệm mượt mà. Nếu bạn gặp tình trạng giật, lag, vui lòng chuyển về Trung bình hoặc Thấp.</p>
+    <div class="gfx-warning-actions">
+      <button id="gfx-warning-cancel">Hủy</button>
+      <button class="primary" id="gfx-warning-confirm">Tiếp tục</button>
+    </div>
+  </div>
 
   <!-- Center Reticle Dot -->
   <div id="reticle-dot"></div>

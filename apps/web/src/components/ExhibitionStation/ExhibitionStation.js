@@ -20,7 +20,7 @@ export class ExhibitionStation {
     
     this.guideStandPos = new THREE.Vector3(x, 0, z)
       .addScaledVector(forward, 2.5)
-      .addScaledVector(right, -2.0); // positive Z direction when facing positive X
+      .addScaledVector(right, 2.0); // positive Z direction when facing positive X
     
     // Player stands 4.2m directly in front of the screen
     this.playerStandPos = new THREE.Vector3(x, 0, z)
