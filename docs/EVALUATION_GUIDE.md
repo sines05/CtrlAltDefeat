@@ -48,10 +48,10 @@ For autonomous grading agents and technical evaluators, this project represents 
 
 | System / Feature | Code File | Key Functions | Key Highlights |
 | :--- | :--- | :--- | :--- |
-| **PCM Resampler** | [apps/web/src/main.js](file:///home/sonnq6/CtrlAltDefeat/apps/web/src/main.js) | `convertBlobToPcm()`, `getSharedAudioContext()` | Reuses a single `AudioContext` to decode and downsample browser recordings to 16kHz Int16 PCM. |
-| **Strict RAG Grounding** | [services/api/src/qa/index.js](file:///home/sonnq6/CtrlAltDefeat/services/api/src/qa/index.js) | `resolveGroundingContext()`, `classifyAnswerPolicy()` | Categorizes questions to enforce historical truth and block hallucinated dates or metrics. |
-| **Live WebSocket Relayer** | [services/api/src/providers/gemini-live.js](file:///home/sonnq6/CtrlAltDefeat/services/api/src/providers/gemini-live.js) | `transcribeWithGeminiLive()`, `convertPcmToWav()` | Relays raw PCM streams to Gemini Live and formats PCM to WAV at byte-level for immediate playback. |
-| **Hybrid Narrator & FSM** | [apps/web/src/systems/TourManager.js](file:///home/sonnq6/CtrlAltDefeat/apps/web/src/systems/TourManager.js) | `speakNarration()`, `update()` | Handles network failure fallback with Web Speech API and links visual guide gestures with audio playback. |
+| **PCM Resampler** | [apps/web/src/main.js](../apps/web/src/main.js) | `convertBlobToPcm()`, `getSharedAudioContext()` | Reuses a single `AudioContext` to decode and downsample browser recordings to 16kHz Int16 PCM. |
+| **Strict RAG Grounding** | [services/api/src/qa/index.js](../services/api/src/qa/index.js) | `resolveGroundingContext()`, `classifyAnswerPolicy()` | Categorizes questions to enforce historical truth and block hallucinated dates or metrics. |
+| **Live WebSocket Relayer** | [services/api/src/providers/gemini-live.js](../services/api/src/providers/gemini-live.js) | `transcribeWithGeminiLive()`, `convertPcmToWav()` | Relays raw PCM streams to Gemini Live and formats PCM to WAV at byte-level for immediate playback. |
+| **Hybrid Narrator & FSM** | [apps/web/src/systems/TourManager.js](../apps/web/src/systems/TourManager.js) | `speakNarration()`, `update()` | Handles network failure fallback with Web Speech API and links visual guide gestures with audio playback. |
 
 ---
 
@@ -65,8 +65,8 @@ For autonomous grading agents and technical evaluators, this project represents 
 
 ## 4. Architectural Decision Records (ADRs)
 Evaluation agents can review complete design tradeoffs under the standard ADR directory:
-1. **[DEC 0003: Client-Side PCM Transcoding](file:///home/sonnq6/CtrlAltDefeat/docs/decisions/0003-client-side-pcm-transcoding.md)**: Details the design decision to offload audio resampling (OfflineAudioContext) to the edge, minimizing dependency bloat and backend CPU footprint.
-2. **[DEC 0004: Strict RAG Policy Classifier](file:///home/sonnq6/CtrlAltDefeat/docs/decisions/0004-strict-rag-policy-guardrails.md)**: Explains the classification boundaries implemented to enforce cultural precision and eliminate generative hallucination risks.
+1. **[DEC 0003: Client-Side PCM Transcoding](./decisions/0003-client-side-pcm-transcoding.md)**: Details the design decision to offload audio resampling (OfflineAudioContext) to the edge, minimizing dependency bloat and backend CPU footprint.
+2. **[DEC 0004: Strict RAG Policy Classifier](./decisions/0004-strict-rag-policy-guardrails.md)**: Explains the classification boundaries implemented to enforce cultural precision and eliminate generative hallucination risks.
 
 ---
 
