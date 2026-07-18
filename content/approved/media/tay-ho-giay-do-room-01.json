@@ -1,0 +1,32 @@
+{
+  "sceneId": "tay-ho-giay-do-room-01",
+  "fbx": [
+    "/guide_girl/huongdanvien.fbx",
+    "/guide_girl/Idle.fbx",
+    "/guide_girl/Walking.fbx",
+    "/guide_girl/Talking.fbx",
+    "/asset/product_showing.fbx",
+    "/asset/showing_tree_01.fbx",
+    "/asset/village_picture.fbx",
+    "/asset/mortar.fbx",
+    "/asset/paper_showing.fbx",
+    "/asset/woodenmould.fbx",
+    "/asset/celling_fan.fbx"
+  ],
+  "glb": [
+    "/assets/avatar/cesium-man.glb",
+    "/assets/avatar/huongdanvien.glb"
+  ],
+  "mp4": [
+    "/making_step/Buoc1_nau_do.mp4",
+    "/making_step/Buoc2_lam_bia.mp4",
+    "/making_step/Buoc3_gia_do.mp4",
+    "/making_step/Buoc4_dap_le_va_bao_go.mp4",
+    "/making_step/Buoc5_dai_bia.mp4",
+    "/making_step/Buoc6_keo_tau.mp4",
+    "/making_step/Buoc7_seo_giấy.mp4",
+    "/making_step/Buoc8_ep_do.mp4",
+    "/making_step/Buoc9_can_giay.mp4",
+    "/making_step/Buoc10_lot_giay.mp4"
+  ]
+}

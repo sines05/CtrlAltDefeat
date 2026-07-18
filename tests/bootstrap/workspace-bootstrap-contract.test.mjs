@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import test from 'node:test';
 
-const repoRoot = '/home/anoreo/Desktop/CtrlAltDefeat';
+const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
 
 async function readJson(relativePath) {
   const absolutePath = path.join(repoRoot, relativePath);
@@ -31,6 +32,8 @@ test('test_workspace_bootstrap_contract', async () => {
     'apps/web/src/main.js',
     'services/api/src/server.js',
     'services/api/src/http/errors.js',
+    'services/api/src/media/index.js',
+    'content/approved/media/tay-ho-giay-do-room-01.json',
   ]) {
     const absolutePath = path.join(repoRoot, relativePath);
     await readFile(absolutePath, 'utf8');
