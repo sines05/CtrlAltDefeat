@@ -917,6 +917,7 @@ addEventListener('resize', () => {
 });
 
 const clock = new THREE.Clock();
+let didSignalFirstFrame = false;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -944,6 +945,11 @@ function animate() {
 
   controls.update();
   renderer.render(scene, camera);
+
+  if (!didSignalFirstFrame) {
+    didSignalFirstFrame = true;
+    window.dispatchEvent(new Event('museum:first-frame'));
+  }
 }
 
 let sharedAudioCtx = null;

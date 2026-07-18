@@ -20,11 +20,13 @@ test('test_health_endpoint_smoke', async (t) => {
   const [
     healthResponse,
     rootResponse,
+    landingEntryResponse,
     sceneResponse,
     avatarReadmeResponse,
   ] = await Promise.all([
     fetch(`${runtime.baseUrl}/api/health`),
     fetch(`${runtime.baseUrl}/`),
+    fetch(`${runtime.baseUrl}/src/landing.js`),
     fetch(`${runtime.baseUrl}/api/scene/tay-ho-giay-do-room-01`),
     fetch(`${runtime.baseUrl}/assets/avatar/README.md`),
   ]);
@@ -42,7 +44,13 @@ test('test_health_endpoint_smoke', async (t) => {
 
   assert.equal(rootResponse.status, 200);
   assert.match(rootResponse.headers.get('content-type') ?? '', /text\/html/);
-  assert.match(await rootResponse.text(), /<script type="module" src="\/src\/main\.js"><\/script>/);
+  const rootHtml = await rootResponse.text();
+  assert.match(rootHtml, /id="landing"/);
+  assert.match(rootHtml, /<script type="module" src="\/src\/landing\.js"><\/script>/);
+  assert.doesNotMatch(rootHtml, /<script type="module" src="\/src\/main\.js"><\/script>/);
+
+  assert.equal(landingEntryResponse.status, 200);
+  assert.match(await landingEntryResponse.text(), /import\('\.\/main\.js'\)/);
 
   assert.equal(sceneResponse.status, 200);
   assert.equal((await sceneResponse.json()).sceneId, 'tay-ho-giay-do-room-01');
