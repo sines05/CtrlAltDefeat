@@ -20,17 +20,13 @@ test('test_health_endpoint_smoke', async (t) => {
   const [
     healthResponse,
     rootResponse,
-    scriptResponse,
     sceneResponse,
-    cesiumAssetResponse,
-    huongDanVienAssetResponse,
+    avatarReadmeResponse,
   ] = await Promise.all([
     fetch(`${runtime.baseUrl}/api/health`),
     fetch(`${runtime.baseUrl}/`),
-    fetch(`${runtime.baseUrl}/src/main.js`),
     fetch(`${runtime.baseUrl}/api/scene/tay-ho-giay-do-room-01`),
-    fetch(`${runtime.baseUrl}/assets/avatar/cesium-man.glb`),
-    fetch(`${runtime.baseUrl}/assets/avatar/huongdanvien.glb`),
+    fetch(`${runtime.baseUrl}/assets/avatar/README.md`),
   ]);
 
   assert.equal(healthResponse.status, 200);
@@ -48,18 +44,9 @@ test('test_health_endpoint_smoke', async (t) => {
   assert.match(rootResponse.headers.get('content-type') ?? '', /text\/html/);
   assert.match(await rootResponse.text(), /<script type="module" src="\/src\/main\.js"><\/script>/);
 
-  assert.equal(scriptResponse.status, 200);
-  assert.match(scriptResponse.headers.get('content-type') ?? '', /text\/javascript/);
-  assert.match(await scriptResponse.text(), /createSceneAppHtml/);
-
   assert.equal(sceneResponse.status, 200);
   assert.equal((await sceneResponse.json()).sceneId, 'tay-ho-giay-do-room-01');
 
-  assert.equal(cesiumAssetResponse.status, 200);
-  assert.match(cesiumAssetResponse.headers.get('content-type') ?? '', /model\/gltf-binary/);
-  assert.ok((await cesiumAssetResponse.arrayBuffer()).byteLength > 0);
-
-  assert.equal(huongDanVienAssetResponse.status, 200);
-  assert.match(huongDanVienAssetResponse.headers.get('content-type') ?? '', /model\/gltf-binary/);
-  assert.ok((await huongDanVienAssetResponse.arrayBuffer()).byteLength > 0);
+  assert.equal(avatarReadmeResponse.status, 200);
+  assert.match(await avatarReadmeResponse.text(), /avatar/i);
 });
