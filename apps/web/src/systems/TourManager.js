@@ -40,6 +40,15 @@ export class TourManager {
     this.setupUIEvents();
   }
 
+  resetQuestionState() {
+    if (
+      this.playerState === PLAYER_STATES.QUESTION_INPUT
+      || this.playerState === PLAYER_STATES.QUESTION_VOICE
+    ) {
+      this.playerState = PLAYER_STATES.WATCHING_DIALOGUE;
+    }
+  }
+
   setupUIEvents() {
     // When the user clicks the "Continue" option on the dialogue bubble
     const originalContinue = uiController.optContinue.onclick;
@@ -68,13 +77,13 @@ export class TourManager {
 
     // Handle close/cancel actions to return to WATCHING_DIALOGUE state
     uiController.typingCancel.addEventListener('click', () => {
-      this.playerState = PLAYER_STATES.WATCHING_DIALOGUE;
+      this.resetQuestionState();
     });
     uiController.typingSend.addEventListener('click', () => {
-      this.playerState = PLAYER_STATES.WATCHING_DIALOGUE;
+      this.resetQuestionState();
     });
     uiController.voiceClose.addEventListener('click', () => {
-      this.playerState = PLAYER_STATES.WATCHING_DIALOGUE;
+      this.resetQuestionState();
     });
   }
 
@@ -149,32 +158,56 @@ export class TourManager {
     uiController.showToast("Đã hủy theo hướng dẫn viên.");
   }
 
-  speakNarration(text, callback) {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'vi-VN';
-      utterance.rate = 0.95; // slightly slower for premium tone
+  async speakNarration(text, callback) {
+    this.isSpeaking = true;
+    try {
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, voice: 'mock-default' })
+      });
+      if (!response.ok) throw new Error('TTS status not ok');
+      const data = await response.json();
+      if (!data.audioUrl) throw new Error('No audioUrl in TTS response');
       
-      utterance.onend = () => {
+      const audio = new Audio(data.audioUrl);
+      const spoke = await this.guideFSM.playAnswerAudio(audio);
+      if (spoke) {
+        audio.addEventListener('ended', () => {
+          this.isSpeaking = false;
+          if (callback) callback();
+        }, { once: true });
+        return;
+      }
+      throw new Error('playAnswerAudio failed');
+    } catch (err) {
+      console.warn("Backend TTS failed or was blocked, falling back to Web Speech API:", err);
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'vi-VN';
+        utterance.rate = 0.95; // slightly slower for premium tone
+        
+        utterance.onend = () => {
+          this.isSpeaking = false;
+          if (callback) callback();
+        };
+        
+        utterance.onerror = (e) => {
+          console.error("Speech synthesis error, using timer fallback:", e);
+          this.isSpeaking = false;
+          // Fallback timer based on character length
+          const duration = Math.max(4000, text.length * 65);
+          setTimeout(() => { if (callback) callback(); }, duration);
+        };
+        
+        window.speechSynthesis.speak(utterance);
+      } else {
+        // Fallback if speechSynthesis is not available
         this.isSpeaking = false;
-        if (callback) callback();
-      };
-      
-      utterance.onerror = (e) => {
-        console.error("Speech synthesis error, using timer fallback:", e);
-        this.isSpeaking = false;
-        // Fallback timer based on character length
         const duration = Math.max(4000, text.length * 65);
         setTimeout(() => { if (callback) callback(); }, duration);
-      };
-      
-      this.isSpeaking = true;
-      window.speechSynthesis.speak(utterance);
-    } else {
-      // Fallback if speechSynthesis is not available
-      const duration = Math.max(4000, text.length * 65);
-      setTimeout(() => { if (callback) callback(); }, duration);
+      }
     }
   }
 

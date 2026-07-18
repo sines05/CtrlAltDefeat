@@ -19,10 +19,10 @@
     ]
   },
   "assets": [
-    { "assetId": "guide-model", "kind": "model", "role": "guide-model", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/huongdanvien.fbx", "byteLength": 27118192, "loader": "fbx", "preload": "none" },
-    { "assetId": "guide-idle", "kind": "model", "role": "guide-idle", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/Idle.fbx", "byteLength": 27971280, "loader": "fbx", "preload": "none" },
-    { "assetId": "guide-walk", "kind": "model", "role": "guide-walk", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/Walking.fbx", "byteLength": 27304160, "loader": "fbx", "preload": "none" },
-    { "assetId": "guide-talk", "kind": "model", "role": "guide-talk", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/Talking.fbx", "byteLength": 27469344, "loader": "fbx", "preload": "none" },
+    { "assetId": "guide-model", "kind": "model", "role": "guide-model", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/huongdanvien.fbx", "byteLength": 27118192, "loader": "fbx", "preload": "eager" },
+    { "assetId": "guide-idle", "kind": "model", "role": "guide-idle", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/Idle.fbx", "byteLength": 27971280, "loader": "fbx", "preload": "eager" },
+    { "assetId": "guide-walk", "kind": "model", "role": "guide-walk", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/Walking.fbx", "byteLength": 27304160, "loader": "fbx", "preload": "eager" },
+    { "assetId": "guide-talk", "kind": "model", "role": "guide-talk", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/Talking.fbx", "byteLength": 27469344, "loader": "fbx", "preload": "eager" },
     { "assetId": "exhibit-product-showing", "kind": "model", "role": "exhibit-product-showing", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/asset/product_showing.fbx", "byteLength": 2618668, "loader": "fbx", "preload": "none" },
     { "assetId": "exhibit-showing-tree", "kind": "model", "role": "exhibit-showing-tree", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/asset/showing_tree_01.fbx", "byteLength": 2397420, "loader": "fbx", "preload": "none" },
     { "assetId": "exhibit-village-picture", "kind": "model", "role": "exhibit-village-picture", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/asset/village_picture.fbx", "byteLength": 2493916, "loader": "fbx", "preload": "none" },

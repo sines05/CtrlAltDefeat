@@ -1,0 +1,16 @@
+schema: plan-approval/v1
+plan: 260718-2242-eager-guide-voice-fix
+plan_hash: 539e76af3401
+file_hashes:
+  plan.md: 587ce0b13d3a
+  phase-1-guide-eager-policy.md: 8cb627c88974
+  phase-2-guide-promotion-hitch-reduction.md: a3992dde07a2
+  phase-3-live-config-provider.md: 2d81aa8e0c17
+  phase-4-verification.md: 5c80bce32c07
+  plan-graph.yaml: 33013aa8700c
+author: user:sonnguyenque5@gmail.com
+reviewer: user:sonnguyenque5@gmail.com
+verdict: APPROVED
+rationale: Guide eager policy and voice mic fix scope approved for TDD cook.
+ts: '2026-07-18T16:18:27.076412+00:00'
+run_seq: null

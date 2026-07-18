@@ -68,14 +68,26 @@ test('test_bootstrap_media_failure_isolated_from_scene_and_tour', async () => {
   assert.equal(result.tour.tourId, 'tour-01');
 });
 
-test('test_runtime_source_delegates_media_fetch_and_removes_startup_preload_loop', async () => {
-  const mainSource = await readFile(path.join(repoRoot, 'apps/web/src/main.js'), 'utf8');
-  const clientSource = await readFile(path.join(repoRoot, 'apps/web/src/media/client.js'), 'utf8');
+test('test_runtime_source_keeps_guide_promotion_eager_and_staged', async () => {
+  const [mainSource, clientSource] = await Promise.all([
+    readFile(path.join(repoRoot, 'apps/web/src/main.js'), 'utf8'),
+    readFile(path.join(repoRoot, 'apps/web/src/media/client.js'), 'utf8'),
+  ]);
+  const bootstrapSection = mainSource.split('async function bootstrapApprovedMedia() {')[1] ?? '';
+  const promotionSection = mainSource.split('async function promoteAnimatedCharacters')[1] ?? '';
+  const promotionFrameYields = [...promotionSection.matchAll(/await waitForNextFrame\(\);/gu)].length;
 
   assert.match(mainSource, /fetchBootstrapContent\(/u);
   assert.match(clientSource, /\/api\/scene\/\$\{sceneId\}/u);
   assert.match(clientSource, /\/api\/tour\/\$\{tourId\}/u);
   assert.match(clientSource, /\/api\/media\/\$\{sceneId\}/u);
+  assert.match(mainSource, /const GUIDE_PROMOTION_ROLES = \['guide-model', 'guide-idle', 'guide-walk', 'guide-talk'\];/u);
+  assert.match(bootstrapSection, /modelRegistry = createModelRegistry\(bootstrapState\.media\);\n\s+const guidePromotionLoad = Promise\.all\(GUIDE_PROMOTION_ROLES\.map\(\(role\) => modelRegistry\.loadRole\(role\)\)\);\n\s+void promoteAnimatedCharacters\(guidePromotionLoad\);/u);
+  assert.equal(promotionFrameYields, 2);
+  assert.match(promotionSection, /guideModel\.visible = false;/u);
+  assert.match(promotionSection, /guideModel\.visible = true;\n\s+removeSceneObject\(previousPlayer\);\n\s+removeSceneObject\(previousGuide\);/u);
+  assert.match(mainSource, /const loadPromise = modelRegistry\.loadRole\(target\.role\)/u);
+  assert.match(mainSource, /if \(bootstrapState\.media\.status === 'ready' && modelRegistry\) \{\n\s+maybeLoadSceneProps\(\);/u);
   assert.doesNotMatch(mainSource, /stations\.forEach\(station => \{\n\s+station\.videoDisplay\.load\(\);/u);
   assert.doesNotMatch(mainSource, /Promise\.all\(\[\n\s+loadWithLog\(modelPath,/u);
 });

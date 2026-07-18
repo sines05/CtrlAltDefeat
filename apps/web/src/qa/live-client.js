@@ -53,6 +53,17 @@ function toTtsState(packet, { inputTranscript = '', outputTranscript = '', recov
   };
 }
 
+function toAudioRecoveryState(recoveryMessage, errorMessage = '') {
+  return {
+    inputTranscript: '',
+    outputTranscript: '',
+    transcript: '',
+    audioUrl: '',
+    errorMessage,
+    recoveryMessage,
+  };
+}
+
 async function restFallback({ sceneId, question, postJson }) {
   const qaPacket = await postJson('/api/qa', {
     sceneId,
@@ -141,6 +152,15 @@ export async function submitQuestionTurn({
       };
 
   if (!liveAttempted) {
+    if (audio) {
+      return {
+        liveAttempted,
+        liveUsed: false,
+        qaPacket: null,
+        ttsState: toAudioRecoveryState('Hỏi bằng giọng nói đang tạm không khả dụng. Hãy nhập câu hỏi bằng chữ.'),
+      };
+    }
+
     const restPacket = await restFallback({ sceneId, question, postJson });
     return {
       ...restPacket,
@@ -181,18 +201,14 @@ export async function submitQuestionTurn({
         liveAttempted: true,
         liveUsed: false,
         qaPacket: null,
-        ttsState: {
-          inputTranscript: '',
-          outputTranscript: '',
-          transcript: '',
-          audioUrl: '',
-          errorMessage: isTranscriptionFailure
-            ? ''
-            : error instanceof Error ? error.message : 'Live voice unavailable',
-          recoveryMessage: isTranscriptionFailure
+        ttsState: toAudioRecoveryState(
+          isTranscriptionFailure
             ? 'Audio chưa đủ để tạo transcript, hãy thử lại.'
             : 'Audio chưa có transcript, hãy nhập câu hỏi bằng chữ.',
-        },
+          isTranscriptionFailure
+            ? ''
+            : error instanceof Error ? error.message : 'Live voice unavailable'
+        ),
       };
     }
 

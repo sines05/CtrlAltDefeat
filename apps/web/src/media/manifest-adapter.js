@@ -34,6 +34,7 @@ function normalizeAsset(asset) {
     kind,
     format,
     loader: asset.loader ?? format,
+    preload: asset.preload === 'eager' ? 'eager' : 'none',
     role: asset.role ?? null,
     publicPath,
     title: asset.title ?? asset.name ?? null,

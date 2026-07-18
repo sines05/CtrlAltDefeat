@@ -25,6 +25,7 @@ const SCENE_PROP_TARGETS = [
   { role: 'exhibit-showing-tree', activationZ: 9 },
   { role: 'exhibit-wooden-mould', activationZ: 18 },
 ];
+const GUIDE_PROMOTION_ROLES = ['guide-model', 'guide-idle', 'guide-walk', 'guide-talk'];
 
 const scene = new THREE.Scene();
 let videoActivationSystem = null;
@@ -152,6 +153,11 @@ function removeLoadingScreen() {
 
   loadingScreen.classList.add('fade-out');
   setTimeout(() => loadingScreen.remove(), 500);
+}
+
+function waitForNextFrame() {
+  const scheduleFrame = globalThis.requestAnimationFrame ?? ((callback) => setTimeout(callback, 0));
+  return new Promise((resolve) => scheduleFrame(() => resolve()));
 }
 
 function adjustSingleMaterial(mat) {
@@ -583,18 +589,17 @@ function initializeBaseScene() {
   removeLoadingScreen();
 }
 
-async function promoteAnimatedCharacters() {
+async function promoteAnimatedCharacters(guidePromotionLoad) {
   if (!modelRegistry) {
     return;
   }
 
+  let playerModel = null;
+  let guideModel = null;
+
   try {
-    const [model, idleAnim, walkAnim, talkingAnim] = await Promise.all([
-      modelRegistry.loadRole('guide-model'),
-      modelRegistry.loadRole('guide-idle'),
-      modelRegistry.loadRole('guide-walk'),
-      modelRegistry.loadRole('guide-talk'),
-    ]);
+    const loadPromise = guidePromotionLoad ?? Promise.all(GUIDE_PROMOTION_ROLES.map((role) => modelRegistry.loadRole(role)));
+    const [model, idleAnim, walkAnim, talkingAnim] = await loadPromise;
 
     const previousPlayer = tourManager?.player;
     const previousGuide = tourManager?.guide;
@@ -604,7 +609,7 @@ async function promoteAnimatedCharacters() {
     const guideRotationY = previousGuide?.rotation.y ?? 0;
 
     const scaleFactor = 1.8;
-    const playerModel = SkeletonUtils.clone(model);
+    playerModel = SkeletonUtils.clone(model);
     playerModel.scale.set(scaleFactor, scaleFactor, scaleFactor);
     playerModel.position.copy(playerPosition);
     playerModel.rotation.y = playerRotationY;
@@ -626,13 +631,16 @@ async function promoteAnimatedCharacters() {
     };
     playerModel.userData.actions = playerActions;
 
-    const guideModel = SkeletonUtils.clone(model);
+    await waitForNextFrame();
+
+    guideModel = SkeletonUtils.clone(model);
     const guideScale = scaleFactor * 1.1;
     guideModel.scale.set(guideScale, guideScale, guideScale);
     guideModel.position.copy(guidePosition);
     guideModel.rotation.y = guideRotationY;
     CharacterGrounding.ground(guideModel, -0.92);
     fixModelMaterials(guideModel, false);
+    guideModel.visible = false;
     scene.add(guideModel);
 
     const guideMixer = new THREE.AnimationMixer(guideModel);
@@ -642,6 +650,8 @@ async function promoteAnimatedCharacters() {
       talk: guideMixer.clipAction(talkingAnim.animations[0]),
     };
     const guideFSM = new GuideFSM(guideModel, guideMixer, guideActions);
+
+    await waitForNextFrame();
 
     const shouldWalk = tourManager?.playerState === PLAYER_STATES.FOLLOWING_GUIDE;
     const nextPlayerAction = shouldWalk ? playerActions.walk : playerActions.idle;
@@ -658,11 +668,14 @@ async function promoteAnimatedCharacters() {
       tourManager.guideFSM = guideFSM;
     }
 
+    guideModel.visible = true;
     removeSceneObject(previousPlayer);
     removeSceneObject(previousGuide);
     character = playerModel;
     mixers = [playerMixer, guideMixer];
   } catch (error) {
+    removeSceneObject(playerModel);
+    removeSceneObject(guideModel);
     console.warn('[MediaRuntime] Animated guide assets unavailable, keeping fallback geometry.', error);
   }
 }
@@ -735,7 +748,8 @@ async function bootstrapApprovedMedia() {
 
   rebuildStations(bootstrapState.media.stations);
   modelRegistry = createModelRegistry(bootstrapState.media);
-  void promoteAnimatedCharacters();
+  const guidePromotionLoad = Promise.all(GUIDE_PROMOTION_ROLES.map((role) => modelRegistry.loadRole(role)));
+  void promoteAnimatedCharacters(guidePromotionLoad);
 }
 
 function fadeToAction(action) {
@@ -918,23 +932,96 @@ function animate() {
   renderer.render(scene, camera);
 }
 
+let sharedAudioCtx = null;
+
+function getSharedAudioContext() {
+  if (!sharedAudioCtx) {
+    sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (sharedAudioCtx.state === 'suspended') {
+    void sharedAudioCtx.resume();
+  }
+  return sharedAudioCtx;
+}
+
+async function convertBlobToPcm(blob) {
+  const arrayBuffer = await blob.arrayBuffer();
+  
+  const audioCtx = getSharedAudioContext();
+  let audioBuffer;
+  try {
+    audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+  } catch (err) {
+    console.error("decodeAudioData failed:", err);
+    throw err;
+  }
+
+  const targetSampleRate = 16000;
+  const offlineCtx = new OfflineAudioContext(
+    1,
+    Math.ceil(audioBuffer.duration * targetSampleRate),
+    targetSampleRate
+  );
+  
+  const bufferSource = offlineCtx.createBufferSource();
+  bufferSource.buffer = audioBuffer;
+  bufferSource.connect(offlineCtx.destination);
+  bufferSource.start();
+  
+  const renderedBuffer = await offlineCtx.startRendering();
+  const floatSamples = renderedBuffer.getChannelData(0);
+  
+  const buffer = new ArrayBuffer(floatSamples.length * 2);
+  const view = new DataView(buffer);
+  for (let i = 0; i < floatSamples.length; i++) {
+    const s = Math.max(-1, Math.min(1, floatSamples[i]));
+    const intVal = s < 0 ? s * 0x8000 : s * 0x7fff;
+    view.setInt16(i * 2, intVal, true); // little-endian
+  }
+  
+  return {
+    mimeType: 'audio/pcm;rate=16000',
+    dataBase64: arrayBufferToBase64(buffer)
+  };
+}
+
+function arrayBufferToBase64(buffer) {
+  let binary = '';
+  const bytes = new Uint8Array(buffer);
+  const len = bytes.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return window.btoa(binary);
+}
+
 uiController.setQuestionHandlers({
   submitText(question) {
     return submitGuideTurn({ question });
   },
   async submitAudio({ blob, mimeType, durationMs }) {
-    if (!liveCapability.enabled) {
-      uiController.showToast('Hỏi bằng giọng nói đang tạm không khả dụng.');
-      return;
+    try {
+      const pcmData = await convertBlobToPcm(blob);
+      await submitGuideTurn({
+        audio: {
+          mimeType: pcmData.mimeType,
+          dataBase64: pcmData.dataBase64,
+          durationMs,
+        },
+      });
+    } catch (error) {
+      console.error("PCM conversion failed, falling back to original blob upload:", error);
+      await submitGuideTurn({
+        audio: {
+          mimeType,
+          dataBase64: await blobToBase64(blob),
+          durationMs,
+        },
+      });
     }
-
-    await submitGuideTurn({
-      audio: {
-        mimeType,
-        dataBase64: await blobToBase64(blob),
-        durationMs,
-      },
-    });
+  },
+  resetVoiceState() {
+    tourManager?.resetQuestionState?.();
   },
 });
 

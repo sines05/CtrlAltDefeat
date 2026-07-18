@@ -27,14 +27,23 @@ test('test_demo_path_long_tasks_returns_complete_data', async () => {
   assert.ok(qaPacket.answer.length > 0);
 });
 
-test('test_media_bootstrap_stays_metadata_only_and_lazy', async () => {
+test('test_media_bootstrap_keeps_manifest_metadata_only_and_scopes_eager_to_guides', async () => {
   const [manifest, mainSource] = await Promise.all([
     getMediaManifest('tay-ho-giay-do-room-01'),
     readFile(path.join(repoRoot, 'apps/web/src/main.js'), 'utf8'),
   ]);
   const serializedManifest = JSON.stringify(manifest);
+  const eagerAssetIds = manifest.assets
+    .filter((asset) => asset.preload === 'eager')
+    .map((asset) => asset.assetId)
+    .sort();
 
-  assert.ok(manifest.assets.every((asset) => asset.preload === 'none'));
+  assert.deepEqual(eagerAssetIds, ['guide-idle', 'guide-model', 'guide-talk', 'guide-walk']);
+  assert.ok(manifest.assets.every((asset) => (
+    eagerAssetIds.includes(asset.assetId)
+      ? asset.preload === 'eager'
+      : asset.preload === 'none'
+  )));
   assert.doesNotMatch(serializedManifest, /(?:data:|base64)/iu);
   assert.doesNotMatch(mainSource, /stations\.forEach\(station => \{\n\s+station\.videoDisplay\.load\(\);/u);
   assert.doesNotMatch(mainSource, /Promise\.all\(\[\n\s+loadWithLog\(modelPath,/u);

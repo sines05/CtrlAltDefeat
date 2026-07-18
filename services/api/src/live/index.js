@@ -7,7 +7,7 @@ import {
 import { answerQuestion, resolveGroundingContext } from '../qa/index.js';
 import { synthesizeSpeech } from '../tts/index.js';
 
-const AUDIO_MIME_TYPES = new Set(['audio/webm', 'audio/mp4', 'audio/wav']);
+const AUDIO_MIME_TYPES = new Set(['audio/webm', 'audio/mp4', 'audio/wav', 'audio/pcm', 'audio/l16']);
 const MAX_AUDIO_BYTES = 5_000_000;
 const MAX_AUDIO_DURATION_MS = 30_000;
 

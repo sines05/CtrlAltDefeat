@@ -1,0 +1,48 @@
+edges:
+  - {from: P1, to: P2}
+  - {from: P2, to: P3}
+  - {from: P3, to: P4}
+subtasks:
+  P1:
+    files_to_create: []
+    files_to_modify:
+      - content/approved/media/tay-ho-giay-do-room-01.json
+      - apps/web/src/media/manifest-adapter.js
+      - tests/perf/demo-path-budget.test.mjs
+      - tests/e2e/media-manifest-runtime.test.mjs
+      - tests/mobile/manual-checklist.md
+      - docs/system-architecture.md
+      - docs/code-standards.md
+      - docs/engineering/api-contract.md
+      - README.md
+      - docs/submission-overview.md
+    files_to_delete: []
+    post: [verification-P1.json]
+  P2:
+    files_to_create: []
+    files_to_modify:
+      - apps/web/src/main.js
+      - apps/web/src/media/model-registry.js
+    files_to_delete: []
+    post: [verification-P2.json]
+  P3:
+    files_to_create:
+      - tests/scene/live-voice-ui-state.test.mjs
+    files_to_modify:
+      - apps/web/src/systems/UIController.js
+      - apps/web/src/main.js
+      - apps/web/src/qa/live-client.js
+      - apps/web/src/systems/TourManager.js
+      - .env.example
+      - render.yaml
+      - tests/e2e/live-voice-smoke.test.mjs
+      - tests/api/live/live-relay.contract.test.mjs
+      - tests/scene/guide-voice-audio.test.mjs
+    files_to_delete: []
+    post: [verification-P3.json]
+  P4:
+    files_to_create: []
+    files_to_modify:
+      - plans/260718-2242-eager-guide-voice-fix/artifacts/verification.json
+    files_to_delete: []
+    post: [verification-P4.json]

@@ -55,6 +55,9 @@ test('test_voice_ui_submits_real_turns_and_routes_audio_to_the_guide', async () 
 
   assert.match(mainSource, /submitQuestionTurn\(/u);
   assert.match(mainSource, /playAnswerAudio\(/u);
+  assert.match(mainSource, /resetVoiceState\(\) \{\n\s+tourManager\?\.resetQuestionState\?\.\(\);/u);
   assert.match(uiSource, /navigator\.mediaDevices\?\.getUserMedia/u);
+  assert.match(uiSource, /MediaRecorder\.isTypeSupported/u);
+  assert.match(uiSource, /MAX_RECORDING_MS/u);
   assert.doesNotMatch(uiSource, /backend coming soon/iu);
 });

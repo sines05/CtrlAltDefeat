@@ -53,13 +53,13 @@ Xem thêm: `docs/system-architecture.md`, `docs/engineering/api-contract.md`, `d
 - scene + tour 5 bước;
 - approved media manifest qua `/api/media/{sceneId}`;
 - grounded QA/TTS;
+- guide path policy hóa bằng manifest preload metadata: guide animated assets eager sau shell/bootstrap, scene props/video vẫn lazy/degraded;
 - guide voice integration ở mức gesture + audio playback;
 - browser/build/test gates cho media runtime và docs contract.
 
 ## Deferred issues đã biết
 
 Repo này không giả vờ mọi thứ đã hoàn hảo. Một số media/runtime lệch pha đã được nhận diện và để dành cho pass sau, ví dụ:
-- guide animated assets hiện chưa đạt lazy-load đúng mục tiêu ban đầu;
 - một phần scene-prop lazy activation còn cần siết lại trong guided flow;
 - shared model registry còn một số nợ kỹ thuật quanh GLB role/loader alignment.
 

@@ -1,0 +1,1 @@
+- [Media manifest first](project-media-manifest-first.md) — Ship backend-approved manifest+API for current models and 10 process videos; keep 5-step tour unchanged.

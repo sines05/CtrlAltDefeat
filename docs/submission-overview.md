@@ -60,7 +60,7 @@ Repo này không giả định network, media, device, hoặc voice service luô
 
 ## Honest boundaries
 
-Repo này không claim mọi media/runtime edge đã hoàn hảo. Một số deferred issues đã được ghi thẳng trong `docs/system-architecture.md`. Điều quan trọng ở pass hiện tại là: dù còn debt, sản phẩm đã có một đường đi rõ ràng từ nội dung đã duyệt đến trải nghiệm tương tác trên điện thoại.
+Repo này không claim mọi media/runtime edge đã hoàn hảo. Deferred issues còn lại đã được ghi thẳng trong `docs/system-architecture.md`, nhưng guide eager mismatch không còn nằm trong nhóm đó nữa: guide assets nay là policy eager sau shell/bootstrap, còn debt chủ yếu nằm ở scene-prop activation và registry alignment. Điều quan trọng ở pass hiện tại là: dù còn debt, sản phẩm đã có một đường đi rõ ràng từ nội dung đã duyệt đến trải nghiệm tương tác trên điện thoại.
 
 ## Sanity check
 

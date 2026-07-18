@@ -1,0 +1,31 @@
+{
+  "stage": "cook",
+  "plan": "260718-2242-eager-guide-voice-fix",
+  "checks": [
+    {
+      "name": "contract",
+      "status": "PASS"
+    },
+    {
+      "name": "e2e",
+      "status": "PASS"
+    },
+    {
+      "name": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "regression",
+      "status": "PASS"
+    },
+    {
+      "name": "smoke",
+      "status": "PASS"
+    }
+  ],
+  "verdict": "PASS",
+  "phase": "P1",
+  "actor": "user:sonnguyenque5@gmail.com",
+  "ts": "2026-07-18T16:31:56+00:00",
+  "run_seq": null
+}

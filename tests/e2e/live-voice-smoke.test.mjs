@@ -47,6 +47,33 @@ test('test_live_capability_disabled_skips_live_call', async () => {
   assert.equal(result.ttsState.outputTranscript, 'Cây dó có sợi dai và bền.');
 });
 
+test('test_live_capability_disabled_returns_audio_recovery_without_empty_rest_fallback', async () => {
+  const calls = [];
+
+  const result = await submitQuestionTurn({
+    sceneId: 'tay-ho-giay-do-room-01',
+    capability: {
+      enabled: false,
+      model: 'gemini-3.1-flash-live-preview',
+    },
+    audio: {
+      mimeType: 'audio/webm;codecs=opus',
+      dataBase64: Buffer.from('voice').toString('base64'),
+      durationMs: 1200,
+    },
+    postJson: async (url) => {
+      calls.push(url);
+      throw new Error(`unexpected ${url}`);
+    },
+  });
+
+  assert.deepEqual(calls, []);
+  assert.equal(result.liveAttempted, false);
+  assert.equal(result.liveUsed, false);
+  assert.equal(result.qaPacket, null);
+  assert.match(result.ttsState.recoveryMessage, /giọng nói|audio/i);
+});
+
 test('test_one_failed_live_attempt_falls_back_once_per_turn', async () => {
   const calls = [];
 

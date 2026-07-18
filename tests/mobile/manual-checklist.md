@@ -16,9 +16,9 @@ Required manual path:
 7. Allow mic permission, tap `Record voice`, stop the turn, and confirm push-to-talk sends one bounded audio request.
 8. Simulate Live answer failure after transcript and confirm REST fallback reuses the transcript.
 9. Trigger TTS and confirm transcript stays visible if audio fails.
-10. Verify the first scene load does not request every MP4 or FBX binary.
+10. Verify the first scene load does not request every MP4 or every non-guide FBX binary; guide FBX may prewarm after shell/bootstrap.
 11. Activate one process station; confirm its approved manifest title/narration renders and only its MP4 loads or a visible degraded fallback appears.
-12. Walk to one model activation area; confirm its FBX loads lazily or fallback geometry remains usable without breaking the 5-step tour.
+12. Walk to one non-guide model activation area; confirm its FBX still loads lazily or fallback geometry remains usable without breaking the 5-step tour.
 13. Confirm the tour still exposes exactly 5 approved steps after the media manifest request.
 14. Record browser + device name.
 

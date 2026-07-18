@@ -196,6 +196,40 @@ test('test_live_route_accepts_media_recorder_mime_with_codecs', async (t) => {
   assert.equal(live.state.transcribeCalls[0].audio.mimeType, 'audio/webm;codecs=opus');
 });
 
+test('test_live_route_accepts_mp4_audio_from_supported_recorders', async (t) => {
+  const live = createLiveProviderFactory({
+    transcribeResult: {
+      inputTranscript: 'Cây dó được dùng để làm giấy vì đặc tính gì?',
+    },
+  });
+  const runtime = await startServer({
+    host: '127.0.0.1',
+    port: 0,
+    env: {
+      ...process.env,
+      GEMINI_LIVE_QA_ENABLED: '1',
+    },
+    liveProviderFactory: live.factory,
+  });
+
+  t.after(async () => {
+    await runtime.stop();
+  });
+
+  const { status, payload } = await postJson(runtime, '/api/qa/live', {
+    sceneId: 'tay-ho-giay-do-room-01',
+    audio: {
+      mimeType: 'audio/mp4',
+      dataBase64: Buffer.from('voice').toString('base64'),
+      durationMs: 1200,
+    },
+  });
+
+  assert.equal(status, 200);
+  assert.equal(payload.live, true);
+  assert.equal(live.state.transcribeCalls[0].audio.mimeType, 'audio/mp4');
+});
+
 test('test_live_route_rejects_oversized_transport_before_provider', async (t) => {
   const live = createLiveProviderFactory();
   const runtime = await startServer({
