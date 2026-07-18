@@ -1,0 +1,25 @@
+{
+  "sceneId": "tay-ho-giay-do-room-01",
+  "question": "Vỏ dó được xử lý thế nào trước khi thành bột giấy?",
+  "expectedAnswerHints": [
+    "ngâm lại trong nước",
+    "nước vôi",
+    "rửa",
+    "tách phần vỏ trong"
+  ],
+  "sourceIds": [
+    "museum-room-01"
+  ],
+  "citations": [
+    "hotspot-02"
+  ],
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "txtLineRange": "176-203, 221-238",
+    "pdfPageRange": "6-7"
+  }
+}

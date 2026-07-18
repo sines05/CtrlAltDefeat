@@ -1,0 +1,25 @@
+{
+  "chunkId": "hotspot-02",
+  "sourceId": "museum-room-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "topic": "fiber-softening",
+  "title": "Ngâm, vôi và làm mềm vỏ",
+  "text": "Trước khi xeo giấy, vỏ dó khô được ngâm lại trong nước rồi xử lý với nước vôi để làm mềm sợi. Tài liệu mô tả nhiều biến thể theo vùng, nhưng đều cùng một logic: ngâm, nấu hoặc hấp, rửa nhiều lần, rồi mới tách phần vỏ trong để đưa sang bước làm bột.",
+  "keywords": [
+    "ngâm vỏ dó",
+    "nước vôi",
+    "nấu vỏ",
+    "rửa vỏ",
+    "làm mềm sợi"
+  ],
+  "citation": "Ojascastro et al., ch. 2.3.1, TXT lines 176-203, 221-238 / PDF pp. 6-7",
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "txtLineRange": "176-203, 221-238",
+    "pdfPageRange": "6-7"
+  }
+}

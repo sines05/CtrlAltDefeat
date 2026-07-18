@@ -1,0 +1,21 @@
+{
+  "sourceId": "museum-room-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "title": "Phòng quy trình giấy dó Tây Hồ",
+  "type": "paper-excerpt",
+  "owner": "museum-mvp-phase-2",
+  "status": "provisional",
+  "roomScope": "single-room",
+  "summary": "Nội dung phòng được ground từ nghiên cứu về cây dó và quy trình làm giấy dó, dẫn người xem từ khâu lấy vỏ, xử lý sợi, xeo giấy đến ép và sấy.",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "sectionScope": [
+      "2.1 Introduction",
+      "2.2 Fiber Harvesting",
+      "2.3 Papermaking"
+    ]
+  }
+}

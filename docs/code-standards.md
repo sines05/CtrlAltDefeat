@@ -102,7 +102,7 @@ Cập nhật: 2026-07-17
 
 1. Chốt stack frontend/backend [PROPOSED].
 2. Chốt nguồn dữ liệu chuyên gia ban đầu [ASSUMED].
-3. Chốt provider TTS và nếu có thì LLM/RAG [PROPOSED].
+3. Chat model đã khóa vào Gemini 3.1 Flash Lite cho grounded answer; provider TTS production vẫn phải chốt trước khi ship [OBSERVED/ASSUMED].
 4. Chốt mức WebAR mục tiêu: marker-based tối thiểu hay full surface/object tracking [PROPOSED].
 
 ## Tài liệu liên quan

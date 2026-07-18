@@ -1,0 +1,24 @@
+{
+  "sceneId": "tay-ho-giay-do-room-01",
+  "question": "Cây dó được dùng để làm giấy vì đặc tính gì?",
+  "expectedAnswerHints": [
+    "sợi bền",
+    "mềm",
+    "vỏ dó"
+  ],
+  "sourceIds": [
+    "museum-room-01"
+  ],
+  "citations": [
+    "hotspot-01"
+  ],
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "txtLineRange": "18-25, 93-105",
+    "pdfPageRange": "1, 4-5"
+  }
+}

@@ -1,0 +1,33 @@
+edges:
+  - {from: P1, to: P2}
+  - {from: P2, to: P3}
+subtasks:
+  P1:
+    files_to_create: []
+    files_to_modify:
+      - services/api/src/qa/index.js
+      - tests/api/qa-tts/qa-tts.contract.test.mjs
+      - tests/e2e/mvp-smoke.test.mjs
+      - docs/engineering/qa-grounding-prompt.md
+    post: [verification-P1.json]
+  P2:
+    files_to_create:
+      - services/api/src/live/index.js
+      - services/api/src/providers/gemini-live.js
+      - tests/api/live/live-relay.contract.test.mjs
+      - tests/api/live/gemini-live-provider.contract.test.mjs
+    files_to_modify:
+      - services/api/src/server.js
+      - tests/bootstrap/health-endpoint-smoke.test.mjs
+    post: [verification-P2.json]
+  P3:
+    files_to_create:
+      - apps/web/src/qa/live-client.js
+      - tests/e2e/live-voice-smoke.test.mjs
+    files_to_modify:
+      - apps/web/src/main.js
+      - apps/web/src/qa/panel.js
+      - apps/web/src/tts/panel.js
+      - tests/api/qa-tts/tts-ui.contract.test.mjs
+      - tests/mobile/manual-checklist.md
+    post: [verification-P3.json]

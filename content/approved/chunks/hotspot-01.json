@@ -1,0 +1,25 @@
+{
+  "chunkId": "hotspot-01",
+  "sourceId": "museum-room-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "topic": "raw-material-entry",
+  "title": "Cây dó và nguồn vỏ giấy",
+  "text": "Nghiên cứu xác định dó, tức Rhamnoneuron balansae, là loài chính dùng cho giấy thủ công Việt Nam vì cho sợi bền nhưng vẫn mềm. Ở miền Bắc, cây được trồng để lấy vỏ và người thu hoạch phải chọn thân đủ tuổi, đủ khỏe rồi bóc vỏ cẩn thận để cây còn tái sinh cho những vụ sau.",
+  "keywords": [
+    "cây dó",
+    "Rhamnoneuron balansae",
+    "vỏ dó",
+    "thu hoạch",
+    "Đà Bắc"
+  ],
+  "citation": "Ojascastro et al., ch. 2.1-2.2, TXT lines 1-26, 48-163 / PDF pp. 1-5",
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "txtLineRange": "1-26, 48-163",
+    "pdfPageRange": "1-5"
+  }
+}

@@ -4,8 +4,9 @@ Cập nhật: 2026-07-17
 
 ## Trạng thái
 
-- [PROPOSED] Đây là hợp đồng API sơ bộ; chỉ chốt sau khi team quyết định stack.
-- [ASSUMED] Chưa có backend code thực tế trong repo này.
+- [OBSERVED] Repo có backend Node HTTP cho `scene`, `tour`, `qa`, và `tts`.
+- [OBSERVED] `POST /api/qa` đang là đường grounded answer cho room hiện tại và được nâng từ exact-match sang retrieval-backed chat.
+- [ASSUMED] Credential/provider production cho chat và TTS vẫn phụ thuộc môi trường deploy.
 
 ## Nguyên tắc
 
@@ -47,7 +48,7 @@ Response
 
 ### `POST /api/qa`
 
-Nhận câu hỏi text và trả lời grounded.
+Nhận câu hỏi text, retrieve chunk theo `sceneId`, rồi dùng chat model để trả lời grounded hoặc abstain nếu bằng chứng không đủ.
 
 Request
 ```json
@@ -64,13 +65,15 @@ Response
   "citations": [
     { "label": "Nguồn chuyên gia 1", "ref": "content/approved/source-1" }
   ],
-  "confidence": "medium"
+  "confidence": "medium",
+  "abstained": false,
+  "abstainReason": null
 }
 ```
 
 ### `POST /api/tts`
 
-Sinh hoặc trả về audio cho một đoạn script ngắn.
+Sinh hoặc trả về audio cho transcript ngắn, thường là câu trả lời vừa được grounded từ `/api/qa` hoặc một câu tour ngắn.
 
 Request
 ```json

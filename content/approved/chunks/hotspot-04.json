@@ -1,0 +1,25 @@
+{
+  "chunkId": "hotspot-04",
+  "sourceId": "museum-room-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "topic": "sheet-forming",
+  "title": "Khung seo, liềm seo và động tác xeo",
+  "text": "Khung seo và liềm seo là bộ dụng cụ quyết định hình dạng tờ giấy. Người thợ kẹp liềm seo giữa hai phần khung, múc huyền phù sợi trong bể, lắc nhẹ để sợi dàn đều rồi hạ tờ ướt xuống chồng giấy; nghiên cứu mô tả cách làm này gần với truyền thống Nhật và Hàn nhưng vẫn có cấu tạo khung riêng của Việt Nam.",
+  "keywords": [
+    "khung seo",
+    "liềm seo",
+    "xeo giấy",
+    "dàn sợi",
+    "sheet formation"
+  ],
+  "citation": "Ojascastro et al., ch. 2.3.3-2.3.4, TXT lines 300-392 / PDF pp. 9-11",
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "txtLineRange": "300-392",
+    "pdfPageRange": "9-11"
+  }
+}

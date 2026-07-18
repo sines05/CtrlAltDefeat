@@ -1,0 +1,15 @@
+schema: plan-approval/v1
+plan: 260718-1059-gemini-live-voice
+plan_hash: 54bc6027698f
+file_hashes:
+  plan.md: 13d24a56a4bb
+  phase-1-lock-rest-grounding-contracts.md: 2f973b515a57
+  phase-2-add-backend-live-relay.md: 7ae697236b34
+  phase-3-wire-browser-live-voice.md: 1f387f39bfee
+  plan-graph.yaml: 97cf6d310e9d
+author: user:sonnguyenque5@gmail.com
+reviewer: user:sonnguyenque5@gmail.com
+verdict: APPROVED
+rationale: User approved the Gemini Live voice migration plan after red-team revisions.
+ts: '2026-07-18T05:42:57.403566+00:00'
+run_seq: null

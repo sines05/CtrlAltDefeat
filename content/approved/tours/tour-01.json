@@ -1,0 +1,71 @@
+{
+  "tourId": "tour-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "title": "Tour 5 bước phòng quy trình giấy dó",
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "sectionScope": [
+      "2.1 Introduction",
+      "2.2 Fiber Harvesting",
+      "2.3.1 Fiber Processing",
+      "2.3.2 Formation Aid",
+      "2.3.3-2.3.5 Sheet Formation and Drying"
+    ]
+  },
+  "steps": [
+    {
+      "stepId": "step-01",
+      "sceneId": "tay-ho-giay-do-room-01",
+      "title": "Gặp cây dó",
+      "body": "Điểm mở đầu của phòng giải thích vì sao cây dó được chọn làm giấy: sợi của nó bền nhưng vẫn mềm, và người thu hoạch phải bóc vỏ đúng tuổi để cây tiếp tục tái sinh.",
+      "ttsText": "Điểm mở đầu của phòng giải thích vì sao cây dó được chọn làm giấy: sợi của nó bền nhưng vẫn mềm, và người thu hoạch phải bóc vỏ đúng tuổi để cây tiếp tục tái sinh.",
+      "citations": [
+        "hotspot-01"
+      ]
+    },
+    {
+      "stepId": "step-02",
+      "sceneId": "tay-ho-giay-do-room-01",
+      "title": "Làm mềm vỏ",
+      "body": "Từ đây, vỏ dó được ngâm lại trong nước, xử lý với nước vôi, rồi nấu hoặc hấp và rửa kỹ trước khi đưa sang bước làm bột.",
+      "ttsText": "Từ đây, vỏ dó được ngâm lại trong nước, xử lý với nước vôi, rồi nấu hoặc hấp và rửa kỹ trước khi đưa sang bước làm bột.",
+      "citations": [
+        "hotspot-02"
+      ]
+    },
+    {
+      "stepId": "step-03",
+      "sceneId": "tay-ho-giay-do-room-01",
+      "title": "Giã bột và thêm mò",
+      "body": "Khi vỏ đã mềm, người thợ tách phần vỏ trong, giã thành huyền phù sợi, rồi dùng chất nhầy lấy từ gỗ mò để giữ nước thoát chậm và giúp lớp sợi dàn đều hơn.",
+      "ttsText": "Khi vỏ đã mềm, người thợ tách phần vỏ trong, giã thành huyền phù sợi, rồi dùng chất nhầy lấy từ gỗ mò để giữ nước thoát chậm và giúp lớp sợi dàn đều hơn.",
+      "citations": [
+        "hotspot-03"
+      ]
+    },
+    {
+      "stepId": "step-04",
+      "sceneId": "tay-ho-giay-do-room-01",
+      "title": "Xeo bằng khung seo",
+      "body": "Tờ giấy bắt đầu có hình khi liềm seo được kẹp trong khung seo, múc huyền phù từ bể xeo và lắc nhẹ để sợi nằm đều trước khi chuyển sang chồng giấy ướt.",
+      "ttsText": "Tờ giấy bắt đầu có hình khi liềm seo được kẹp trong khung seo, múc huyền phù từ bể xeo và lắc nhẹ để sợi nằm đều trước khi chuyển sang chồng giấy ướt.",
+      "citations": [
+        "hotspot-04"
+      ]
+    },
+    {
+      "stepId": "step-05",
+      "sceneId": "tay-ho-giay-do-room-01",
+      "title": "Ép, sấy và bóc tờ",
+      "body": "Khâu cuối ép bớt nước, dán chồng giấy lên tường bằng hồ sắn loãng, hong khô bằng quạt, rồi bóc tách từng lớp để thu được giấy dó thành phẩm.",
+      "ttsText": "Khâu cuối ép bớt nước, dán chồng giấy lên tường bằng hồ sắn loãng, hong khô bằng quạt, rồi bóc tách từng lớp để thu được giấy dó thành phẩm.",
+      "citations": [
+        "hotspot-05"
+      ]
+    }
+  ]
+}

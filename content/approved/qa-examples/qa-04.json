@@ -1,0 +1,25 @@
+{
+  "sceneId": "tay-ho-giay-do-room-01",
+  "question": "Sau khi xeo xong, giấy dó được ép và làm khô ra sao?",
+  "expectedAnswerHints": [
+    "ép",
+    "hồ sắn",
+    "dán lên tường",
+    "quạt sấy"
+  ],
+  "sourceIds": [
+    "museum-room-01"
+  ],
+  "citations": [
+    "hotspot-05"
+  ],
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "txtLineRange": "375-422",
+    "pdfPageRange": "11-12"
+  }
+}

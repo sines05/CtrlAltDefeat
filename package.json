@@ -1,0 +1,16 @@
+{
+  "name": "ctrlaltdfeat-museum-mvp",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@11.16.0",
+  "scripts": {
+    "run": "node ./scripts/run.mjs",
+    "test": "node --test tests/bootstrap/*.test.mjs",
+    "lint": "node ./scripts/lint.mjs",
+    "typecheck": "node ./scripts/typecheck.mjs",
+    "build": "node ./scripts/build.mjs"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "chunkId": "hotspot-03",
+  "sourceId": "museum-room-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "topic": "pulp-preparation",
+  "title": "Giã bột và chuẩn bị huyền phù",
+  "text": "Sau khi vỏ đã mềm, người làm giấy rửa sạch, tách phần vỏ trong và giã hoặc beating trong nhiều ngày để tạo huyền phù sợi đồng nhất. Nghiên cứu cũng nhấn mạnh vai trò của mò: gỗ được bào thành dăm, ngâm qua đêm để lấy chất nhầy, rồi khuấy vào bể xeo nhằm làm chậm thoát nước và giúp tờ giấy được dàn đều.",
+  "keywords": [
+    "giã bột",
+    "huyền phù sợi",
+    "mò",
+    "chất nhầy",
+    "bể xeo"
+  ],
+  "citation": "Ojascastro et al., ch. 2.3.1-2.3.2, TXT lines 226-245, 278-285 / PDF pp. 7-8",
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "txtLineRange": "226-245, 278-285",
+    "pdfPageRange": "7-8"
+  }
+}

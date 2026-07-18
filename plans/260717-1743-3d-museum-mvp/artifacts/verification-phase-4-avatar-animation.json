@@ -1,0 +1,27 @@
+{
+  "stage": "cook",
+  "plan": "260717-1743-3d-museum-mvp",
+  "checks": [
+    {
+      "name": "contract",
+      "status": "PASS"
+    },
+    {
+      "name": "unit",
+      "status": "PASS"
+    },
+    {
+      "name": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "smoke",
+      "status": "PASS"
+    }
+  ],
+  "verdict": "PASS_WITH_RISK",
+  "phase": "phase-4-avatar-animation",
+  "actor": "user:sonnguyenque5@gmail.com",
+  "ts": "2026-07-17T18:42:17+00:00",
+  "run_seq": null
+}

@@ -1,0 +1,21 @@
+{
+  "ttsId": "intro-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "sourceStepId": "step-01",
+  "text": "Điểm mở đầu của phòng giải thích vì sao cây dó được chọn làm giấy: sợi của nó bền nhưng vẫn mềm, và người thu hoạch phải bóc vỏ đúng tuổi để cây tiếp tục tái sinh.",
+  "sourceIds": [
+    "museum-room-01"
+  ],
+  "citations": [
+    "hotspot-01"
+  ],
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "txtLineRange": "18-25, 93-105",
+    "pdfPageRange": "1, 4-5"
+  }
+}

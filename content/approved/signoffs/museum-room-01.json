@@ -1,0 +1,37 @@
+{
+  "signoffId": "museum-room-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "status": "provisional-signoff",
+  "reviewedAt": "2026-07-18",
+  "reviewer": "hs:developer",
+  "author": "hs:developer",
+  "reviewScope": {
+    "sourceIds": [
+      "museum-room-01"
+    ],
+    "chunkIds": [
+      "hotspot-01",
+      "hotspot-02",
+      "hotspot-03",
+      "hotspot-04",
+      "hotspot-05"
+    ],
+    "tourIds": [
+      "tour-01"
+    ],
+    "qaExampleIds": [
+      "qa-01",
+      "qa-02",
+      "qa-03",
+      "qa-04"
+    ],
+    "ttsIds": [
+      "intro-01"
+    ]
+  },
+  "notes": [
+    "One-off grounded corpus authored from the TXT extraction of the source paper and cross-checked against the PDF page images.",
+    "Room and hotspot IDs were preserved so the existing scene, tour, QA, and TTS runtime paths continue to load the same file tree.",
+    "Content is grounded, but the room narrative still carries provisional status until a final museum or curator review signs off publication wording."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "stage": "cook",
+  "plan": "260718-1059-gemini-live-voice",
+  "checks": [
+    {
+      "name": "contract",
+      "status": "PASS"
+    },
+    {
+      "name": "integration",
+      "status": "PASS"
+    },
+    {
+      "name": "regression",
+      "status": "PASS"
+    },
+    {
+      "name": "unit",
+      "status": "PASS"
+    },
+    {
+      "name": "smoke",
+      "status": "PASS"
+    }
+  ],
+  "verdict": "PASS",
+  "phase": "P2",
+  "actor": "user:sonnguyenque5@gmail.com",
+  "ts": "2026-07-18T06:19:39+00:00",
+  "run_seq": null
+}

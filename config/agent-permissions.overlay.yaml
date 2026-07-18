@@ -1,0 +1,29 @@
+# config/agent-permissions.overlay.yaml — repo-local add-only RBAC overlay for hs:developer
+# Widen this file when cook needs the developer agent to edit project code in this repo.
+roles:
+  developer:
+    - apps/**
+    - services/**
+    - tests/**
+    - scripts/**
+    - assets/**
+    - content/**
+    - config/**
+    - "**/package.json"
+    - "**/package-lock.json"
+    - "**/pnpm-lock.yaml"
+    - "**/yarn.lock"
+    - "**/bun.lock*"
+  hs-developer:
+    - apps/**
+    - services/**
+    - tests/**
+    - scripts/**
+    - assets/**
+    - content/**
+    - config/**
+    - "**/package.json"
+    - "**/package-lock.json"
+    - "**/pnpm-lock.yaml"
+    - "**/yarn.lock"
+    - "**/bun.lock*"

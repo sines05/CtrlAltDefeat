@@ -26,7 +26,7 @@ Người dùng mobile
   -> API nhẹ
       -> Scene service
       -> Tour service
-      -> Q&A/RAG service
+      -> Q&A retrieval/chat service
       -> TTS adapter
   -> Content store đã duyệt
       -> scene metadata
@@ -103,8 +103,8 @@ Stretch feature không được chen vào giữa ladder này.
 
 ### Gate C — RAG/TTS provider
 
-- [ASSUMED] Chưa xác nhận provider, quota, chi phí, latency.
-- Nếu chưa chốt kịp, dùng bộ trả lời giới hạn theo dữ liệu đã duyệt và audio dựng sẵn.
+- [OBSERVED] Hướng QA/chat đã khóa vào Gemini 3.1 Flash Lite với grounding room/hotspot-first.
+- [ASSUMED] Provider/quota production cho TTS vẫn cần chốt theo môi trường deploy; transcript fallback và mock audio vẫn là degraded path an toàn.
 
 ### Gate D — stretch features
 

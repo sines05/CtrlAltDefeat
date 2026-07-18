@@ -1,0 +1,27 @@
+{
+  "stage": "cook",
+  "plan": "260717-1743-3d-museum-mvp",
+  "checks": [
+    {
+      "name": "contract",
+      "status": "PASS"
+    },
+    {
+      "name": "smoke",
+      "status": "PASS"
+    },
+    {
+      "name": "unit",
+      "status": "PASS"
+    },
+    {
+      "name": "manual",
+      "status": "FAIL"
+    }
+  ],
+  "verdict": "BLOCKED",
+  "phase": "phase-6-fallback-smoke",
+  "actor": "user:sonnguyenque5@gmail.com",
+  "ts": "2026-07-17T18:53:19+00:00",
+  "run_seq": null
+}

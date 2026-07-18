@@ -1,0 +1,25 @@
+{
+  "chunkId": "hotspot-05",
+  "sourceId": "museum-room-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "topic": "drying-and-finish",
+  "title": "Ép, dán tường, quạt sấy và thành phẩm",
+  "text": "Khi đã xeo xong, chồng giấy ướt được ép để thoát bớt nước, tách từng tờ, rồi dán thành chồng ngắn lên tường bê tông bằng hồ sắn loãng. Quạt sàn được dùng để hong khô nhiều ngày; đến cuối chu trình, các lớp giấy khô được bóc tách ra từng tờ để trở thành giấy dó thành phẩm.",
+  "keywords": [
+    "ép nước",
+    "hồ sắn",
+    "dán tường",
+    "quạt sấy",
+    "thành phẩm"
+  ],
+  "citation": "Ojascastro et al., ch. 2.3.4-2.3.5, TXT lines 375-422 / PDF pp. 11-12",
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "txtLineRange": "375-422",
+    "pdfPageRange": "11-12"
+  }
+}

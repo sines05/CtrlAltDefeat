@@ -1,0 +1,24 @@
+{
+  "sceneId": "tay-ho-giay-do-room-01",
+  "question": "Mò có vai trò gì trong quá trình xeo giấy dó?",
+  "expectedAnswerHints": [
+    "chất nhầy",
+    "làm chậm thoát nước",
+    "dàn đều"
+  ],
+  "sourceIds": [
+    "museum-room-01"
+  ],
+  "citations": [
+    "hotspot-03"
+  ],
+  "status": "provisional",
+  "provenance": {
+    "canonicalTextFile": "nghien-cuu-ve-giay-do.txt",
+    "sourcePdfTitle": "Nghiên Cứu Về Giấy Dó - James Ojascastro, Veronica Y Pham, Tran Hong Nhung, Robie Hart.pdf",
+    "paperTitle": "Việt Nam's Paper Plants: Dó",
+    "note": "Grounded from the TXT extraction of the source paper and cross-checked against the PDF page images; still awaiting final curator-style editorial review before publication.",
+    "txtLineRange": "239-245, 278-285",
+    "pdfPageRange": "8"
+  }
+}

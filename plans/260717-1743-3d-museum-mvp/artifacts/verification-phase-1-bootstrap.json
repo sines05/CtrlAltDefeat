@@ -1,0 +1,27 @@
+{
+  "stage": "cook",
+  "plan": "260717-1743-3d-museum-mvp",
+  "checks": [
+    {
+      "name": "unit",
+      "status": "PASS"
+    },
+    {
+      "name": "contract",
+      "status": "PASS"
+    },
+    {
+      "name": "smoke",
+      "status": "PASS"
+    },
+    {
+      "name": "integration",
+      "status": "PASS"
+    }
+  ],
+  "verdict": "PASS",
+  "phase": "phase-1-bootstrap",
+  "actor": "user:sonnguyenque5@gmail.com",
+  "ts": "2026-07-17T17:29:18+00:00",
+  "run_seq": null
+}
