@@ -2,12 +2,13 @@ import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 import { getAvatarManifest } from '../../apps/web/src/avatar/manifest.js';
 import { createAvatarPlaybackState, advanceAvatarPlayback } from '../../apps/web/src/avatar/state.js';
 import { createSceneAppHtml } from '../../apps/web/src/scene/app.js';
 
-const repoRoot = '/home/anoreo/Desktop/CtrlAltDefeat';
+const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
 
 async function readJson(relativePath) {
   return JSON.parse(await readFile(path.join(repoRoot, relativePath), 'utf8'));

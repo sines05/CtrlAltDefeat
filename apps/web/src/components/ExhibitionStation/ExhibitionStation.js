@@ -2,12 +2,13 @@ import * as THREE from 'three';
 import { VideoDisplay } from '../VideoDisplay/VideoDisplay.js';
 
 export class ExhibitionStation {
-  constructor(stepInfo, videoUrl, x, z, rotationY) {
-    this.stepNum = stepInfo.stepNum;
-    this.name = stepInfo.name;
-    this.nameEn = stepInfo.nameEn;
-    this.narration = stepInfo.narration;
-    this.narrationEn = stepInfo.narrationEn;
+  constructor(stationViewModel, x, z, rotationY) {
+    this.stepNum = stationViewModel.order ?? stationViewModel.stepNum ?? 0;
+    this.name = stationViewModel.title ?? stationViewModel.name ?? `Bước ${this.stepNum}`;
+    this.nameEn = stationViewModel.titleEn ?? stationViewModel.nameEn ?? `Step ${this.stepNum}`;
+    this.narration = stationViewModel.narration ?? '';
+    this.narrationEn = stationViewModel.narrationEn ?? '';
+    this.videoUrl = stationViewModel.videoUrl ?? null;
 
     this.group = new THREE.Group();
     this.group.position.set(x, 0, z);
@@ -17,20 +18,19 @@ export class ExhibitionStation {
     // Guide stands 2.5m in front of the station and 2.0m to the right (from user's perspective looking at wall)
     const forward = new THREE.Vector3(Math.sin(rotationY), 0, Math.cos(rotationY));
     const right = new THREE.Vector3(Math.cos(rotationY), 0, -Math.sin(rotationY));
-    
+
     this.guideStandPos = new THREE.Vector3(x, 0, z)
       .addScaledVector(forward, 2.5)
-      .addScaledVector(right, -2.0); // positive Z direction when facing positive X
-    
+      .addScaledVector(right, -2.0);
+
     // Player stands 4.2m directly in front of the screen
     this.playerStandPos = new THREE.Vector3(x, 0, z)
       .addScaledVector(forward, 4.2);
-    
+
     // Center of the video screen in world coordinates
     this.lookPos = new THREE.Vector3(x, 2.2, z);
 
-    // Initialize VideoDisplay
-    this.videoDisplay = new VideoDisplay(videoUrl);
+    this.videoDisplay = new VideoDisplay(this.videoUrl);
 
     this.buildMeshes();
   }
@@ -117,7 +117,7 @@ export class ExhibitionStation {
 
     infoCtx.font = '13px "Outfit", system-ui, sans-serif';
     infoCtx.fillStyle = '#4e342e';
-    const descText = this.narration.substring(0, 55) + "...";
+    const descText = this.narration ? `${this.narration.substring(0, 55)}...` : '';
     infoCtx.fillText(descText, 256, 145);
 
     const infoTexture = new THREE.CanvasTexture(infoCanvas);

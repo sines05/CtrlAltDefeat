@@ -1,23 +1,52 @@
-import { createSceneAppHtml } from './scene/app.js';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
 import { createMuseumCorridor, updateCeilingFans } from './components/MuseumCorridor.js';
 import { createExhibitionWall } from './components/ExhibitionWall/ExhibitionWall.js';
-import { GuideFSM } from './systems/GuideFSM.js';
+import { CharacterGrounding } from './systems/CharacterGrounding.js';
+import { GuideFSM, GUIDE_STATES } from './systems/GuideFSM.js';
 import { TourManager, PLAYER_STATES } from './systems/TourManager.js';
 import { uiController } from './systems/UIController.js';
-import { CharacterGrounding } from './systems/CharacterGrounding.js';
 import { VideoActivationSystem } from './systems/VideoActivationSystem/VideoActivationSystem.js';
+import { fetchBootstrapContent } from './media/client.js';
+import { adaptMediaManifest, createDegradedMediaState } from './media/manifest-adapter.js';
+import { createModelRegistry } from './media/model-registry.js';
+
+const SCENE_ID = 'tay-ho-giay-do-room-01';
+const TOUR_ID = 'tour-01';
+const SCENE_PROP_ACTIVATION_DISTANCE = 16;
+const SCENE_PROP_TARGETS = [
+  { role: 'exhibit-village-picture', activationZ: -18 },
+  { role: 'exhibit-product-showing', activationZ: -9 },
+  { role: 'exhibit-paper-showing', activationZ: -6 },
+  { role: 'exhibit-mortar', activationZ: 0 },
+  { role: 'exhibit-showing-tree', activationZ: 9 },
+  { role: 'exhibit-wooden-mould', activationZ: 18 },
+];
 
 const scene = new THREE.Scene();
-let videoActivationSystem;
+let videoActivationSystem = null;
+let character = null;
+let currentAction = null;
+let isTalking = false;
+let mixers = [];
+let tourManager = null;
+let stations = [];
+let modelRegistry = null;
+let bootstrapState = {
+  scene: null,
+  tour: null,
+  media: createDegradedMediaState({ sceneId: SCENE_ID }),
+};
+
+const sceneProps = new Map();
+const scenePropLoadPromises = new Map();
+const loadedScenePropRoles = new Set();
 
 const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
-camera.position.set(0, 3, -35); // Start closer to the entrance walkway
-scene.add(camera); // Ensure camera children (arms) are rendered
+camera.position.set(0, 3, -35);
+scene.add(camera);
 
 const renderer = new THREE.WebGLRenderer({ antialias: false });
 renderer.setSize(innerWidth, innerHeight);
@@ -32,16 +61,15 @@ document.body.prepend(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 1.3, -32);
 controls.enableDamping = false;
-controls.rotateSpeed = 0.45; // Reduced mouse looking sensitivity
+controls.rotateSpeed = 0.45;
 controls.minDistance = 0.01;
 controls.maxDistance = 0.1;
 controls.enableZoom = false;
 controls.enablePan = false;
 controls.maxPolarAngle = Math.PI / 1.9;
-controls.minPolarAngle = Math.PI / 3.0; // restrict vertical looking
+controls.minPolarAngle = Math.PI / 3.0;
 controls.update();
 
-// Sun Light (Warm golden sunlight filtering from gaps)
 const sunLight = new THREE.DirectionalLight(0xffe2ab, 2.2);
 sunLight.position.set(10, 15, -10);
 sunLight.castShadow = true;
@@ -56,591 +84,631 @@ sunLight.shadow.camera.bottom = -8;
 sunLight.shadow.bias = -0.0005;
 scene.add(sunLight);
 
-const loader = new FBXLoader();
-const modelPath = '/guide_girl/huongdanvien.fbx';
-const idlePath = '/guide_girl/Idle.fbx';
-const walkPath = '/guide_girl/Walking.fbx';
-const talkingPath = '/guide_girl/Talking.fbx';
-const productShowingPath = '/asset/product_showing.fbx';
-const showingTreePath = '/asset/showing_tree_01.fbx';
-const villagePicturePath = '/asset/village_picture.fbx';
-const mortarPath = '/asset/mortar.fbx';
-const paperShowingPath = '/asset/paper_showing.fbx';
-const woodenMouldPath = '/asset/woodenmould.fbx';
-
-let character; // The user's controllable player character
-let currentAction;
-let isTalking = false;
-let mixers = [];
-let tourManager = null;
-let stations = [];
-
 const keys = { w: false, a: false, s: false, d: false, ' ': false };
 const velocity = new THREE.Vector3();
-const acceleration = 12;
 const maxSpeed = 2.4;
 const friction = 25;
-const rotationSpeed = 10;
 
-console.log('[FBXLoader] Bắt đầu tải model...', { modelPath, idlePath, walkPath, talkingPath });
-
-const loadWithLog = (path, label) => {
-  console.log(`[FBXLoader] Đang tải: ${label} (${path})`);
-  return loader.loadAsync(path).then(result => {
-    console.log(`[FBXLoader] ✅ Tải thành công: ${label}`);
-    return result;
-  });
-};
-
-function autoScaleAndGround(model, targetHeight) {
-  model.updateMatrixWorld(true);
-  const box = new THREE.Box3().setFromObject(model);
-  const size = new THREE.Vector3();
-  box.getSize(size);
-  if (size.y > 0) {
-    const scale = targetHeight / size.y;
-    model.scale.set(scale, scale, scale);
-    console.log(`[AutoScale] Scaling model to ${scale.toFixed(4)} (target height: ${targetHeight}m, original height: ${size.y.toFixed(2)}m)`);
+function removeLoadingScreen() {
+  const loadingScreen = document.getElementById('loading-screen');
+  if (!loadingScreen) {
+    return;
   }
-  CharacterGrounding.ground(model);
-}
 
-function fixModelMaterials(model, receiveShadow = true) {
-  model.traverse(child => {
-    if (child.isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = receiveShadow;
-      
-      if (child.material) {
-        if (Array.isArray(child.material)) {
-          child.material = child.material.map(mat => adjustSingleMaterial(mat));
-        } else {
-          child.material = adjustSingleMaterial(child.material);
-        }
-      }
-    }
-  });
+  loadingScreen.classList.add('fade-out');
+  setTimeout(() => loadingScreen.remove(), 500);
 }
 
 function adjustSingleMaterial(mat) {
   if (mat.isMeshBasicMaterial) {
-    const stdMat = new THREE.MeshStandardMaterial({
+    return new THREE.MeshStandardMaterial({
       map: mat.map,
       color: mat.color ? mat.color.clone().multiplyScalar(1.0) : new THREE.Color(0xcccccc),
       roughness: 0.85,
-      metalness: 0.05
+      metalness: 0.05,
     });
-    return stdMat;
   }
-  
+
   if (mat.emissive) mat.emissive.setHex(0x000000);
   if (mat.specular) mat.specular.setHex(0x111111);
   if (mat.shininess !== undefined) mat.shininess = 5;
   if (mat.color) {
     mat.color.multiplyScalar(1.0);
   }
-  
   if (mat.roughness !== undefined) mat.roughness = 0.85;
   if (mat.metalness !== undefined) mat.metalness = 0.05;
-  
+
   return mat;
 }
 
+function fixModelMaterials(model, receiveShadow = true) {
+  model.traverse((child) => {
+    if (!child.isMesh) {
+      return;
+    }
+
+    child.castShadow = true;
+    child.receiveShadow = receiveShadow;
+
+    if (!child.material) {
+      return;
+    }
+
+    child.material = Array.isArray(child.material)
+      ? child.material.map((mat) => adjustSingleMaterial(mat))
+      : adjustSingleMaterial(child.material);
+  });
+}
+
+function autoScaleAndGround(model, targetHeight) {
+  model.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(model);
+  const size = new THREE.Vector3();
+  box.getSize(size);
+
+  if (size.y > 0) {
+    const scale = targetHeight / size.y;
+    model.scale.set(scale, scale, scale);
+  }
+
+  CharacterGrounding.ground(model);
+}
+
 function prepareAsset(model, receiveShadow = true) {
-  // Remove any light or camera objects exported in the FBX to prevent changing global scene colors
   const lightsToRemove = [];
-  model.traverse(child => {
+  model.traverse((child) => {
     if (child.isLight || child.isCamera) {
       lightsToRemove.push(child);
     }
   });
-  lightsToRemove.forEach(light => {
-    if (light.parent) {
-      light.parent.remove(light);
-    }
+  lightsToRemove.forEach((light) => {
+    light.parent?.remove(light);
   });
 
-  // Clone materials to prevent bleed-through/override of shared properties
-  model.traverse(child => {
-    if (child.isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = receiveShadow;
-      
-      if (child.material) {
-        if (Array.isArray(child.material)) {
-          child.material = child.material.map(mat => mat.clone());
-        } else {
-          child.material = child.material.clone();
-        }
-      }
+  model.traverse((child) => {
+    if (!child.isMesh) {
+      return;
     }
+
+    child.castShadow = true;
+    child.receiveShadow = receiveShadow;
+    if (!child.material) {
+      return;
+    }
+
+    child.material = Array.isArray(child.material)
+      ? child.material.map((mat) => mat.clone())
+      : child.material.clone();
   });
 }
 
-Promise.all([
-  loadWithLog(modelPath, 'Main model'),
-  loadWithLog(idlePath, 'Idle animation'),
-  loadWithLog(walkPath, 'Walk animation'),
-  loadWithLog(talkingPath, 'Talking animation'),
-  loadWithLog(productShowingPath, 'Product showing'),
-  loadWithLog(showingTreePath, 'Showing tree 01'),
-  loadWithLog(villagePicturePath, 'Village picture'),
-  loadWithLog(mortarPath, 'Mortar'),
-  loadWithLog(paperShowingPath, 'Paper showing'),
-  loadWithLog(woodenMouldPath, 'Wooden mould'),
-]).then(([model, idleAnim, walkAnim, talkingAnim, productShowingModel, showingTreeModel, villagePictureModel, mortarModel, paperShowingModel, woodenMouldModel]) => {
-  console.log('[FBXLoader] ✅ Tất cả file đã tải xong, đang khởi tạo nhân vật...');
+function createMockAction() {
+  return {
+    play() {},
+    reset() {
+      return this;
+    },
+    fadeIn() {
+      return this;
+    },
+    fadeOut() {},
+    setEffectiveWeight() {},
+  };
+}
 
-  // Setup Museum architecture & exhibition screens
-  createMuseumCorridor(scene);
-  stations = createExhibitionWall(scene);
-  
-  // Pre-load all video displays at startup
-  stations.forEach(station => {
-    station.videoDisplay.load();
-  });
+function removeSceneObject(object3d) {
+  if (!object3d) {
+    return;
+  }
 
+  object3d.parent?.remove(object3d);
+}
+
+function disposeStations(stationList) {
+  for (const station of stationList) {
+    removeSceneObject(station.group);
+    station.dispose?.();
+  }
+}
+
+function rebuildStations(stationViewModels) {
+  disposeStations(stations);
+  stations = createExhibitionWall(scene, stationViewModels);
   videoActivationSystem = new VideoActivationSystem(stations);
 
-  // Remove loading screen
-  const loadingScreen = document.getElementById('loading-screen');
-  if (loadingScreen) {
-    loadingScreen.classList.add('fade-out');
-    setTimeout(() => loadingScreen.remove(), 500);
+  if (tourManager) {
+    tourManager.stations = stations;
+    tourManager.currentStationIdx = Math.min(tourManager.currentStationIdx, Math.max(stations.length - 1, 0));
   }
+}
 
-  const scaleFactor = 1.8;
+function registerSceneProp(role, object3d) {
+  removeSceneObject(sceneProps.get(role));
+  sceneProps.set(role, object3d);
+  return object3d;
+}
 
-  // 1. Initialize Player character
-  const playerModel = SkeletonUtils.clone(model);
-  playerModel.scale.set(scaleFactor, scaleFactor, scaleFactor);
-  playerModel.position.set(0, 0, -32); // start near the entrance
-
-  CharacterGrounding.ground(playerModel);
-
-  playerModel.traverse(child => {
-    if (child.isMesh) {
-      child.castShadow = false;
-      child.receiveShadow = false;
-    }
-  });
-  playerModel.visible = false; // Hide player character for first-person view
-  scene.add(playerModel);
-  character = playerModel; // Assign to global character variable
-
-  const playerMixer = new THREE.AnimationMixer(playerModel);
-  const playerActions = {
-    idle: playerMixer.clipAction(idleAnim.animations[0]),
-    walk: playerMixer.clipAction(walkAnim.animations[0]),
-    talk: playerMixer.clipAction(talkingAnim.animations[0])
-  };
-  
-  // Store actions in userData for updateMovement reference
-  playerModel.userData.actions = playerActions;
-  playerActions.idle.play();
-  currentAction = playerActions.idle;
-
-  // 2. Initialize Guide NPC
-  const guideModel = SkeletonUtils.clone(model);
-  const guideScale = scaleFactor * 1.1; // scale up guide slightly
-  guideModel.scale.set(guideScale, guideScale, guideScale);
-  guideModel.position.set(-1.5, 0, -28); // stand left of walkway near start
-
-  CharacterGrounding.ground(guideModel, -0.92);
-
-  fixModelMaterials(guideModel, false);
-  scene.add(guideModel);
-
-  // 3. Initialize new assets: product_showing and showing_tree_01
-  prepareAsset(productShowingModel, true);
-  productShowingModel.position.set(2.5, 0, -9.0);
-  scene.add(productShowingModel);
-  autoScaleAndGround(productShowingModel, 2.0);
-
-  prepareAsset(showingTreeModel, true);
-  showingTreeModel.position.set(2.5, 0, 9.0);
-  scene.add(showingTreeModel);
-  autoScaleAndGround(showingTreeModel, 2.8);
-
-  // 4. Village picture — hung on the RIGHT wall (X=11, no video screens)
-  // Target: Z=-18 (midpoint between pillar Z=-21 and pillar Z=-15, in empty wall section)
-  {
-    prepareAsset(villagePictureModel, false);
-
-    // --- Step 1: Strip non-mesh leaf nodes (FBX helpers, empties, locators, etc.) ---
-    const vpNodesToRemove = [];
-    villagePictureModel.traverse(child => {
-      if (child === villagePictureModel) return;
-      if (!child.isMesh && child.children.length === 0) {
-        vpNodesToRemove.push(child);
-      }
-    });
-    vpNodesToRemove.forEach(obj => { if (obj.parent) obj.parent.remove(obj); });
-    console.log(`[VillagePicture] Stripped ${vpNodesToRemove.length} non-mesh leaf node(s)`);
-
-    // Log remaining mesh hierarchy
-    let vpMeshCount = 0;
-    villagePictureModel.traverse(child => {
-      if (child.isMesh) {
-        vpMeshCount++;
-        console.log(`[VillagePicture]   Mesh: "${child.name}"`);
-      }
-    });
-    console.log(`[VillagePicture] Total meshes: ${vpMeshCount}`);
-
-    // --- Step 2: Reset transforms and compute raw bounding box ---
-    villagePictureModel.position.set(0, 0, 0);
-    villagePictureModel.rotation.set(0, 0, 0);
-    villagePictureModel.scale.set(1, 1, 1);
-    villagePictureModel.updateMatrixWorld(true);
-
-    const vpRawBox = new THREE.Box3().setFromObject(villagePictureModel);
-    const vpRawSize = new THREE.Vector3();
-    vpRawBox.getSize(vpRawSize);
-    const vpRawCenter = new THREE.Vector3();
-    vpRawBox.getCenter(vpRawCenter);
-
-    console.log(`[VillagePicture] Raw size: X=${vpRawSize.x.toFixed(3)}, Y=${vpRawSize.y.toFixed(3)}, Z=${vpRawSize.z.toFixed(3)}`);
-    console.log(`[VillagePicture] Raw center: (${vpRawCenter.x.toFixed(3)}, ${vpRawCenter.y.toFixed(3)}, ${vpRawCenter.z.toFixed(3)})`);
-
-    // --- Step 3: Normalize pivot — shift model so its bounding-box center is at (0,0,0) ---
-    villagePictureModel.position.sub(vpRawCenter);
-
-    // Wrap in a parent Group — all further transforms go on this group only
-    const vpGroup = new THREE.Group();
-    vpGroup.add(villagePictureModel);
-
-    // --- Step 4: Uniform scale to target height (1.8m) ---
-    const vpTargetH = 1.8;
-    const vpScaleFactor = vpTargetH / vpRawSize.y;
-    vpGroup.scale.set(vpScaleFactor, vpScaleFactor, vpScaleFactor);
-
-    // --- Step 5: Auto-detect thin axis and rotate to align with the right wall ---
-    // Right wall at X=11 has inward normal pointing toward -X.
-    // The picture's thinnest dimension is its depth/thickness.
-    // We need this thin axis to align with world X so the picture is parallel to the wall.
-    const minDim = Math.min(vpRawSize.x, vpRawSize.y, vpRawSize.z);
-    const dimTolerance = minDim * 0.1 + 0.001;
-
-    if (Math.abs(vpRawSize.z - minDim) < dimTolerance) {
-      // Z is thin → rotate Y by -π/2 so content face points toward -X (into corridor)
-      // +π/2 had the back facing outward; adding π flips the content side out
-      vpGroup.rotation.y = -Math.PI / 2;
-      console.log('[VillagePicture] Thin axis: Z → rotated Y = -90° (content faces corridor)');
-    } else if (Math.abs(vpRawSize.x - minDim) < dimTolerance) {
-      // X is already thin → rotate π to flip content face toward -X
-      vpGroup.rotation.y = Math.PI;
-      console.log('[VillagePicture] Thin axis: X → rotated Y = 180° (content faces corridor)');
-    } else {
-      // Y is thin (unusual) → rotate to fix
-      vpGroup.rotation.y = -Math.PI / 2;
-      vpGroup.rotation.z = Math.PI / 2;
-      console.log('[VillagePicture] Thin axis: Y (unusual) → compound rotation applied');
-    }
-
-    // --- Step 6: Compute bounding box after scale + rotation, group at origin ---
-    vpGroup.position.set(0, 0, 0);
-    vpGroup.updateMatrixWorld(true);
-    const vpScaledBox = new THREE.Box3().setFromObject(vpGroup);
-
-    // --- Step 7: Position so back face is 2cm from wall, centered at Z=-18, Y=2.2 ---
-    const vpWallX = 11.0;
-    const vpWallGap = 0.02; // 2cm gap to avoid z-fighting
-
-    // X: back face (max X) → wallX - gap
-    const vpPosX = (vpWallX - vpWallGap) - vpScaledBox.max.x;
-    // Y: center at 2.2m hanging height
-    const vpCenterY = (vpScaledBox.min.y + vpScaledBox.max.y) / 2;
-    const vpPosY = 2.2 - vpCenterY;
-    // Z: center at -18.0
-    const vpCenterZ = (vpScaledBox.min.z + vpScaledBox.max.z) / 2;
-    const vpPosZ = -18.0 - vpCenterZ;
-
-    vpGroup.position.set(vpPosX, vpPosY, vpPosZ);
-    scene.add(vpGroup);
-
-    // --- Step 8: Final verification ---
-    vpGroup.updateMatrixWorld(true);
-    const vpVerifyBox = new THREE.Box3().setFromObject(vpGroup);
-    const vpVerifySize = new THREE.Vector3();
-    vpVerifyBox.getSize(vpVerifySize);
-    console.log(`[VillagePicture] ── Final Report ──`);
-    console.log(`[VillagePicture] Position: (${vpGroup.position.x.toFixed(3)}, ${vpGroup.position.y.toFixed(3)}, ${vpGroup.position.z.toFixed(3)})`);
-    console.log(`[VillagePicture] Rotation Y: ${(vpGroup.rotation.y * 180 / Math.PI).toFixed(1)}°`);
-    console.log(`[VillagePicture] Scale: ${vpGroup.scale.x.toFixed(5)}`);
-    console.log(`[VillagePicture] BBox: X[${vpVerifyBox.min.x.toFixed(3)}, ${vpVerifyBox.max.x.toFixed(3)}]  Y[${vpVerifyBox.min.y.toFixed(3)}, ${vpVerifyBox.max.y.toFixed(3)}]  Z[${vpVerifyBox.min.z.toFixed(3)}, ${vpVerifyBox.max.z.toFixed(3)}]`);
-    console.log(`[VillagePicture] Size: ${vpVerifySize.x.toFixed(3)} × ${vpVerifySize.y.toFixed(3)} × ${vpVerifySize.z.toFixed(3)}`);
-    console.log(`[VillagePicture] Wall gap (back→wall): ${(vpWallX - vpVerifyBox.max.x).toFixed(3)} m`);
-  }
-
-  // 5. Mortar — placed on the floor, scaled up 30% from default
-  prepareAsset(mortarModel, true);
-  autoScaleAndGround(mortarModel, 1.0); // Scale to ~1.0m baseline height
-  // Apply 30% enlargement on top of the auto-scaled result
-  const mortarCurrentScale = mortarModel.scale.clone();
-  mortarModel.scale.set(
-    mortarCurrentScale.x * 1.3,
-    mortarCurrentScale.y * 1.3,
-    mortarCurrentScale.z * 1.3
-  );
-  // Position: right side of corridor at Z=0 (center), near pillar line but not blocking walkway
-  mortarModel.position.set(5.0, 0, 0);
-  CharacterGrounding.ground(mortarModel);
-  scene.add(mortarModel);
-
-  // 6. Paper showing — hung on the RIGHT wall at Z=-6 (between pillar Z=-9 and pillar Z=-3)
-  {
-    prepareAsset(paperShowingModel, false);
-
-    // Strip non-mesh leaf nodes
-    const psNodesToRemove = [];
-    paperShowingModel.traverse(child => {
-      if (child === paperShowingModel) return;
-      if (!child.isMesh && child.children.length === 0) {
-        psNodesToRemove.push(child);
-      }
-    });
-    psNodesToRemove.forEach(obj => { if (obj.parent) obj.parent.remove(obj); });
-
-    // Reset transforms and compute raw bounding box
-    paperShowingModel.position.set(0, 0, 0);
-    paperShowingModel.rotation.set(0, 0, 0);
-    paperShowingModel.scale.set(1, 1, 1);
-    paperShowingModel.updateMatrixWorld(true);
-
-    const psRawBox = new THREE.Box3().setFromObject(paperShowingModel);
-    const psRawSize = new THREE.Vector3();
-    psRawBox.getSize(psRawSize);
-    const psRawCenter = new THREE.Vector3();
-    psRawBox.getCenter(psRawCenter);
-
-    console.log(`[PaperShowing] Raw size: X=${psRawSize.x.toFixed(3)}, Y=${psRawSize.y.toFixed(3)}, Z=${psRawSize.z.toFixed(3)}`);
-
-    // Normalize pivot
-    paperShowingModel.position.sub(psRawCenter);
-    const psGroup = new THREE.Group();
-    psGroup.add(paperShowingModel);
-
-    // Uniform scale to 1.6m height
-    const psTargetH = 3.2;
-    const psScaleFactor = psTargetH / psRawSize.y;
-    psGroup.scale.set(psScaleFactor, psScaleFactor, psScaleFactor);
-
-    // Auto-detect thin axis and rotate (content face toward -X = corridor)
-    const psMinDim = Math.min(psRawSize.x, psRawSize.y, psRawSize.z);
-    const psTol = psMinDim * 0.1 + 0.001;
-
-    if (Math.abs(psRawSize.z - psMinDim) < psTol) {
-      psGroup.rotation.y = -Math.PI / 2;
-    } else if (Math.abs(psRawSize.x - psMinDim) < psTol) {
-      psGroup.rotation.y = Math.PI;
-    } else {
-      psGroup.rotation.y = -Math.PI / 2;
-      psGroup.rotation.z = Math.PI / 2;
-    }
-
-    // Compute bounding box after scale + rotation
-    psGroup.position.set(0, 0, 0);
-    psGroup.updateMatrixWorld(true);
-    const psScaledBox = new THREE.Box3().setFromObject(psGroup);
-
-    // Position: back at wall X=11 with 2cm gap, center Y=2.2, center Z=-6.0
-    const psWallX = 11.0;
-    const psGap = 0.02;
-    const psPosX = (psWallX - psGap) - psScaledBox.max.x;
-    const psCenterY = (psScaledBox.min.y + psScaledBox.max.y) / 2;
-    const psPosY = 2.2 - psCenterY;
-    const psCenterZ = (psScaledBox.min.z + psScaledBox.max.z) / 2;
-    const psPosZ = -6.0 - psCenterZ;
-
-    psGroup.position.set(psPosX, psPosY, psPosZ);
-    scene.add(psGroup);
-
-    // Verification
-    psGroup.updateMatrixWorld(true);
-    const psVerifyBox = new THREE.Box3().setFromObject(psGroup);
-    const psVerifySize = new THREE.Vector3();
-    psVerifyBox.getSize(psVerifySize);
-    console.log(`[PaperShowing] Position: (${psGroup.position.x.toFixed(3)}, ${psGroup.position.y.toFixed(3)}, ${psGroup.position.z.toFixed(3)})`);
-    console.log(`[PaperShowing] Rotation Y: ${(psGroup.rotation.y * 180 / Math.PI).toFixed(1)}°`);
-    console.log(`[PaperShowing] Scale: ${psGroup.scale.x.toFixed(5)}`);
-    console.log(`[PaperShowing] Size: ${psVerifySize.x.toFixed(3)} × ${psVerifySize.y.toFixed(3)} × ${psVerifySize.z.toFixed(3)}`);
-    console.log(`[PaperShowing] Wall gap: ${(psWallX - psVerifyBox.max.x).toFixed(3)} m`);
-  }
-
-  // 7. Wooden mould — placed on the floor at Z=18
-  prepareAsset(woodenMouldModel, true);
-  woodenMouldModel.position.set(4.0, 0, 18.0);
-  scene.add(woodenMouldModel);
-  autoScaleAndGround(woodenMouldModel, 1.2);
-
-  const guideMixer = new THREE.AnimationMixer(guideModel);
-  const guideActions = {
-    idle: guideMixer.clipAction(idleAnim.animations[0]),
-    walk: guideMixer.clipAction(walkAnim.animations[0]),
-    talk: guideMixer.clipAction(talkingAnim.animations[0])
-  };
-
-  const guideFSM = new GuideFSM(guideModel, guideMixer, guideActions);
-
-  // 3. Initialize Tour Manager
-  tourManager = new TourManager(
-    scene, camera, controls,
-    playerModel, playerMixer, playerActions,
-    guideModel, guideFSM, stations
-  );
-
-  // Track mixers
-  mixers = [playerMixer, guideMixer];
-
-}).catch(err => {
-  console.error('[FBXLoader] ❌ Thất bại:', err.message);
-  console.log('[FBXLoader] Fallback: tạo các hình khối thay thế');
-
-  // Fallback setup for scene
-  createMuseumCorridor(scene);
-  stations = createExhibitionWall(scene);
-  videoActivationSystem = new VideoActivationSystem(stations);
-
-  const geo = new THREE.CylinderGeometry(0.3, 0.3, 1.8, 8);
-  const mat = new THREE.MeshStandardMaterial({ color: 0x44aaff });
-
-  const playerModel = new THREE.Mesh(geo, mat);
+function createFallbackCharacters() {
+  const geometry = new THREE.CylinderGeometry(0.3, 0.3, 1.8, 8);
+  const playerModel = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x44aaff }));
   playerModel.position.set(0, 0, -32);
   playerModel.castShadow = false;
   playerModel.receiveShadow = false;
-  playerModel.visible = false; // Hide fallback player too
+  playerModel.visible = false;
   scene.add(playerModel);
-  character = playerModel;
   CharacterGrounding.ground(playerModel);
 
-  const guideModel = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0xffaa44 }));
+  const guideModel = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0xffaa44 }));
   guideModel.position.set(-1.5, 0, -28);
   guideModel.castShadow = true;
   guideModel.receiveShadow = false;
   scene.add(guideModel);
   CharacterGrounding.ground(guideModel, -0.92);
 
-  // Fallback for product_showing: a cylinder/box
+  const mockActions = {
+    idle: createMockAction(),
+    walk: createMockAction(),
+    talk: createMockAction(),
+  };
+  playerModel.userData.actions = mockActions;
+  currentAction = mockActions.idle;
+  character = playerModel;
+
+  return {
+    playerModel,
+    guideModel,
+    guideFSM: new GuideFSM(guideModel, null, mockActions),
+    mockActions,
+  };
+}
+
+function createFallbackSceneProps() {
   const productFallback = new THREE.Mesh(
     new THREE.BoxGeometry(1.6, 2.0, 1.6),
-    new THREE.MeshStandardMaterial({ color: 0xba9566, roughness: 0.7 })
+    new THREE.MeshStandardMaterial({ color: 0xba9566, roughness: 0.7 }),
   );
   productFallback.position.set(2.5, 0, -9.0);
   scene.add(productFallback);
   CharacterGrounding.ground(productFallback);
+  registerSceneProp('exhibit-product-showing', productFallback);
 
-  // Fallback for showing_tree_01: a green cone on a brown trunk
   const treeFallback = new THREE.Group();
   treeFallback.position.set(2.5, 0, 9.0);
   const trunk = new THREE.Mesh(
     new THREE.CylinderGeometry(0.2, 0.2, 0.8),
-    new THREE.MeshStandardMaterial({ color: 0x5d4037 })
+    new THREE.MeshStandardMaterial({ color: 0x5d4037 }),
   );
   trunk.position.y = 0.4;
   const leaves = new THREE.Mesh(
     new THREE.ConeGeometry(1.2, 2.2, 8),
-    new THREE.MeshStandardMaterial({ color: 0x3d7044, roughness: 0.9 })
+    new THREE.MeshStandardMaterial({ color: 0x3d7044, roughness: 0.9 }),
   );
   leaves.position.y = 1.9;
   treeFallback.add(trunk, leaves);
   scene.add(treeFallback);
   CharacterGrounding.ground(treeFallback);
+  registerSceneProp('exhibit-showing-tree', treeFallback);
 
-  // Fallback for village_picture: a flat canvas on the right wall
   const pictureFallback = new THREE.Mesh(
     new THREE.BoxGeometry(0.08, 1.4, 2.0),
-    new THREE.MeshStandardMaterial({ color: 0x8b6f47, roughness: 0.6 })
+    new THREE.MeshStandardMaterial({ color: 0x8b6f47, roughness: 0.6 }),
   );
   pictureFallback.position.set(10.75, 2.2, -18.0);
   scene.add(pictureFallback);
+  registerSceneProp('exhibit-village-picture', pictureFallback);
 
-  // Fallback for mortar: a stone-colored cylinder
   const mortarFallback = new THREE.Mesh(
     new THREE.CylinderGeometry(0.5, 0.4, 1.0, 12),
-    new THREE.MeshStandardMaterial({ color: 0x8d8072, roughness: 0.85 })
+    new THREE.MeshStandardMaterial({ color: 0x8d8072, roughness: 0.85 }),
   );
   mortarFallback.position.set(5.0, 0, 0);
   scene.add(mortarFallback);
   CharacterGrounding.ground(mortarFallback);
+  registerSceneProp('exhibit-mortar', mortarFallback);
 
-  // Fallback for paper_showing: a flat canvas on the right wall at Z=-6
   const paperFallback = new THREE.Mesh(
     new THREE.BoxGeometry(0.08, 1.2, 1.8),
-    new THREE.MeshStandardMaterial({ color: 0xd4c9a8, roughness: 0.5 })
+    new THREE.MeshStandardMaterial({ color: 0xd4c9a8, roughness: 0.5 }),
   );
   paperFallback.position.set(10.95, 2.2, -6.0);
   scene.add(paperFallback);
+  registerSceneProp('exhibit-paper-showing', paperFallback);
 
-  // Fallback for wooden mould
   const mouldFallback = new THREE.Mesh(
     new THREE.BoxGeometry(1.4, 0.15, 1.0),
-    new THREE.MeshStandardMaterial({ color: 0xba9566, roughness: 0.7 })
+    new THREE.MeshStandardMaterial({ color: 0xba9566, roughness: 0.7 }),
   );
   mouldFallback.position.set(4.0, 0.6, 18.0);
   scene.add(mouldFallback);
+  registerSceneProp('exhibit-wooden-mould', mouldFallback);
+}
 
-  // Mock animation clips & actions
-  const mockAction = () => ({
-    play: () => {}, reset: () => {}, fadeIn: function() { return this; }, fadeOut: () => {}, setEffectiveWeight: () => {}
+function placeProductShowingModel(productShowingModel) {
+  prepareAsset(productShowingModel, true);
+  productShowingModel.position.set(2.5, 0, -9.0);
+  scene.add(productShowingModel);
+  autoScaleAndGround(productShowingModel, 2.0);
+  return registerSceneProp('exhibit-product-showing', productShowingModel);
+}
+
+function placeShowingTreeModel(showingTreeModel) {
+  prepareAsset(showingTreeModel, true);
+  showingTreeModel.position.set(2.5, 0, 9.0);
+  scene.add(showingTreeModel);
+  autoScaleAndGround(showingTreeModel, 2.8);
+  return registerSceneProp('exhibit-showing-tree', showingTreeModel);
+}
+
+function placeVillagePictureModel(villagePictureModel) {
+  prepareAsset(villagePictureModel, false);
+
+  const nodesToRemove = [];
+  villagePictureModel.traverse((child) => {
+    if (child === villagePictureModel) {
+      return;
+    }
+
+    if (!child.isMesh && child.children.length === 0) {
+      nodesToRemove.push(child);
+    }
   });
-  const mockActions = { idle: mockAction(), walk: mockAction(), talk: mockAction() };
-  playerModel.userData.actions = mockActions;
+  nodesToRemove.forEach((object3d) => object3d.parent?.remove(object3d));
 
-  const guideFSM = new GuideFSM(guideModel, null, mockActions);
+  villagePictureModel.position.set(0, 0, 0);
+  villagePictureModel.rotation.set(0, 0, 0);
+  villagePictureModel.scale.set(1, 1, 1);
+  villagePictureModel.updateMatrixWorld(true);
 
+  const rawBox = new THREE.Box3().setFromObject(villagePictureModel);
+  const rawSize = new THREE.Vector3();
+  rawBox.getSize(rawSize);
+  const rawCenter = new THREE.Vector3();
+  rawBox.getCenter(rawCenter);
+  villagePictureModel.position.sub(rawCenter);
+
+  const group = new THREE.Group();
+  group.add(villagePictureModel);
+
+  const targetHeight = 1.8;
+  const scaleFactor = targetHeight / rawSize.y;
+  group.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+  const minDimension = Math.min(rawSize.x, rawSize.y, rawSize.z);
+  const tolerance = minDimension * 0.1 + 0.001;
+  if (Math.abs(rawSize.z - minDimension) < tolerance) {
+    group.rotation.y = -Math.PI / 2;
+  } else if (Math.abs(rawSize.x - minDimension) < tolerance) {
+    group.rotation.y = Math.PI;
+  } else {
+    group.rotation.y = -Math.PI / 2;
+    group.rotation.z = Math.PI / 2;
+  }
+
+  group.position.set(0, 0, 0);
+  group.updateMatrixWorld(true);
+  const scaledBox = new THREE.Box3().setFromObject(group);
+
+  const wallX = 11.0;
+  const wallGap = 0.02;
+  const posX = (wallX - wallGap) - scaledBox.max.x;
+  const centerY = (scaledBox.min.y + scaledBox.max.y) / 2;
+  const posY = 2.2 - centerY;
+  const centerZ = (scaledBox.min.z + scaledBox.max.z) / 2;
+  const posZ = -18.0 - centerZ;
+
+  group.position.set(posX, posY, posZ);
+  scene.add(group);
+  return registerSceneProp('exhibit-village-picture', group);
+}
+
+function placeMortarModel(mortarModel) {
+  prepareAsset(mortarModel, true);
+  autoScaleAndGround(mortarModel, 1.0);
+  const currentScale = mortarModel.scale.clone();
+  mortarModel.scale.set(currentScale.x * 1.3, currentScale.y * 1.3, currentScale.z * 1.3);
+  mortarModel.position.set(5.0, 0, 0);
+  CharacterGrounding.ground(mortarModel);
+  scene.add(mortarModel);
+  return registerSceneProp('exhibit-mortar', mortarModel);
+}
+
+function placePaperShowingModel(paperShowingModel) {
+  prepareAsset(paperShowingModel, false);
+
+  const nodesToRemove = [];
+  paperShowingModel.traverse((child) => {
+    if (child === paperShowingModel) {
+      return;
+    }
+
+    if (!child.isMesh && child.children.length === 0) {
+      nodesToRemove.push(child);
+    }
+  });
+  nodesToRemove.forEach((object3d) => object3d.parent?.remove(object3d));
+
+  paperShowingModel.position.set(0, 0, 0);
+  paperShowingModel.rotation.set(0, 0, 0);
+  paperShowingModel.scale.set(1, 1, 1);
+  paperShowingModel.updateMatrixWorld(true);
+
+  const rawBox = new THREE.Box3().setFromObject(paperShowingModel);
+  const rawSize = new THREE.Vector3();
+  rawBox.getSize(rawSize);
+  const rawCenter = new THREE.Vector3();
+  rawBox.getCenter(rawCenter);
+  paperShowingModel.position.sub(rawCenter);
+
+  const group = new THREE.Group();
+  group.add(paperShowingModel);
+
+  const targetHeight = 3.2;
+  const scaleFactor = targetHeight / rawSize.y;
+  group.scale.set(scaleFactor, scaleFactor, scaleFactor);
+
+  const minDimension = Math.min(rawSize.x, rawSize.y, rawSize.z);
+  const tolerance = minDimension * 0.1 + 0.001;
+  if (Math.abs(rawSize.z - minDimension) < tolerance) {
+    group.rotation.y = -Math.PI / 2;
+  } else if (Math.abs(rawSize.x - minDimension) < tolerance) {
+    group.rotation.y = Math.PI;
+  } else {
+    group.rotation.y = -Math.PI / 2;
+    group.rotation.z = Math.PI / 2;
+  }
+
+  group.position.set(0, 0, 0);
+  group.updateMatrixWorld(true);
+  const scaledBox = new THREE.Box3().setFromObject(group);
+
+  const wallX = 11.0;
+  const wallGap = 0.02;
+  const posX = (wallX - wallGap) - scaledBox.max.x;
+  const centerY = (scaledBox.min.y + scaledBox.max.y) / 2;
+  const posY = 2.2 - centerY;
+  const centerZ = (scaledBox.min.z + scaledBox.max.z) / 2;
+  const posZ = -6.0 - centerZ;
+
+  group.position.set(posX, posY, posZ);
+  scene.add(group);
+  return registerSceneProp('exhibit-paper-showing', group);
+}
+
+function placeWoodenMouldModel(woodenMouldModel) {
+  prepareAsset(woodenMouldModel, true);
+  woodenMouldModel.position.set(4.0, 0, 18.0);
+  scene.add(woodenMouldModel);
+  autoScaleAndGround(woodenMouldModel, 1.2);
+  return registerSceneProp('exhibit-wooden-mould', woodenMouldModel);
+}
+
+function applyScenePropModel(role, model) {
+  switch (role) {
+    case 'exhibit-product-showing':
+      placeProductShowingModel(model);
+      break;
+    case 'exhibit-showing-tree':
+      placeShowingTreeModel(model);
+      break;
+    case 'exhibit-village-picture':
+      placeVillagePictureModel(model);
+      break;
+    case 'exhibit-mortar':
+      placeMortarModel(model);
+      break;
+    case 'exhibit-paper-showing':
+      placePaperShowingModel(model);
+      break;
+    case 'exhibit-wooden-mould':
+      placeWoodenMouldModel(model);
+      break;
+    default:
+      break;
+  }
+}
+
+function initializeBaseScene() {
+  createMuseumCorridor(scene);
+  rebuildStations(bootstrapState.media.stations);
+
+  const { playerModel, guideModel, guideFSM, mockActions } = createFallbackCharacters();
   tourManager = new TourManager(
-    scene, camera, controls,
-    playerModel, null, mockActions,
-    guideModel, guideFSM, stations
+    scene,
+    camera,
+    controls,
+    playerModel,
+    null,
+    mockActions,
+    guideModel,
+    guideFSM,
+    stations,
   );
 
-  // Pre-load all video displays at startup in fallback too
-  stations.forEach(station => {
-    station.videoDisplay.load();
-  });
+  createFallbackSceneProps();
+  removeLoadingScreen();
+}
 
-  // Remove loading screen
-  const loadingScreen = document.getElementById('loading-screen');
-  if (loadingScreen) {
-    loadingScreen.classList.add('fade-out');
-    setTimeout(() => loadingScreen.remove(), 500);
+async function promoteAnimatedCharacters() {
+  if (!modelRegistry) {
+    return;
   }
-});
+
+  try {
+    const [model, idleAnim, walkAnim, talkingAnim] = await Promise.all([
+      modelRegistry.loadRole('guide-model'),
+      modelRegistry.loadRole('guide-idle'),
+      modelRegistry.loadRole('guide-walk'),
+      modelRegistry.loadRole('guide-talk'),
+    ]);
+
+    const previousPlayer = tourManager?.player;
+    const previousGuide = tourManager?.guide;
+    const playerPosition = previousPlayer?.position.clone() ?? new THREE.Vector3(0, 0, -32);
+    const guidePosition = previousGuide?.position.clone() ?? new THREE.Vector3(-1.5, 0, -28);
+    const playerRotationY = previousPlayer?.rotation.y ?? 0;
+    const guideRotationY = previousGuide?.rotation.y ?? 0;
+
+    const scaleFactor = 1.8;
+    const playerModel = SkeletonUtils.clone(model);
+    playerModel.scale.set(scaleFactor, scaleFactor, scaleFactor);
+    playerModel.position.copy(playerPosition);
+    playerModel.rotation.y = playerRotationY;
+    CharacterGrounding.ground(playerModel);
+    playerModel.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = false;
+        child.receiveShadow = false;
+      }
+    });
+    playerModel.visible = false;
+    scene.add(playerModel);
+
+    const playerMixer = new THREE.AnimationMixer(playerModel);
+    const playerActions = {
+      idle: playerMixer.clipAction(idleAnim.animations[0]),
+      walk: playerMixer.clipAction(walkAnim.animations[0]),
+      talk: playerMixer.clipAction(talkingAnim.animations[0]),
+    };
+    playerModel.userData.actions = playerActions;
+
+    const guideModel = SkeletonUtils.clone(model);
+    const guideScale = scaleFactor * 1.1;
+    guideModel.scale.set(guideScale, guideScale, guideScale);
+    guideModel.position.copy(guidePosition);
+    guideModel.rotation.y = guideRotationY;
+    CharacterGrounding.ground(guideModel, -0.92);
+    fixModelMaterials(guideModel, false);
+    scene.add(guideModel);
+
+    const guideMixer = new THREE.AnimationMixer(guideModel);
+    const guideActions = {
+      idle: guideMixer.clipAction(idleAnim.animations[0]),
+      walk: guideMixer.clipAction(walkAnim.animations[0]),
+      talk: guideMixer.clipAction(talkingAnim.animations[0]),
+    };
+    const guideFSM = new GuideFSM(guideModel, guideMixer, guideActions);
+
+    const shouldWalk = tourManager?.playerState === PLAYER_STATES.FOLLOWING_GUIDE;
+    const nextPlayerAction = shouldWalk ? playerActions.walk : playerActions.idle;
+    nextPlayerAction.play();
+    currentAction = nextPlayerAction;
+    guideFSM.transitionTo(shouldWalk ? GUIDE_STATES.WALKING : GUIDE_STATES.IDLE);
+
+    if (tourManager) {
+      tourManager.player = playerModel;
+      tourManager.playerMixer = playerMixer;
+      tourManager.playerActions = playerActions;
+      tourManager.playerCurrentAction = nextPlayerAction;
+      tourManager.guide = guideModel;
+      tourManager.guideFSM = guideFSM;
+    }
+
+    removeSceneObject(previousPlayer);
+    removeSceneObject(previousGuide);
+    character = playerModel;
+    mixers = [playerMixer, guideMixer];
+  } catch (error) {
+    console.warn('[MediaRuntime] Animated guide assets unavailable, keeping fallback geometry.', error);
+  }
+}
+
+function maybeLoadSceneProps() {
+  if (!character || !modelRegistry) {
+    return;
+  }
+
+  for (const target of SCENE_PROP_TARGETS) {
+    if (loadedScenePropRoles.has(target.role) || scenePropLoadPromises.has(target.role)) {
+      continue;
+    }
+
+    if (Math.abs(character.position.z - target.activationZ) > SCENE_PROP_ACTIVATION_DISTANCE) {
+      continue;
+    }
+
+    const loadPromise = modelRegistry.loadRole(target.role)
+      .then((model) => {
+        applyScenePropModel(target.role, model);
+        loadedScenePropRoles.add(target.role);
+      })
+      .catch((error) => {
+        console.warn(`[MediaRuntime] ${target.role} unavailable, keeping fallback geometry.`, error);
+      })
+      .finally(() => {
+        scenePropLoadPromises.delete(target.role);
+      });
+
+    scenePropLoadPromises.set(target.role, loadPromise);
+  }
+}
+
+async function bootstrapApprovedMedia() {
+  let approvedContent;
+
+  try {
+    approvedContent = await fetchBootstrapContent({ sceneId: SCENE_ID, tourId: TOUR_ID });
+  } catch (error) {
+    console.warn('[MediaRuntime] Scene/tour bootstrap unavailable; keeping degraded media shell.', error);
+    return;
+  }
+
+  bootstrapState = {
+    scene: approvedContent.scene,
+    tour: approvedContent.tour,
+    media: approvedContent.media
+      ? adaptMediaManifest(approvedContent.media)
+      : createDegradedMediaState({ sceneId: SCENE_ID, error: approvedContent.mediaError }),
+  };
+
+  if (bootstrapState.tour?.steps?.length !== 5) {
+    console.warn('[MediaRuntime] Approved tour contract changed unexpectedly.', bootstrapState.tour);
+  }
+
+  if (approvedContent.mediaError) {
+    console.warn('[MediaRuntime] Media manifest unavailable; keeping degraded media UI only.', approvedContent.mediaError);
+    return;
+  }
+
+  if (bootstrapState.media.status !== 'ready') {
+    console.warn('[MediaRuntime] Media manifest malformed; keeping degraded media UI only.', bootstrapState.media.error);
+    return;
+  }
+
+  rebuildStations(bootstrapState.media.stations);
+  modelRegistry = createModelRegistry(bootstrapState.media);
+  void promoteAnimatedCharacters();
+}
 
 function fadeToAction(action) {
-  if (currentAction === action) return;
-  if (currentAction) currentAction.fadeOut(0.2);
+  if (currentAction === action || !action) {
+    return;
+  }
+
+  currentAction?.fadeOut?.(0.2);
   action.reset().fadeIn(0.2).play();
   currentAction = action;
 }
 
 function updateMovement(delta) {
-  if (!character) return;
+  if (!character) {
+    return;
+  }
 
-  // 1. Lock camera position and controls target to player's head for first-person
   const headPos = new THREE.Vector3().copy(character.position).add(new THREE.Vector3(0, 1.3, 0));
-  
-  // Calculate current camera direction
-  const dir = new THREE.Vector3();
-  camera.getWorldDirection(dir);
-  
-  // Align OrbitControls target slightly in front of the camera, centered at headPos
-  controls.target.copy(headPos).addScaledVector(dir, 0.05);
+  const direction = new THREE.Vector3();
+  camera.getWorldDirection(direction);
+  controls.target.copy(headPos).addScaledVector(direction, 0.05);
   camera.position.copy(headPos);
 
-  // If the Guided Tour is active, the TourManager controls player movement
   if (tourManager && tourManager.playerState !== PLAYER_STATES.FREE) {
     tourManager.update(delta, clock.getElapsedTime());
     return;
   }
 
-  // Update tour manager logic (e.g. check proximity for follow button)
   if (tourManager) {
     tourManager.update(delta, clock.getElapsedTime());
   }
 
-  // Handle manual player controls (movement relative to camera horizontal direction)
   const input = new THREE.Vector3();
   if (keys.w) input.z -= 1;
   if (keys.s) input.z += 1;
@@ -649,8 +717,7 @@ function updateMovement(delta) {
 
   if (input.lengthSq() > 0) {
     input.normalize();
-    
-    // Get horizontal camera heading vectors
+
     const forward = new THREE.Vector3();
     camera.getWorldDirection(forward);
     forward.y = 0;
@@ -661,15 +728,14 @@ function updateMovement(delta) {
     right.y = 0;
     right.normalize();
 
-    // Combine direction vectors
-    const moveDir = new THREE.Vector3();
-    moveDir.addScaledVector(forward, -input.z); // input.z is -1 for W (forward)
-    moveDir.addScaledVector(right, input.x);
-    moveDir.normalize();
+    const moveDirection = new THREE.Vector3();
+    moveDirection.addScaledVector(forward, -input.z);
+    moveDirection.addScaledVector(right, input.x);
+    moveDirection.normalize();
 
     const speedLimit = keys[' '] ? maxSpeed * 2.2 : maxSpeed;
-    velocity.x = moveDir.x * speedLimit;
-    velocity.z = moveDir.z * speedLimit;
+    velocity.x = moveDirection.x * speedLimit;
+    velocity.z = moveDirection.z * speedLimit;
   } else {
     const speed = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
     if (speed > 0) {
@@ -683,71 +749,77 @@ function updateMovement(delta) {
 
   let newX = character.position.x + velocity.x * delta;
   let newZ = character.position.z + velocity.z * delta;
-  
-  // Bounds check matching 22m x 70m corridor limits
   newX = Math.max(-10.4, Math.min(10.4, newX));
   newZ = Math.max(-34, Math.min(34, newZ));
 
-  // Collision with floor objects (product_showing, showing_tree_01, mortar)
   const colliders = [
-    { x: 2.5, z: -9.0, radius: 1.6 },  // product_showing
-    { x: 2.5, z: 9.0, radius: 1.5 },   // showing_tree_01
-    { x: 5.0, z: 0, radius: 1.0 },     // mortar
-    { x: 4.0, z: 18.0, radius: 1.2 }   // wooden mould
+    { x: 2.5, z: -9.0, radius: 1.6 },
+    { x: 2.5, z: 9.0, radius: 1.5 },
+    { x: 5.0, z: 0, radius: 1.0 },
+    { x: 4.0, z: 18.0, radius: 1.2 },
   ];
 
-  colliders.forEach(col => {
-    const dx = newX - col.x;
-    const dz = newZ - col.z;
-    const dist = Math.sqrt(dx * dx + dz * dz);
-    const minDist = col.radius + 0.45; // Combined radius (object + player)
-    if (dist < minDist) {
-      const pushDist = minDist - dist;
-      if (dist > 0.001) {
-        newX += (dx / dist) * pushDist;
-        newZ += (dz / dist) * pushDist;
-      } else {
-        newX += minDist;
-      }
+  colliders.forEach((collider) => {
+    const dx = newX - collider.x;
+    const dz = newZ - collider.z;
+    const distance = Math.sqrt(dx * dx + dz * dz);
+    const minDistance = collider.radius + 0.45;
+    if (distance >= minDistance) {
+      return;
     }
+
+    const pushDistance = minDistance - distance;
+    if (distance > 0.001) {
+      newX += (dx / distance) * pushDistance;
+      newZ += (dz / distance) * pushDistance;
+      return;
+    }
+
+    newX += minDistance;
   });
 
   character.position.x = newX;
   character.position.z = newZ;
 
-  // No player model rotation/skinning update needed since it is invisible in first-person
+  if (bootstrapState.media.status === 'ready' && modelRegistry) {
+    maybeLoadSceneProps();
+  }
+
+  if (character.userData.actions?.walk && character.userData.actions?.idle) {
+    const isMoving = Math.abs(velocity.x) > 0.01 || Math.abs(velocity.z) > 0.01;
+    fadeToAction(isMoving ? character.userData.actions.walk : character.userData.actions.idle);
+  }
 }
 
-document.addEventListener('keydown', e => {
-  // Disable keyboard keys if typing in the modal
+document.addEventListener('keydown', (event) => {
   if (tourManager && tourManager.playerState === PLAYER_STATES.QUESTION_INPUT) {
     return;
   }
 
-  const key = e.key.toLowerCase();
-  if (key === 'e') {
-    if (tourManager && tourManager.playerState !== PLAYER_STATES.FREE) {
-      tourManager.cancelFollow();
-      e.preventDefault();
-      return;
-    }
+  const key = event.key.toLowerCase();
+  if (key === 'e' && tourManager && tourManager.playerState !== PLAYER_STATES.FREE) {
+    tourManager.cancelFollow();
+    event.preventDefault();
+    return;
   }
+
   if (key === 'f') {
     isTalking = !isTalking;
     console.log('[Input] Toggle Talking:', isTalking);
-    e.preventDefault();
+    event.preventDefault();
   }
+
   if (key in keys) {
     keys[key] = true;
-    e.preventDefault();
+    event.preventDefault();
   }
 });
 
-document.addEventListener('keyup', e => {
-  const key = e.key.toLowerCase();
+document.addEventListener('keyup', (event) => {
+  const key = event.key.toLowerCase();
   if (key in keys) {
     keys[key] = false;
-    e.preventDefault();
+    event.preventDefault();
   }
 });
 
@@ -764,26 +836,22 @@ function animate() {
   const delta = Math.min(clock.getDelta(), 0.05);
 
   updateMovement(delta);
-
-  // Update ceiling fans rotation
   updateCeilingFans(delta);
 
-  // Update video activation system (handles playback, loading, and culling)
   const time = clock.getElapsedTime();
   if (videoActivationSystem && character) {
     videoActivationSystem.update(time, character.position, tourManager ? tourManager.guide.position : null);
   }
 
-  // Update secondary mixer (Guide NPC) during free explore, optimized by distance culling
   if (tourManager && mixers[1]) {
-    const shouldUpdateGuide = (tourManager.playerState !== PLAYER_STATES.FREE) || 
-                              (character && character.position.distanceTo(tourManager.guide.position) < 15);
+    const shouldUpdateGuide = tourManager.playerState !== PLAYER_STATES.FREE ||
+      (character && character.position.distanceTo(tourManager.guide.position) < 15);
     if (shouldUpdateGuide) {
       mixers[1].update(delta);
     }
   }
 
-  if (tourManager && tourManager.guide) {
+  if (tourManager?.guide) {
     uiController.updateGuideAskBubble(camera, tourManager.guide);
   }
 
@@ -791,4 +859,6 @@ function animate() {
   renderer.render(scene, camera);
 }
 
+initializeBaseScene();
+void bootstrapApprovedMedia();
 animate();

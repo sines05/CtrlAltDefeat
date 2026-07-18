@@ -26,7 +26,7 @@ export class VideoActivationSystem {
       }
       station.group.visible = true;
 
-      // 2. Playback and Loading State Machine (Preloaded, so only toggle play/pause)
+      // 2. Playback and Loading State Machine (load on activation, then toggle play/pause)
       if (dist < this.ACTIVE_DISTANCE) {
         station.videoDisplay.play();
       } else {
