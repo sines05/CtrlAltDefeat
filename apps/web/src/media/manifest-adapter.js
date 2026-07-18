@@ -1,3 +1,19 @@
+/**
+ * @file manifest-adapter.js
+ * @description Dynamic media manifest adaptation and data normalization layer.
+ * 
+ * SCHEMA NORMALIZATION, DATA INTEGRITY & GRACEFUL DEGRADATION:
+ * - Manifest Adaptability & Fallback Safety: Translates and standardizes arbitrary raw museum assets into structured, 
+ *   well-defined JavaScript objects. If the media manifest endpoint is blocked, fails, or returns incomplete payloads, 
+ *   the adapter dynamically constructs a clean, default state (`createDegradedMediaState`) containing fallback 
+ *   narration, text descriptions, and empty media fields. This prevents runtime errors and keeps the user interface functional.
+ * - Dynamic Eager Guides Promotion: Restricts preloading scopes to active guides and prioritized station resources. 
+ *   This ensures that resources (such as 3D glTF models, textures, and video frames) are loaded dynamically based 
+ *   on the user's progress rather than blocking the browser thread at startup, keeping memory footprints light.
+ * - Data Sanity Enforcement: Validates incoming station properties (order numbers, string parameters, nullable media links), 
+ *   protecting downstream systems (like WebGL loaders and TTS API calls) from parsing malformed or corrupted values.
+ */
+
 const DEFAULT_SCENE_ID = 'tay-ho-giay-do-room-01';
 export const DEFAULT_PROCESS_STATION_COUNT = 10;
 

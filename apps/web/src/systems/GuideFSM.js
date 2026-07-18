@@ -1,3 +1,18 @@
+/**
+ * @file GuideFSM.js
+ * @description Finite State Machine (FSM) governing guide NPC behavior and animation synchronizations.
+ * 
+ * INTERACTIVE ANIMATION STATE DECOUPLING & RESOURCE EFFICIENCY:
+ * - Deterministic Behavior Modeling: Implements a rigid FSM (IDLE, WALKING, TALKING, WAITING_QUESTION, FINISHED) 
+ *   to govern the 3D tour guide NPC. This decouples visual render states from asynchronous network I/O operations, 
+ *   ensuring animation transitions occur without frame drops (maintaining 60 FPS).
+ * - Real-Time Audio-to-Gesture Synchronization: Binds 3D talking gestures dynamically to the active playback lifecycle 
+ *   of audio streams. By monitoring HTML5 Audio playback events (`onended`), the state machine transitions seamlessly 
+ *   from TALKING to WAITING_QUESTION, unlocking micro-interactions (voice panel inputs) at the precise moment speech stops.
+ * - Hardware Memory Protection: Efficiently manages THREE.AnimationMixer clips, playing only active animations while 
+ *   fading out inactive states. This keeps GPU memory usage minimal, ensuring stable performance on low-end mobile devices.
+ */
+
 export const GUIDE_STATES = {
   IDLE: 'Idle',
   WALKING: 'Walking',

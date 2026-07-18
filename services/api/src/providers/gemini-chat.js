@@ -1,3 +1,19 @@
+/**
+ * @file gemini-chat.js
+ * @description Gemini Chat REST Provider implementing structured schema generation and grounding alignment.
+ * 
+ * STRUCTURED JSON SCHEMAS, PROMPT STEERING & PERSONA CONSISTENCY:
+ * - Deterministic Output Structuring: Enforces Gemini model output to adhere strictly to a strict JSON Schema 
+ *   (declaring answer, confidence score, abstention flags, and reasons). This prevents malformed response 
+ *   bodies and assures direct parse compatibility in the Node.js API pipeline.
+ * - Gentle Tour Guide Persona: Custom-steers the Gemini system prompt (`systemInstruction`) to embody a polite, 
+ *   professional, and warm female tour guide. Instructs the model to speak Vietnamese gracefully, using personal 
+ *   pronouns ("tôi/mình" and "bạn") to create an immersive, welcoming conversational tone for museum visitors.
+ * - Academic Alignment & Strict Grounding: Ensures the model acts strictly as a retrieval-grounded assistant, 
+ *   constraining answer context exclusively to verified academic literature chunks while guiding visitors back 
+ *   to active exhibition steps upon boundary violations.
+ */
+
 const GEMINI_MODEL = 'gemini-3.1-flash-lite';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 const RESPONSE_SCHEMA = {

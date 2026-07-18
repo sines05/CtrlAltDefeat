@@ -1,3 +1,19 @@
+/**
+ * @file index.js (Live API Route Handler)
+ * @description Dynamic entry point routing live WebSocket voice interactions and REST fallbacks.
+ * 
+ * LIVE VOICE ROUTING, PAYLOAD VALIDATION & GRACEFUL REST RECOVERY:
+ * - Robust Content Validation: Enforces strict data-contract validation on incoming client payloads. 
+ *   Rejects malformed frames, unsupported audio MimeTypes (restricting to standard WebM, MP4, WAV, and raw PCM formats), 
+ *   and oversized audio buffers (>5MB or >30 seconds duration) before invoking expensive LLM sessions.
+ * - Multi-tiered Fallback & Recovery Architecture: Protects live user conversations from network degradation or API rate limits. 
+ *   If the high-performance Gemini Live WebSocket relayer encounters a connection timeout, protocol error, or model failure, 
+ *   the system automatically triggers a structured recovery process. It falls back to the grounded REST QA engine 
+ *   and synthesizes speech via the backend TTS module (`synthesizeSpeech`), ensuring the user always receives a grounded response.
+ * - Dynamic Modality Intercept: Handles incoming client audio chunks, dynamically routing the stream to the speech 
+ *   transcription layer (`transcribeWithGeminiLive`) to verify user input before executing RAG retrieval.
+ */
+
 import { createErrorResponse } from '../http/errors.js';
 import {
   GEMINI_LIVE_MODEL,
