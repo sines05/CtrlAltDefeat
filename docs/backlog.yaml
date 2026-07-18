@@ -1,0 +1,9 @@
+- id: BL-001
+  text: 'Tighten the scene-prop activation window: first-load runtime observation still fetches /asset/village_picture.fbx before tour progression despite the lazy non-guide contract.'
+  type: debt
+  priority: P2
+  status: open
+  created_ts: '2026-07-18T18:13:02.329073+00:00'
+  done_ts: ''
+  source_ref: ''
+  actor: user:sonnguyenque5@gmail.com

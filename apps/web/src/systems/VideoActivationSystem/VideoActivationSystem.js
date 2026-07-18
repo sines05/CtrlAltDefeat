@@ -21,7 +21,8 @@ export class VideoActivationSystem {
       // Always render station meshes; only control video playback
       station.group.visible = true;
 
-      // Playback control based on distance
+      // Playback and Loading State Machine (load on activation, then toggle play/pause)
+
       if (dist < this.ACTIVE_DISTANCE) {
         station.videoDisplay.play();
       } else {

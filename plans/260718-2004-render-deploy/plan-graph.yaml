@@ -1,0 +1,17 @@
+edges:
+  - {from: P1, to: P2}
+  - {from: P1, to: P3}
+  - {from: P2, to: P3}
+subtasks:
+  P1:
+    files_to_create: [render.yaml]
+    files_to_modify: []
+    post: [verification-P1.json]
+  P2:
+    files_to_create: [docs/decisions/0002-render-web-service.md]
+    files_to_modify: [docs/operations/deployment.md]
+    post: [verification-P2.json]
+  P3:
+    files_to_create: []
+    files_to_modify: []
+    post: [verification-P3.json, review-decision.json]

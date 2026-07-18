@@ -1,8 +1,12 @@
 import { cp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = resolve(new URL('..', import.meta.url).pathname);
-const buildDir = resolve(root, 'build');
+import { build as viteBuild } from 'vite';
+
+const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
+const buildDir = resolve(repoRoot, 'build');
+const webBuildDir = resolve(buildDir, 'web');
 const buildRunScript = `import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -75,10 +79,22 @@ process.on('SIGTERM', () => {
 
 await rm(buildDir, { recursive: true, force: true });
 await mkdir(buildDir, { recursive: true });
-await cp(resolve(root, 'apps/web'), resolve(buildDir, 'web'), { recursive: true });
-await cp(resolve(root, 'services/api/src'), resolve(buildDir, 'api/src'), { recursive: true });
-await cp(resolve(root, 'content/approved'), resolve(buildDir, 'content/approved'), { recursive: true });
-await cp(resolve(root, 'assets/avatar'), resolve(buildDir, 'assets/avatar'), { recursive: true });
+await viteBuild({
+  root: resolve(repoRoot, 'apps/web'),
+  publicDir: false,
+  base: '/',
+  logLevel: 'error',
+  build: {
+    outDir: webBuildDir,
+    emptyOutDir: false,
+  },
+});
+await cp(resolve(repoRoot, 'apps/web/asset'), resolve(buildDir, 'asset'), { recursive: true });
+await cp(resolve(repoRoot, 'apps/web/guide_girl'), resolve(buildDir, 'guide_girl'), { recursive: true });
+await cp(resolve(repoRoot, 'apps/web/making_step'), resolve(buildDir, 'making_step'), { recursive: true });
+await cp(resolve(repoRoot, 'services/api/src'), resolve(buildDir, 'api/src'), { recursive: true });
+await cp(resolve(repoRoot, 'content/approved'), resolve(buildDir, 'content/approved'), { recursive: true });
+await cp(resolve(repoRoot, 'assets/avatar'), resolve(buildDir, 'assets/avatar'), { recursive: true });
 await writeFile(
   resolve(buildDir, 'manifest.json'),
   JSON.stringify({

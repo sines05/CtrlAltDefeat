@@ -39,8 +39,8 @@ export function advanceAvatarPlayback(state, deltaSeconds) {
   };
 }
 
-export function getAvatarViewModel(avatarId = 'cesium-man') {
-  const manifest = getAvatarManifest(avatarId);
+export function getAvatarViewModel(avatarId = 'cesium-man', options = {}) {
+  const manifest = getAvatarManifest(avatarId, options);
   const playback = advanceAvatarPlayback(createAvatarPlaybackState(manifest), 0.5);
 
   return {

@@ -18,6 +18,41 @@ export class GuideFSM {
     if (this.currentAction) {
       this.currentAction.play();
     }
+
+    this.answerAudio = null;
+  }
+
+  async playAnswerAudio(audio) {
+    // Talking animation is a trust/accessibility cue for the visitor: the guide should feel
+    // responsive when answer audio is available, but the experience must still degrade cleanly
+    // back to readable text if playback cannot start.
+    if (!audio || typeof audio.play !== 'function') {
+      return false;
+    }
+
+    this.answerAudio?.pause?.();
+    this.answerAudio = audio;
+    this.transitionTo(GUIDE_STATES.TALKING);
+
+    const finish = () => {
+      if (this.answerAudio !== audio) {
+        return;
+      }
+
+      this.answerAudio = null;
+      this.transitionTo(GUIDE_STATES.IDLE);
+    };
+
+    audio.addEventListener?.('ended', finish, { once: true });
+    audio.addEventListener?.('error', finish, { once: true });
+
+    try {
+      await audio.play();
+      return true;
+    } catch {
+      finish();
+      return false;
+    }
   }
 
   transitionTo(state) {

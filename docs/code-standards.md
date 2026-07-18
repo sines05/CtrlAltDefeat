@@ -1,70 +1,50 @@
 # Code standards
 
-Cập nhật: 2026-07-17
+Cập nhật: 2026-07-18
 
 ## Trạng thái hiện tại
 
-- [OBSERVED] Repo hiện chỉ có SDLC harness và chưa có app code, `src/`, `app/`, `package.json`, `pyproject.toml` hay test runtime.
-- [PROPOSED] Tài liệu này là chuẩn khởi tạo để team code thống nhất ngay từ vòng MVP 40 giờ.
+- [OBSERVED] Repo có Vite web app, Node HTTP API, approved content store, build scripts, và runtime tests.
+- [OBSERVED] Scene media dùng manifest JSON theo scene; public binaries vẫn được phục vụ tĩnh, với guide animated FBX eager sau shell/bootstrap còn media khác giữ lazy-load ở browser.
 
-## Nguyên tắc làm MVP
+## Nguyên tắc MVP
 
-1. Ưu tiên đường đi chắc chắn: QR hoặc image marker mở web, xem nội dung được trên điện thoại phổ thông.
-2. Có fallback trước rồi mới thêm WebAR: nếu AR lỗi, người dùng vẫn xem được 3D viewer hoặc nội dung 2D.
-3. Chỉ ship nội dung đã được chuyên gia duyệt cho RAG và tour.
+1. QR hoặc marker mở được web trên điện thoại phổ thông.
+2. Có fallback trước khi thêm WebAR: media lỗi không được làm gãy scene/tour/QA/TTS.
+3. Chỉ ship factual content đã duyệt cho RAG, tour, TTS, và process station copy.
 4. Text Q&A và TTS là bắt buộc; STT, lip-sync, WebAR nâng cao là stretch.
-5. Mọi claim chưa kiểm chứng bằng code hoặc hạ tầng phải gắn `[PROPOSED]` hoặc `[ASSUMED]`.
+5. Claim chưa kiểm chứng bằng code hoặc hạ tầng phải gắn `[PROPOSED]` hoặc `[ASSUMED]`.
 
-## Cấu trúc repo đề xuất
-
-- [PROPOSED] Chỉ chốt khi team chọn stack tại decision gate đầu tiên.
-- [PROPOSED] Nếu làm một repo cho MVP, dùng cấu trúc mỏng sau:
+## Cấu trúc repo
 
 ```text
-/docs/
-  code-standards.md
-  system-architecture.md
-  product/
-  engineering/
-  operations/
-  decisions/
-/apps/
-  web/          # frontend trải nghiệm khách tham quan
-/services/
-  api/          # backend nhẹ cho scene, Q&A, TTS
-/content/
-  approved/     # dữ liệu chuyên gia đã duyệt, citations, scripts
-/tests/         # smoke test tối thiểu cho luồng bắt buộc
+/apps/web/                 # Vite browser runtime
+/services/api/             # Node HTTP API
+/content/approved/         # approved scene/tour/QA/TTS/media metadata
+/assets/                   # public static binaries
+/tests/                    # contract, smoke, e2e, perf checks
 ```
 
 ## Quy ước đặt tên
 
 - File và thư mục: `kebab-case`.
-- Route HTTP: danh từ số nhiều hoặc action rõ nghĩa, ví dụ `[PROPOSED] /api/scenes/{id}`.
+- Route HTTP: noun/action rõ nghĩa, ví dụ `/api/media/{sceneId}`.
 - JSON key: `camelCase`.
 - Biến môi trường: `UPPER_SNAKE_CASE`.
 - Decision record: `docs/decisions/NNNN-short-title.md`.
 
-## Quy ước tài liệu và evidence
+## Quy ước code và content
 
-- Dùng nhãn `[OBSERVED]`, `[PROPOSED]`, `[ASSUMED]` nhất quán.
-- Không ghi "đã hỗ trợ" nếu chưa có code chạy thật.
-- Khi chốt provider hoặc framework, cập nhật đồng thời:
-  - `docs/system-architecture.md`
-  - `docs/engineering/api-contract.md`
-  - `docs/operations/deployment.md`
-  - decision record liên quan
-
-## Quy ước code đề xuất
-
-- [PROPOSED] Tách ba lớp tối thiểu: UI, application/service, data/provider adapter.
-- Không gọi trực tiếp provider LLM/TTS/STT từ view nếu có backend.
-- Scene data, tour data, citation data phải có schema riêng; không hardcode text dài trong UI.
-- Một lỗi ở tính năng stretch không được làm hỏng luồng bắt buộc.
+- Tách UI, service, và provider/data adapter ở các boundary hiện có.
+- Browser không gọi LLM/TTS provider trực tiếp khi API có capability tương ứng.
+- Scene, tour, citation, và media manifest có schema riêng; không hardcode prose dài trong UI.
+- Media manifest ở `content/approved/media/` là metadata-only: public path, role, format, byte length, preload policy, và process station binding.
+- MP4 và non-guide FBX/GLB giữ lazy semantics; guide animated FBX chỉ được eager sau shell/bootstrap, và không thêm startup loop hoặc `Promise.all` làm block first render.
+- Một lỗi stretch hoặc media không được làm hỏng luồng bắt buộc.
 
 ## Error handling
 
-- [PROPOSED] Mọi API trả object lỗi nhất quán:
+Mọi API dùng error object nhất quán:
 
 ```json
 {
@@ -77,37 +57,30 @@ Cập nhật: 2026-07-17
 }
 ```
 
-- UI phải có 3 trạng thái rõ: loading, degraded fallback, fail with recovery action.
-- Nếu Q&A thất bại, vẫn cho người dùng đọc nội dung tour và citations tĩnh.
-- Nếu TTS thất bại, vẫn hiển thị transcript text.
+- UI phải có loading, degraded fallback, và fail-with-recovery states.
+- Q&A failure vẫn để người dùng đọc tour và citations tĩnh.
+- TTS failure vẫn hiển thị transcript text.
+- Media manifest failure chỉ degrade media elements; scene, approved 5-step tour, QA, và TTS phải tiếp tục usable.
 
-## Testing tối thiểu cho MVP
+## Testing tối thiểu
 
-- [PROPOSED] Trước demo phải có smoke test cho:
-  1. QR/image marker mở đúng landing page.
-  2. Tải được scene nghệ nhân hoặc giấy dó.
-  3. Fallback từ WebAR sang viewer thường hoạt động.
-  4. Q&A text trả lời có citation hoặc nguồn chuyên gia.
-  5. TTS đọc được ít nhất 1 đoạn tour.
+Trước demo chạy `npm test`, `npm run lint`, `npm run typecheck`, và `npm run build`.
+
+- Browser smoke mở Vite-built runtime mà không có unresolved bare import.
+- API contract giữ scene, tour 5 bước, và `/api/media/{sceneId}`.
+- Media smoke xác nhận MP4 và non-guide FBX không eager-load từ initial route, guide eager vẫn chỉ giới hạn ở guide path sau bootstrap, fallback render được, và copy process station đến từ manifest đã duyệt.
+- QA/TTS smoke xác nhận grounded citations hoặc degraded transcript.
 
 ## Accessibility và UX baseline
 
 - Text chính dễ đọc trên mobile.
 - Có nút bật/tắt âm thanh.
-- Không buộc người dùng cấp micro cho các luồng bắt buộc.
+- Không buộc micro cho luồng bắt buộc.
 - Có transcript cho audio.
 - Có CTA rõ khi AR không hỗ trợ.
 
-## Decision gates bắt buộc trước khi code nhiều
-
-1. Chốt stack frontend/backend [PROPOSED].
-2. Chốt nguồn dữ liệu chuyên gia ban đầu [ASSUMED].
-3. Chat model đã khóa vào Gemini 3.1 Flash Lite cho grounded answer; provider TTS production vẫn phải chốt trước khi ship [OBSERVED/ASSUMED].
-4. Chốt mức WebAR mục tiêu: marker-based tối thiểu hay full surface/object tracking [PROPOSED].
-
 ## Tài liệu liên quan
 
-- [Tổng quan dự án / PDR](./project-overview-pdr.md)
 - [Kiến trúc hệ thống](./system-architecture.md)
+- [API contract](./engineering/api-contract.md)
 - [PRD](./product/prd.md)
-- [Kế hoạch MVP 40 giờ](./engineering/mvp-40h.md)

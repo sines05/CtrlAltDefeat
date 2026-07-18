@@ -43,9 +43,9 @@ export async function ensureAvatarRuntime() {
   }
 }
 
-export async function loadAvatarViewModel(avatarId = 'cesium-man') {
+export async function loadAvatarViewModel(avatarId = 'cesium-man', options = {}) {
   try {
-    return getAvatarViewModel(avatarId);
+    return getAvatarViewModel(avatarId, options);
   } catch {
     return {
       status: 'error',

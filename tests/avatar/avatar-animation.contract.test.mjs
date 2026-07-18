@@ -2,12 +2,13 @@ import assert from 'node:assert/strict';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 import { getAvatarManifest } from '../../apps/web/src/avatar/manifest.js';
 import { createAvatarPlaybackState, advanceAvatarPlayback } from '../../apps/web/src/avatar/state.js';
 import { createSceneAppHtml } from '../../apps/web/src/scene/app.js';
 
-const repoRoot = '/home/anoreo/Desktop/CtrlAltDefeat';
+const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
 
 async function readJson(relativePath) {
   return JSON.parse(await readFile(path.join(repoRoot, relativePath), 'utf8'));
@@ -71,7 +72,7 @@ test('test_avatar_asset_manifest_exists', async () => {
   assert.ok(assetStats.size > 0);
   assert.equal(manifest.assetPath, 'assets/avatar/cesium-man.glb');
   assert.equal(manifest.license.spdxLike, 'CC-BY-4.0');
-  assert.match(manifest.source.url, /CesiumMan\.glb$/);
+  assert.match(manifest.source.url, /cesium-man\.glb$/u);
 });
 
 test('test_avatar_animation_clip_advances', async () => {

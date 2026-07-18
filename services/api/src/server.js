@@ -5,6 +5,7 @@ import { extname, resolve, sep } from 'node:path';
 import { createErrorResponse } from './http/errors.js';
 import { answerLiveQuestion, getLiveQaCapability } from './live/index.js';
 import { answerQuestion } from './qa/index.js';
+import { getMediaManifest } from './media/index.js';
 import { getSceneConfig } from './scene/index.js';
 import { synthesizeSpeech } from './tts/index.js';
 import { getTourConfig } from './tour/index.js';
@@ -17,11 +18,11 @@ const MIME_TYPES = {
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
+  '.mp4': 'video/mp4',
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
   '.wav': 'audio/wav',
   '.woff2': 'font/woff2',
-  '.mp4': 'video/mp4',
   '.fbx': 'application/octet-stream',
 };
 
@@ -145,6 +146,7 @@ async function routeRequest(request, response, options) {
   const url = new URL(request.url, 'http://localhost');
   const sceneMatch = url.pathname.match(/^\/api\/scene\/([^/]+)$/);
   const tourMatch = url.pathname.match(/^\/api\/tour\/([^/]+)$/);
+  const mediaMatch = url.pathname.match(/^\/api\/media\/([^/]+)$/);
 
   if (request.method === 'GET' && url.pathname === '/api/health') {
     sendJson(response, 200, {
@@ -185,6 +187,22 @@ async function routeRequest(request, response, options) {
     }
 
     sendJson(response, 200, tour);
+    return;
+  }
+
+  if (request.method === 'GET' && mediaMatch) {
+    const mediaManifest = await getMediaManifest(mediaMatch[1]);
+
+    if (!mediaManifest) {
+      sendJson(
+        response,
+        404,
+        createErrorResponse('MEDIA_MANIFEST_NOT_FOUND', 'Media manifest not found.', false),
+      );
+      return;
+    }
+
+    sendJson(response, 200, mediaManifest);
     return;
   }
 

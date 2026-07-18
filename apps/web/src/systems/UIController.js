@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 
+const RECORDING_MIME_CANDIDATES = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
+const MAX_RECORDING_MS = 29000;
+
 export class UIController {
   constructor() {
     this.followBtn = document.getElementById('follow-btn');
@@ -30,6 +33,13 @@ export class UIController {
 
     this.toast = document.getElementById('toast-notification');
 
+    this.questionHandlers = null;
+    this.mediaRecorder = null;
+    this.recordingStream = null;
+    this.recordingStartedAt = 0;
+    this.recordingStopTimeout = null;
+    this.discardRecording = false;
+
     this.plaquePrompt = document.getElementById('plaque-prompt');
     this.plaqueModal = document.getElementById('plaque-modal');
     this.plaqueClose = document.getElementById('plaque-close');
@@ -37,7 +47,6 @@ export class UIController {
     this.villagePrompt = document.getElementById('village-prompt');
     this.villageModal = document.getElementById('village-modal');
     this.villageClose = document.getElementById('village-close');
-
     this.isRecording = false;
     this.toastTimeout = null;
 
@@ -121,25 +130,22 @@ export class UIController {
       }
       this.typingTextarea.value = "";
       this.typingModal.classList.remove('visible');
-      this.showToast("AI backend coming soon.");
+      void this.questionHandlers?.submitText?.(question);
     };
 
     // Voice Modal listeners
     this.voiceClose.onclick = () => {
-      this.stopRecordingSim();
+      this.cancelRecording();
       this.voiceModal.classList.remove('visible');
     };
 
     this.micBtn.onclick = () => {
       if (!this.isRecording) {
-        this.startRecordingSim();
-      } else {
-        this.stopRecordingSim();
-        setTimeout(() => {
-          this.voiceModal.classList.remove('visible');
-          this.showToast("Voice backend coming soon.");
-        }, 1000);
+        void this.startRecording();
+        return;
       }
+
+      this.stopRecording();
     };
 
     // Plaque Modal listeners
@@ -155,6 +161,136 @@ export class UIController {
         this.villageModal.classList.remove('visible');
       };
     }
+  }
+
+  setQuestionHandlers(handlers) {
+    this.questionHandlers = handlers;
+  }
+
+  resolveRecordingMimeType() {
+    if (typeof MediaRecorder === 'undefined' || typeof MediaRecorder.isTypeSupported !== 'function') {
+      return '';
+    }
+
+    return RECORDING_MIME_CANDIDATES.find((mimeType) => MediaRecorder.isTypeSupported(mimeType)) ?? '';
+  }
+
+  resetVoiceRecorderState({ hideModal = false } = {}) {
+    clearTimeout(this.recordingStopTimeout);
+    this.recordingStopTimeout = null;
+    this.mediaRecorder = null;
+    this.recordingStream = null;
+    this.recordingStartedAt = 0;
+    this.discardRecording = false;
+    this.isRecording = false;
+    this.micBtn.classList.remove('recording');
+    this.micStatusText.innerText = 'Nhấn nút để bắt đầu ghi âm';
+    if (hideModal) {
+      this.voiceModal.classList.remove('visible');
+    }
+  }
+
+  async startRecording() {
+    // Voice input is optional convenience, not a gate. If permissions, browser support, or
+    // live services fail, the same cultural walkthrough must remain reachable through typing.
+    if (!this.questionHandlers?.submitAudio) {
+      this.resetVoiceRecorderState({ hideModal: true });
+      this.showToast('Voice assistant is unavailable.');
+      this.questionHandlers?.resetVoiceState?.();
+      return;
+    }
+
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
+      this.resetVoiceRecorderState({ hideModal: true });
+      this.showToast('Trình duyệt không hỗ trợ ghi âm.');
+      this.questionHandlers?.resetVoiceState?.();
+      return;
+    }
+
+    const mimeType = this.resolveRecordingMimeType();
+    if (!mimeType) {
+      this.resetVoiceRecorderState({ hideModal: true });
+      this.showToast('Trình duyệt không hỗ trợ định dạng ghi âm phù hợp.');
+      this.questionHandlers?.resetVoiceState?.();
+      return;
+    }
+
+    let stream = null;
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream, { mimeType });
+      const chunks = [];
+
+      this.recordingStream = stream;
+      this.mediaRecorder = recorder;
+      this.recordingStartedAt = Date.now();
+      this.discardRecording = false;
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+      recorder.onstop = () => {
+        const discard = this.discardRecording;
+        const durationMs = Date.now() - this.recordingStartedAt;
+        const blob = new Blob(chunks, { type: recorder.mimeType || mimeType });
+
+        stream.getTracks().forEach((track) => track.stop());
+        this.resetVoiceRecorderState();
+
+        if (discard) {
+          return;
+        }
+
+        if (blob.size === 0) {
+          this.voiceModal.classList.remove('visible');
+          this.showToast('Không ghi nhận được âm thanh. Hãy thử lại.');
+          this.questionHandlers?.resetVoiceState?.();
+          return;
+        }
+
+        this.voiceModal.classList.remove('visible');
+        void Promise.resolve(this.questionHandlers.submitAudio({
+          blob,
+          mimeType: blob.type,
+          durationMs,
+        })).finally(() => {
+          this.questionHandlers?.resetVoiceState?.();
+        });
+      };
+      recorder.start();
+      this.startRecordingSim();
+      this.recordingStopTimeout = setTimeout(() => {
+        if (this.mediaRecorder === recorder && recorder.state === 'recording') {
+          this.showToast('Đã dừng ghi âm để tránh vượt quá thời lượng cho phép.');
+          this.stopRecording();
+        }
+      }, MAX_RECORDING_MS);
+    } catch {
+      stream?.getTracks?.().forEach((track) => track.stop());
+      this.resetVoiceRecorderState({ hideModal: true });
+      this.showToast('Không thể dùng micro. Hãy kiểm tra quyền truy cập.');
+      this.questionHandlers?.resetVoiceState?.();
+    }
+  }
+
+  stopRecording() {
+    if (this.mediaRecorder?.state === 'recording') {
+      this.stopRecordingSim();
+      this.mediaRecorder.stop();
+    }
+  }
+
+  cancelRecording() {
+    this.discardRecording = true;
+    if (this.mediaRecorder?.state === 'recording') {
+      this.stopRecording();
+      return;
+    }
+
+    this.recordingStream?.getTracks().forEach((track) => track.stop());
+    this.resetVoiceRecorderState();
   }
 
   openTypingModal() {

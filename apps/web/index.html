@@ -1,9 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guide Girl 3D</title>
+  <meta name="description" content="Bước qua tiền sảnh giấy dó Tây Hồ trước khi khám phá phòng trưng bày 3D tương tác." />
+  <meta name="theme-color" content="#eee5d3" />
+  <meta property="og:title" content="Phòng giấy dó Tây Hồ" />
+  <meta property="og:description" content="Từ vỏ dó đến tờ giấy giữ ký ức — một hành trình bảo tàng số tương tác." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23eee5d3'/%3E%3Cpath d='M16 12h32v40H16z' fill='none' stroke='%23942f29' stroke-width='3'/%3E%3Cpath d='M24 22h16M24 31h16M24 40h10' stroke='%23211914' stroke-width='3'/%3E%3C/svg%3E" />
+  <title>Phòng giấy dó Tây Hồ · Bảo tàng số</title>
   <script type="importmap">
     {
       "imports": {
@@ -1782,8 +1788,123 @@
       box-shadow: 0 0 4px rgba(255, 215, 0, 0.6);
     }
   </style>
+  <link rel="stylesheet" href="/src/landing.css" />
 </head>
 <body>
+  <a class="skip-link" href="#landing-main">Bỏ qua điều hướng</a>
+
+  <div id="landing" class="landing">
+    <header class="landing-shell landing-nav" aria-label="Điều hướng tiền sảnh">
+      <a class="landing-brand" href="#landing-main" aria-label="Phòng giấy dó Tây Hồ, về đầu trang">
+        <span class="landing-brand-mark" aria-hidden="true">Dó</span>
+        <span>Phòng giấy dó</span>
+      </a>
+      <span class="landing-nav-title">Tây Hồ · Hà Nội</span>
+      <span class="landing-nav-note">Tiền sảnh triển lãm số</span>
+    </header>
+
+    <main id="landing-main">
+      <section class="landing-shell landing-hero" aria-labelledby="landing-title">
+        <div class="hero-copy">
+          <p class="hero-kicker">Di sản vật liệu · Trải nghiệm 3D</p>
+          <h1 id="landing-title" class="hero-title">Một tờ giấy giữ <em>ký ức</em>.</h1>
+          <p class="hero-intro">Từ lớp vỏ dó bền mà mềm, qua bể xeo, khung seo và những bức tường hong giấy — bước vào câu chuyện của một vật liệu đã đi cùng ký ức Tây Hồ.</p>
+          <div class="hero-actions">
+            <button class="landing-button landing-button-primary" type="button" data-enter-museum>Bước vào bảo tàng 3D</button>
+            <a class="text-link" href="#quy-trinh">Xem hành trình 5 bước</a>
+          </div>
+          <p id="landing-error" class="landing-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <div class="hero-stage">
+          <img class="hero-photo" src="./landing/paper-wall.jpg" alt="Những tờ giấy dó nhiều sắc độ được treo thành từng lớp trong không gian trưng bày" width="1920" height="2560" fetchpriority="high" />
+          <button class="sheet-lift" type="button" aria-expanded="false" aria-label="Nhấc lớp giấy để xem hiện vật phía sau">
+            <span class="sheet-label">Chạm để nhấc tấm dó</span>
+            <span class="sheet-word">Bền.<br />Mềm.</span>
+            <span class="sheet-hint">Nhìn qua lớp giấy đầu tiên</span>
+          </button>
+          <p class="hero-caption">Giấy thành hình từ những lớp sợi được dàn đều, ép nước, hong khô rồi bóc tách từng tờ.</p>
+        </div>
+      </section>
+
+      <section id="quy-trinh" class="landing-section process-section">
+        <div class="landing-shell">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Trước khi vào phòng</p>
+              <h2 class="section-title">Năm nhịp làm nên một tờ dó.</h2>
+            </div>
+            <p class="section-lead">Phần tiền sảnh chỉ mở ra đường nét chính. Trong phòng trưng bày, hướng dẫn viên và mười tư liệu công đoạn sẽ đưa bạn đến gần từng vật liệu, dụng cụ và thao tác.</p>
+          </div>
+
+          <ol class="process-list">
+            <li class="process-item">
+              <h3>Gặp cây dó</h3>
+              <p>Sợi dó bền nhưng vẫn mềm; lớp vỏ cần được thu hoạch đúng tuổi để cây tiếp tục tái sinh.</p>
+            </li>
+            <li class="process-item">
+              <h3>Làm mềm vỏ</h3>
+              <p>Vỏ được ngâm trong nước, xử lý với nước vôi, nấu hoặc hấp rồi rửa kỹ trước khi làm bột.</p>
+            </li>
+            <li class="process-item">
+              <h3>Giã bột và thêm mò</h3>
+              <p>Chất nhầy từ gỗ mò giữ nước thoát chậm, giúp huyền phù sợi dàn thành một lớp đều hơn.</p>
+            </li>
+            <li class="process-item">
+              <h3>Xeo bằng khung seo</h3>
+              <p>Liềm seo múc huyền phù từ bể; chuyển động lắc nhẹ phân bố sợi trước khi tờ ướt được đặt vào chồng giấy.</p>
+            </li>
+            <li class="process-item">
+              <h3>Ép, sấy và bóc tờ</h3>
+              <p>Chồng giấy được ép bớt nước, dán lên tường, hong khô bằng quạt rồi bóc riêng từng lớp.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="landing-section material-section" aria-labelledby="material-title">
+        <div class="landing-shell">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Vật liệu biết kể chuyện</p>
+              <h2 id="material-title" class="section-title">Từ vỏ thô đến bề mặt lưu giữ.</h2>
+            </div>
+            <p class="section-lead">Giấy dó không chỉ là thành phẩm. Mỗi thớ sợi, khung gỗ và lớp giấy ướt đều ghi lại một quyết định của người thợ.</p>
+          </div>
+
+          <div class="material-grid">
+            <figure class="material-figure">
+              <img src="./landing/material-table.jpg" alt="Bàn trưng bày vỏ cây dó, sợi giấy, khung seo và sản phẩm giấy thủ công" width="1920" height="2560" loading="lazy" />
+            </figure>
+            <aside class="material-note">
+              <p class="material-quote">“Sợi của nó <em>bền</em> nhưng vẫn <em>mềm</em>.”</p>
+              <div class="material-facts">
+                <p>Khung seo giữ liềm seo khi người thợ múc và dàn huyền phù sợi.</p>
+                <p>Nhựa mò hỗ trợ sợi phân bố đều thay vì kết tụ khi nước thoát.</p>
+                <p>Nội dung được ground từ nghiên cứu đã duyệt của phòng giấy dó Tây Hồ.</p>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="entry-section" aria-labelledby="entry-title">
+        <div class="entry-content">
+          <span class="entry-count">01 phòng · 05 điểm dẫn · 10 tư liệu công đoạn</span>
+          <h2 id="entry-title" class="entry-title">Phần còn lại nằm phía sau cánh cửa.</h2>
+          <p class="entry-copy">Di chuyển trong không gian 3D, đi theo hướng dẫn viên, xem tư liệu tại từng trạm và đặt câu hỏi bằng chữ hoặc giọng nói.</p>
+          <button class="landing-button landing-button-primary" type="button" data-enter-museum>Vào phòng trưng bày</button>
+          <p class="landing-error" aria-live="polite"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="landing-shell landing-footer">
+      <p>Phòng quy trình giấy dó Tây Hồ · Trải nghiệm bảo tàng số tương tác</p>
+      <p>Dùng bàn phím, chuột hoặc thao tác chạm sau khi vào phòng.</p>
+    </footer>
+  </div>
+
   <div id="loading-screen">
     <div class="spinner"></div>
     <div class="loading-text">Đang tải tài nguyên triển lãm...</div>
@@ -2313,6 +2434,6 @@
   <!-- Center Reticle Dot -->
   <div id="reticle-dot"></div>
 
-  <script type="module" src="/src/main.js"></script>
+  <script type="module" src="/src/landing.js"></script>
 </body>
 </html>

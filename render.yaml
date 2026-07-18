@@ -1,0 +1,20 @@
+services:
+  - type: web
+    runtime: node
+    name: ctrlaltdfeat-museum
+    branch: main
+    buildCommand: npm run build
+    startCommand: node build/run.mjs
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: NODE_VERSION
+        value: 24.14.1
+      - key: NODE_ENV
+        value: production
+      - key: GEMINI_API_KEYS
+        sync: false
+      - key: GEMINI_LIVE_QA_ENABLED
+        value: "1"

@@ -1,0 +1,58 @@
+{
+  "manifestId": "scene-media-01",
+  "sceneId": "tay-ho-giay-do-room-01",
+  "status": "approved",
+  "version": 1,
+  "bindings": {
+    "defaultAvatarId": "avatar-guide-static",
+    "processStationIds": [
+      "process-01",
+      "process-02",
+      "process-03",
+      "process-04",
+      "process-05",
+      "process-06",
+      "process-07",
+      "process-08",
+      "process-09",
+      "process-10"
+    ]
+  },
+  "assets": [
+    { "assetId": "guide-model", "kind": "model", "role": "guide-model", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/huongdanvien.fbx", "byteLength": 27118192, "loader": "fbx", "preload": "eager" },
+    { "assetId": "guide-idle", "kind": "model", "role": "guide-idle", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/Idle.fbx", "byteLength": 27971280, "loader": "fbx", "preload": "eager" },
+    { "assetId": "guide-walk", "kind": "model", "role": "guide-walk", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/Walking.fbx", "byteLength": 27304160, "loader": "fbx", "preload": "eager" },
+    { "assetId": "guide-talk", "kind": "model", "role": "guide-talk", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/guide_girl/Talking.fbx", "byteLength": 27469344, "loader": "fbx", "preload": "eager" },
+    { "assetId": "exhibit-product-showing", "kind": "model", "role": "exhibit-product-showing", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/asset/product_showing.fbx", "byteLength": 2618668, "loader": "fbx", "preload": "none" },
+    { "assetId": "exhibit-showing-tree", "kind": "model", "role": "exhibit-showing-tree", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/asset/showing_tree_01.fbx", "byteLength": 2397420, "loader": "fbx", "preload": "none" },
+    { "assetId": "exhibit-village-picture", "kind": "model", "role": "exhibit-village-picture", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/asset/village_picture.fbx", "byteLength": 2493916, "loader": "fbx", "preload": "none" },
+    { "assetId": "exhibit-mortar", "kind": "model", "role": "exhibit-mortar", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/asset/mortar.fbx", "byteLength": 10760800, "loader": "fbx", "preload": "none" },
+    { "assetId": "exhibit-paper-showing", "kind": "model", "role": "exhibit-paper-showing", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/asset/paper_showing.fbx", "byteLength": 10027264, "loader": "fbx", "preload": "none" },
+    { "assetId": "exhibit-wooden-mould", "kind": "model", "role": "exhibit-wooden-mould", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/asset/woodenmould.fbx", "byteLength": 2457756, "loader": "fbx", "preload": "none" },
+    { "assetId": "exhibit-ceiling-fan", "kind": "model", "role": "exhibit-ceiling-fan", "format": "fbx", "mimeType": "application/octet-stream", "publicPath": "/asset/celling_fan.fbx", "byteLength": 2570844, "loader": "fbx", "preload": "none" },
+    { "assetId": "avatar-animated", "kind": "model", "role": "avatar-animated", "format": "glb", "mimeType": "model/gltf-binary", "publicPath": "/assets/avatar/cesium-man.glb", "byteLength": 438044, "loader": "gltf", "preload": "none" },
+    { "assetId": "avatar-guide-static", "kind": "model", "role": "avatar-static-preview", "format": "glb", "mimeType": "model/gltf-binary", "publicPath": "/assets/avatar/huongdanvien.glb", "byteLength": 4910024, "loader": "gltf", "preload": "none" },
+    { "assetId": "process-video-01", "kind": "video", "role": "process-station", "format": "mp4", "mimeType": "video/mp4", "publicPath": "/making_step/Buoc1_nau_do.mp4", "byteLength": 2430392, "preload": "none" },
+    { "assetId": "process-video-02", "kind": "video", "role": "process-station", "format": "mp4", "mimeType": "video/mp4", "publicPath": "/making_step/Buoc2_lam_bia.mp4", "byteLength": 2494142, "preload": "none" },
+    { "assetId": "process-video-03", "kind": "video", "role": "process-station", "format": "mp4", "mimeType": "video/mp4", "publicPath": "/making_step/Buoc3_gia_do.mp4", "byteLength": 2477817, "preload": "none" },
+    { "assetId": "process-video-04", "kind": "video", "role": "process-station", "format": "mp4", "mimeType": "video/mp4", "publicPath": "/making_step/Buoc4_dap_le_va_bao_go.mp4", "byteLength": 2443477, "preload": "none" },
+    { "assetId": "process-video-05", "kind": "video", "role": "process-station", "format": "mp4", "mimeType": "video/mp4", "publicPath": "/making_step/Buoc5_dai_bia.mp4", "byteLength": 2455133, "preload": "none" },
+    { "assetId": "process-video-06", "kind": "video", "role": "process-station", "format": "mp4", "mimeType": "video/mp4", "publicPath": "/making_step/Buoc6_keo_tau.mp4", "byteLength": 2511414, "preload": "none" },
+    { "assetId": "process-video-07", "kind": "video", "role": "process-station", "format": "mp4", "mimeType": "video/mp4", "publicPath": "/making_step/Buoc7_seo_giấy.mp4", "byteLength": 2518406, "preload": "none" },
+    { "assetId": "process-video-08", "kind": "video", "role": "process-station", "format": "mp4", "mimeType": "video/mp4", "publicPath": "/making_step/Buoc8_ep_do.mp4", "byteLength": 2467521, "preload": "none" },
+    { "assetId": "process-video-09", "kind": "video", "role": "process-station", "format": "mp4", "mimeType": "video/mp4", "publicPath": "/making_step/Buoc9_can_giay.mp4", "byteLength": 1630563, "preload": "none" },
+    { "assetId": "process-video-10", "kind": "video", "role": "process-station", "format": "mp4", "mimeType": "video/mp4", "publicPath": "/making_step/Buoc10_lot_giay.mp4", "byteLength": 2480833, "preload": "none" }
+  ],
+  "processStations": [
+    { "stationId": "process-01", "order": 1, "title": "Nấu vỏ cây Dó", "titleEn": "Cooking the Dó Bark", "narration": "Vỏ cây dó được nấu với vôi để làm mềm sợi trước các công đoạn tiếp theo.", "narrationEn": "Dó bark is cooked with lime to soften the fibers before the next stages.", "assetId": "process-video-01" },
+    { "stationId": "process-02", "order": 2, "title": "Làm bìa vỏ Dó", "titleEn": "Making Cover Sheet", "narration": "Vỏ đã nấu được ngâm rửa, làm sạch và xử lý sơ bộ.", "narrationEn": "Cooked bark is washed, cleaned, and prepared.", "assetId": "process-video-02" },
+    { "stationId": "process-03", "order": 3, "title": "Giã bột Dó", "titleEn": "Pounding the Pulp", "narration": "Sợi vỏ dó được giã thành bột giấy mịn.", "narrationEn": "Dó fibers are pounded into fine paper pulp.", "assetId": "process-video-03" },
+    { "stationId": "process-04", "order": 4, "title": "Đập lề và bào gỗ", "titleEn": "Trimming and Wood Shaving", "narration": "Công đoạn chuẩn bị mép giấy và khuôn cho bể xeo.", "narrationEn": "This stage prepares the paper edges and tools for sheet forming.", "assetId": "process-video-04" },
+    { "stationId": "process-05", "order": 5, "title": "Đãi bìa xơ", "titleEn": "Sifting the Pulp", "narration": "Bột giấy được đãi để loại bỏ phần vỏ cứng và tạp chất.", "narrationEn": "The pulp is sifted to remove hard bark and impurities.", "assetId": "process-video-05" },
+    { "stationId": "process-06", "order": 6, "title": "Pha keo tàu", "titleEn": "Mixing with Glue", "narration": "Nhựa cây mò được pha vào bể bột để hỗ trợ liên kết sợi.", "narrationEn": "Natural glue is mixed into the pulp vat to support fiber bonding.", "assetId": "process-video-06" },
+    { "stationId": "process-07", "order": 7, "title": "Seo giấy Dó", "titleEn": "Scooping the Sheets", "narration": "Người thợ chao liềm xeo để dàn sợi thành tờ giấy mỏng.", "narrationEn": "The maker uses a mould to spread fibers into a thin sheet.", "assetId": "process-video-07" },
+    { "stationId": "process-08", "order": 8, "title": "Ép giấy thoát nước", "titleEn": "Pressing the Paper", "narration": "Các tờ giấy ướt được ép để loại bớt nước.", "narrationEn": "Wet sheets are pressed to remove water.", "assetId": "process-video-08" },
+    { "stationId": "process-09", "order": 9, "title": "Cán phẳng giấy", "titleEn": "Rolling and Flattening", "narration": "Giấy được cán phẳng trước khi hoàn thiện.", "narrationEn": "The paper is flattened before finishing.", "assetId": "process-video-09" },
+    { "stationId": "process-10", "order": 10, "title": "Lột giấy sấy khô", "titleEn": "Peeling and Separating", "narration": "Giấy khô được lột khỏi vách sấy và xếp thành tệp.", "narrationEn": "Dried sheets are peeled from the drying wall and stacked.", "assetId": "process-video-10" }
+  ]
+}
