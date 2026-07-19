@@ -32,3 +32,6 @@ assets/**/*.wav
 assets/**/*.mp4
 
 .harness/state/
+
+# Ignore large academic resources but keep bibliography declarations
+docs/resources/*.pdf
