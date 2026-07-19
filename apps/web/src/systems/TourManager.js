@@ -307,7 +307,11 @@ export class TourManager {
     this.currentStationIdx = 0;
     
     // Let guide stand near the last station
-    uiController.showToast("Chuyến tham quan kết thúc. Chúc bạn khám phá vui vẻ!");
+    if (this.language === 'en') {
+      uiController.showToast("Tour completed. Enjoy your exploration!");
+    } else {
+      uiController.showToast("Chuyến tham quan kết thúc. Chúc bạn khám phá vui vẻ!");
+    }
   }
 
   cancelFollow() {
@@ -347,7 +351,11 @@ export class TourManager {
     // Show the box above the guide's head
     uiController.showGuideAskBubble(true);
     
-    uiController.showToast("Đã hủy theo hướng dẫn viên.");
+    if (this.language === 'en') {
+      uiController.showToast("Guided tour cancelled.");
+    } else {
+      uiController.showToast("Đã hủy theo hướng dẫn viên.");
+    }
   }
 
   async speakNarration(text, callback, audioPath) {

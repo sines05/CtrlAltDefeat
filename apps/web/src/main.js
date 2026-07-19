@@ -1242,6 +1242,12 @@ function bindRuntimeEvents() {
 
   runtimeEventsBound = true;
   document.addEventListener('keydown', (e) => {
+    // Ignore input keys when user is typing in Q&A or other inputs
+    const target = e.target;
+    if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) {
+      return;
+    }
+
     const key = e.key.toLowerCase();
 
     // Get active modal statuses
