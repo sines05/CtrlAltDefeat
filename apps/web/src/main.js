@@ -932,7 +932,8 @@ function maybeLoadSceneProps() {
       continue;
     }
 
-    if (Math.abs(character.position.z - target.activationZ) > SCENE_PROP_ACTIVATION_DISTANCE) {
+    // Use large distance threshold so all props load always and are visible from afar
+    if (Math.abs(character.position.z - target.activationZ) > 150) {
       continue;
     }
 
