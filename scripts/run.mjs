@@ -12,6 +12,22 @@ const mountedStaticRoots = [
     mountPath: '/assets/avatar',
     root: resolve(repoRoot, 'assets/avatar'),
   },
+  {
+    mountPath: '/asset',
+    root: resolve(appRoot, 'asset'),
+  },
+  {
+    mountPath: '/guide_girl',
+    root: resolve(appRoot, 'guide_girl'),
+  },
+  {
+    mountPath: '/making_step',
+    root: resolve(appRoot, 'making_step'),
+  },
+  {
+    mountPath: '/audio',
+    root: resolve(appRoot, 'audio'),
+  },
 ];
 const mimeTypes = {
   '.fbx': 'application/octet-stream',
