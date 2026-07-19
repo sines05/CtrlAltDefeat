@@ -140,7 +140,7 @@ export class TourManager {
     this.hasArrivedAtFirstStation = false;
 
     const welcomeTextVi = "Kính chào quý vị và các bạn đến với mô phỏng phòng trưng bày phương pháp làm giấy nằm ở 189 Trích Sài, Hồ Tây, Hà Nội.\n\nTrước khi bắt đầu, bạn có biết rằng Việt Nam có một loại giấy truyền thống được gọi là giấy Dó. Loại giấy này được dân ta sử dụng để vẽ tranh Đông Hồ, làm chiếu chỉ hoàng gia, hay là lưu trữ kinh Phật. Phương pháp làm giấy dó này đã được lưu truyền từ thê kỷ thứ 13, tuy nhiên, do những thay đổi trong chính sách kinh tế trong giai đoạn Đổi Mới những năm 1980, những gia đình làm giấy thủ công truyền thống đổi sang những công việc khác khiến cho phương pháp làm giấy Dó truyền thống gần như bị mất. Hiện tại, chỉ còn trên dưới 10 hộ gia đình còn tiếp tục làm giấy Dó khắp Việt Nam.\n\nKhu vực Tây Hồ này hồi trước có một làng nghề làm giấy nổi tiếng là làng Yên Thái. Chúng mình đã mô phỏng lại phòng trưng bày các bước làm giấy Dó ở Trích Sài.";
-    const welcomeTextEn = "Welcome, ladies and gentlemen, to the simulation of the paper-making gallery located at 189 Trich Sai, Tay Ho, Hanoi. Before we begin, did you know that Vietnam has a traditional paper called Dó paper? This paper was used by our people to paint Dong Ho paintings, write royal decrees, or store Buddhist scriptures. The method of making this Dó paper has been passed down since the 13th century. However, due to economic changes during the Doi Moi period in the 1980s, traditional hand-made paper families switched to other jobs, causing the traditional Dó paper method to almost fade away. Here, I will introduce to you the 10 steps in this traditional Dó paper making process.";
+    const welcomeTextEn = "Welcome to the simulated paper-making exhibition located at 189 Trích Sài, Westlake, Hanoi. Before we begin, do you know that Vietnam has a traditional type of paper called Dó paper? This type of paper is used by our people to draw Đông Hồ paintings, write imperial decrees, or store Buddhist scriptures. This papermaking method has been passed down since the 13th century. However, due to changes in economic policies during the Đổi Mới period in the 1980s, families practicing traditional handmade papermaking switched to other jobs, causing the traditional Dó papermaking method to be nearly lost. In one famous papermaking village in Bắc Ninh, in 1980, there were 50,000 people involved in making dó paper, but in 2012, there were only 15 people. Across Vietnam right now, only about 10 or fewer households continue to make Dó paper. The Westlake area used to have a famous papermaking village called Yên Thái village. That’s why the museum is located at 189 Trích Sài today.";
     const welcomeText = this.language === 'en' ? welcomeTextEn : welcomeTextVi;
     const speaker = this.language === 'en' ? "Tour Guide" : "Hướng dẫn viên";
 
@@ -439,7 +439,7 @@ export class TourManager {
       this.guideFSM.transitionTo(GUIDE_STATES.TALKING);
       
       const afterTextVi = "Giấy dó thường được làm ở trong một số mùa nhất định khi thời tiết không mưa, không nắng quá, và không ẩm. Người dân Yên Thái hồi trước vừa là nông dân vừa là nghệ nhân làm giấy. Khi hết mùa làm nông, nghệ nhân sẽ chuyển sang làm giấy vì có thời gian. Học làm giấy không khó, chỉ mất một năm; nhưng để làm ra một tờ giấy chất lượng thì một người dân trong làng phải làm từ 5 đến 6 năm trở lên.";
-      const afterTextEn = "Dó paper is usually made in certain seasons when the weather is not too rainy, not too sunny, and not humid. The people of Yen Thai village in the past were both farmers and paper-making artisans. When the agricultural season ended, they switched to making paper since they had time. Learning to make paper is not difficult, taking only a year; but to make a high-quality sheet of paper, a villager had to practice for 5 to 6 years or more.";
+      const afterTextEn = "Dó paper is usually made during certain seasons when the weather is not rainy, not too sunny, and not humid. The people of Yên Thái used to be both farmers and papermaking artisans. When the farming season ended, the artisans would switch to making paper because they had the time. Learning to make paper is only takes one year, but it takes 5 to 6 years to become an expert.";
       const afterText = this.language === 'en' ? afterTextEn : afterTextVi;
       const speaker = this.language === 'en' ? "Tour Guide" : "Hướng dẫn viên";
       
@@ -456,7 +456,7 @@ export class TourManager {
       this.speakNarration(afterText, () => {
         // Part 2: Kết Thúc
         const endTextVi = "Phần hướng dẫn của chúng mình đến đây là hết. Bạn có thể đi vòng quanh bảo tàng để xem những vật phẩm trưng bày của chúng mình, bao gồm những loại giấy dó, cây mò, liềm seo.";
-        const endTextEn = "Here, our simulation journey has come to an end. Thank you very much for accompanying me. You can walk around the museum to view our exhibits, including types of Dó paper, the Mò tree, and the paper moulds.";
+        const endTextEn = "Our guided tour is now complete. You can walk around the museum to see our displayed items, including types of Dó paper, the Mò plant, the liềm xeo, etc.";
         const endText = this.language === 'en' ? endTextEn : endTextVi;
         uiController.showDialogueBubble(speaker, endText);
         
