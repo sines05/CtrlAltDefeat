@@ -242,6 +242,23 @@
       color: #eae3d2;
       margin-bottom: 20px;
       min-height: 48px;
+      max-height: 120px;
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+    #dialogue-text::-webkit-scrollbar {
+      width: 6px;
+    }
+    #dialogue-text::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+    }
+    #dialogue-text::-webkit-scrollbar-thumb {
+      background: rgba(180, 130, 80, 0.4);
+      border-radius: 3px;
+    }
+    #dialogue-text::-webkit-scrollbar-thumb:hover {
+      background: rgba(180, 130, 80, 0.6);
     }
     #dialogue-options {
       display: flex;

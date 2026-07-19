@@ -1533,7 +1533,7 @@ function bindRuntimeEvents() {
       if (e.repeat) return;
       if (document.activeElement && ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(document.activeElement.tagName)) return;
       if (key === '1' || key === 'numpad1') {
-        setGuidePanel('qa-placeholder');
+        triggerGuideQaDialogue();
         e.preventDefault();
         return;
       }
@@ -1543,7 +1543,7 @@ function bindRuntimeEvents() {
         return;
       }
     }
-    if (guidePanel === 'qa-placeholder' || guidePanel === 'tour-confirmation') {
+    if (guidePanel === 'tour-confirmation') {
       if (key === 'escape') {
         setGuidePanel(null);
         e.preventDefault();
@@ -1950,11 +1950,60 @@ function setGuidePanel(panel) {
   }
 }
 
+function triggerGuideQaDialogue() {
+  setGuidePanel(null); // Hide proximity menu
+  
+  if (tourManager && tourManager.guide) {
+    // Guide faces the player
+    const dirToPlayer = new THREE.Vector3().subVectors(character.position, tourManager.guide.position).normalize();
+    tourManager.guide.rotation.y = Math.atan2(dirToPlayer.x, dirToPlayer.z);
+  }
+  
+  if (tourManager?.guideFSM) {
+    tourManager.guideFSM.transitionTo(GUIDE_STATES.WAITING_QUESTION);
+  }
+  if (tourManager) {
+    tourManager.playerState = PLAYER_STATES.QUESTION_INPUT;
+  }
+  
+  uiController.showDialogueBubble(
+    "Hướng dẫn viên",
+    "Tôi sẵn sàng giải đáp mọi thắc mắc của bạn về giấy Dó, làng nghề Yên Thái, quy trình sản xuất và các hiện vật trưng bày ở đây.",
+    {
+      onType: () => {
+        if (tourManager) tourManager.playerState = PLAYER_STATES.QUESTION_INPUT;
+        uiController.openTypingModal();
+      },
+      onVoice: () => {
+        if (tourManager) tourManager.playerState = PLAYER_STATES.QUESTION_VOICE;
+        uiController.openVoiceModal();
+      },
+      onContinue: () => {},
+      onCancel: () => {
+        uiController.hideDialogueBubble();
+        if (tourManager?.guideFSM) {
+          tourManager.guideFSM.transitionTo(GUIDE_STATES.IDLE);
+        }
+        if (tourManager) tourManager.playerState = PLAYER_STATES.FREE;
+        if (uiController.optCancel) uiController.optCancel.textContent = "Hủy";
+      }
+    }
+  );
+  
+  uiController.optContinue.style.display = 'none';
+  uiController.optType.style.display = '';
+  uiController.optVoice.style.display = '';
+  if (uiController.optCancel) {
+    uiController.optCancel.textContent = "Đóng";
+    uiController.optCancel.style.display = '';
+  }
+}
+
 // Guide panel button bindings
 document.querySelectorAll('.guide-menu-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const opt = btn.getAttribute('data-option');
-    if (opt === '1') setGuidePanel('qa-placeholder');
+    if (opt === '1') triggerGuideQaDialogue();
     else if (opt === '2') setGuidePanel('tour-confirmation');
   });
 });

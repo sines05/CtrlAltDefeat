@@ -50,6 +50,9 @@ export class TourManager {
     
     this.narrationTimer = 0;
     this.isSpeaking = false;
+    this.hasWelcomed = false;
+    this.isWelcoming = false;
+    this.hasArrivedAtFirstStation = false;
     
     // Save original camera target/distance settings to restore after tour
     this.originalTarget = new THREE.Vector3().copy(controls.target);
@@ -69,10 +72,11 @@ export class TourManager {
 
   setupUIEvents() {
     // When the user clicks the "Continue" option on the dialogue bubble
-    const originalContinue = uiController.optContinue.onclick;
     uiController.optContinue.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (this.playerState === PLAYER_STATES.WATCHING_DIALOGUE) {
+      if (this.isSpeaking) {
+        this.skipCurrentNarration();
+      } else if (this.playerState === PLAYER_STATES.WATCHING_DIALOGUE) {
         this.nextStation();
       }
     });
@@ -122,17 +126,129 @@ export class TourManager {
     uiController.showCancelNotice(true);
     uiController.showGuideAskBubble(false);
 
-    const currentStation = this.stations[this.currentStationIdx];
-    uiController.showProgress(currentStation.stepNum, this.stations.length, currentStation.name);
-    
-    // Start guide walking
-    this.guideFSM.transitionTo(GUIDE_STATES.WALKING);
-    
     // Save original controls target
     this.originalTarget.copy(this.controls.target);
+
+    this.isWelcoming = true;
+    this.hasArrivedAtFirstStation = false;
+
+    const welcomeText = "Kính chào quý vị và các bạn đến với mô phỏng phòng trưng bày phương pháp làm giấy nằm ở 189 Trích Sài, Hồ Tây, Hà Nội.\n\nTrước khi bắt đầu, bạn có biết rằng Việt Nam có một loại giấy truyền thống được gọi là giấy Dó. Loại giấy này được dân ta sử dụng để vẽ tranh Đông Hồ, làm chiếu chỉ hoàng gia, hay là lưu trữ kinh Phật. Phương pháp làm giấy dó này đã được lưu truyền từ thê kỷ thứ 13, tuy nhiên, do những thay đổi trong chính sách kinh tế trong giai đoạn Đổi Mới những năm 1980, những gia đình làm giấy thủ công truyền thống đổi sang những công việc khác khiến cho phương pháp làm giấy Dó truyền thống gần như bị mất. Hiện tại, chỉ còn trên dưới 10 hộ gia đình còn tiếp tục làm giấy Dó khắp Việt Nam.\n\nKhu vực Tây Hồ này hồi trước có một làng nghề làm giấy nổi tiếng là làng Yên Thái. Chúng mình đã mô phỏng lại phòng trưng bày các bước làm giấy Dó ở Trích Sài.";
+
+    uiController.showDialogueBubble("Hướng dẫn viên", welcomeText);
     
-    // Play initial walking for player
+    uiController.optContinue.textContent = "Bỏ qua giới thiệu";
+    uiController.optContinue.style.display = '';
+    uiController.optType.style.display = 'none';
+    uiController.optVoice.style.display = 'none';
+    if (uiController.optCancel) {
+      uiController.optCancel.textContent = "Hủy";
+      uiController.optCancel.style.display = '';
+    }
+
+    this.speakNarration(welcomeText, () => {
+      this.isWelcoming = false;
+      if (this.hasArrivedAtFirstStation) {
+        this.triggerStationArrival();
+      }
+    }, '/audio/narration/welcome.wav');
+
+    // Walk to the first station immediately
+    const currentStation = this.stations[this.currentStationIdx];
+    uiController.showProgress(currentStation.stepNum, this.stations.length, currentStation.name);
+
+    this.guideFSM.transitionTo(GUIDE_STATES.WALKING);
     this.fadePlayerAction(this.playerActions.walk);
+  }
+
+  triggerStationArrival() {
+    this.hasArrivedAtFirstStation = false;
+    const currentStation = this.stations[this.currentStationIdx];
+    if (!currentStation) return;
+
+    this.guideFSM.transitionTo(GUIDE_STATES.TALKING);
+    uiController.showDialogueBubble("Hướng dẫn viên", currentStation.narration);
+
+    uiController.optContinue.textContent = "Bỏ qua thuyết minh";
+    uiController.optContinue.style.display = '';
+    uiController.optType.style.display = 'none';
+    uiController.optVoice.style.display = 'none';
+    if (uiController.optCancel) {
+      uiController.optCancel.textContent = "Hủy";
+      uiController.optCancel.style.display = '';
+    }
+
+    this.speakNarration(currentStation.narration, () => {
+      this.guideFSM.transitionTo(GUIDE_STATES.WAITING_QUESTION);
+      uiController.showDialogueBubble(
+        "Hướng dẫn viên",
+        "Quy trình của bước này là như vậy. Bạn có câu hỏi nào cần tôi giải đáp không?",
+        {
+          onContinue: () => {},
+          onType: () => {},
+          onVoice: () => {},
+          onCancel: () => this.cancelFollow()
+        }
+      );
+      uiController.optContinue.textContent = "Tiếp tục hành trình";
+      uiController.optContinue.style.display = '';
+      uiController.optType.style.display = '';
+      uiController.optVoice.style.display = '';
+      if (uiController.optCancel) {
+        uiController.optCancel.textContent = "Hủy";
+        uiController.optCancel.style.display = '';
+      }
+    }, `/audio/narration/step${this.currentStationIdx + 1}.wav`);
+  }
+
+  skipCurrentNarration() {
+    // 1. Stop current audio
+    if (this.guideFSM && this.guideFSM.answerAudio) {
+      try {
+        this.guideFSM.answerAudio.pause();
+      } catch (err) {}
+      this.guideFSM.answerAudio = null;
+    }
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    if (this.speechTimeout) {
+      clearTimeout(this.speechTimeout);
+      this.speechTimeout = null;
+    }
+    this.isSpeaking = false;
+
+    // 2. Handle skip based on current state
+    if (this.isWelcoming) {
+      this.isWelcoming = false;
+      if (this.hasArrivedAtFirstStation) {
+        this.triggerStationArrival();
+      } else {
+        uiController.hideDialogueBubble();
+      }
+    } else if (this.currentStationIdx >= this.stations.length) {
+      this.endTour();
+    } else {
+      // Station narration skip
+      this.guideFSM.transitionTo(GUIDE_STATES.WAITING_QUESTION);
+      uiController.showDialogueBubble(
+        "Hướng dẫn viên",
+        "Quy trình của bước này là như vậy. Bạn có câu hỏi nào cần tôi giải đáp không?",
+        {
+          onContinue: () => {},
+          onType: () => {},
+          onVoice: () => {},
+          onCancel: () => this.cancelFollow()
+        }
+      );
+      uiController.optContinue.textContent = "Tiếp tục hành trình";
+      uiController.optContinue.style.display = '';
+      uiController.optType.style.display = '';
+      uiController.optVoice.style.display = '';
+      if (uiController.optCancel) {
+        uiController.optCancel.textContent = "Hủy";
+        uiController.optCancel.style.display = '';
+      }
+    }
   }
 
   endTour() {
@@ -145,6 +261,18 @@ export class TourManager {
       this.speechTimeout = null;
     }
     this.isSpeaking = false;
+    this.isWelcoming = false;
+    this.hasArrivedAtFirstStation = false;
+
+    if (this.guideFSM && this.guideFSM.answerAudio) {
+      try {
+        this.guideFSM.answerAudio.pause();
+        this.guideFSM.answerAudio.currentTime = 0;
+      } catch (err) {
+        console.warn("Failed to stop narration audio:", err);
+      }
+      this.guideFSM.answerAudio = null;
+    }
 
     uiController.hideProgress();
     uiController.hideDialogueBubble();
@@ -173,6 +301,18 @@ export class TourManager {
       window.speechSynthesis.cancel();
     }
     this.isSpeaking = false;
+    this.isWelcoming = false;
+    this.hasArrivedAtFirstStation = false;
+
+    if (this.guideFSM && this.guideFSM.answerAudio) {
+      try {
+        this.guideFSM.answerAudio.pause();
+        this.guideFSM.answerAudio.currentTime = 0;
+      } catch (err) {
+        console.warn("Failed to stop narration audio:", err);
+      }
+      this.guideFSM.answerAudio = null;
+    }
     
     // Stop guide movement, keep current position
     this.guideFSM.transitionTo(GUIDE_STATES.IDLE);
@@ -189,19 +329,25 @@ export class TourManager {
     uiController.showToast("Đã hủy theo hướng dẫn viên.");
   }
 
-  async speakNarration(text, callback) {
+  async speakNarration(text, callback, audioPath) {
     this.isSpeaking = true;
     try {
-      const response = await fetch('/api/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, voice: 'mock-default' })
-      });
-      if (!response.ok) throw new Error('TTS status not ok');
-      const data = await response.json();
-      if (!data.audioUrl) throw new Error('No audioUrl in TTS response');
+      let audioUrl = null;
+      if (audioPath) {
+        audioUrl = audioPath;
+      } else {
+        const response = await fetch('/api/tts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, voice: 'mock-default' })
+        });
+        if (!response.ok) throw new Error('TTS status not ok');
+        const data = await response.json();
+        audioUrl = data.audioUrl;
+      }
+      if (!audioUrl) throw new Error('No audioUrl for TTS');
 
-      const audio = new Audio(data.audioUrl);
+      const audio = new Audio(audioUrl);
       const spoke = await this.guideFSM.playAnswerAudio(audio);
       if (spoke) {
         audio.addEventListener('ended', () => {
@@ -240,29 +386,52 @@ export class TourManager {
     }
   }
 
+
   nextStation() {
     this.currentStationIdx++;
     
     if (this.currentStationIdx >= this.stations.length) {
-      // Final Thank You speech
+      // Final Thank You speech - Part 1: Sau Đó
       this.playerState = PLAYER_STATES.WATCHING_DIALOGUE;
       this.guideFSM.transitionTo(GUIDE_STATES.TALKING);
       
-      const thankYouText = "Cảm ơn bạn đã đồng hành cùng tôi trong chuyến tham quan quy trình làm giấy Dó truyền thống. Hãy tự do khám phá thêm nhé!";
-      uiController.showDialogueBubble("Hướng dẫn viên", thankYouText);
-      uiController.optContinue.style.display = 'none';
+      const afterText = "Giấy dó thường được làm ở trong một số mùa nhất định khi thời tiết không mưa, không nắng quá, và không ẩm. Người dân Yên Thái hồi trước vừa là nông dân vừa là nghệ nhân làm giấy. Khi hết mùa làm nông, nghệ nhân sẽ chuyển sang làm giấy vì có thời gian. Học làm giấy không khó, chỉ mất một năm; nhưng để làm ra một tờ giấy chất lượng thì một người dân trong làng phải làm từ 5 đến 6 năm trở lên.";
+      
+      uiController.showDialogueBubble("Hướng dẫn viên", afterText);
+      uiController.optContinue.textContent = "Bỏ qua thuyết minh";
+      uiController.optContinue.style.display = '';
       uiController.optType.style.display = 'none';
       uiController.optVoice.style.display = 'none';
+      if (uiController.optCancel) {
+        uiController.optCancel.textContent = "Hủy";
+        uiController.optCancel.style.display = '';
+      }
 
-      this.speakNarration(thankYouText, () => {
-        setTimeout(() => {
-          this.endTour();
-          // Restore button displays for next potential run
-          uiController.optContinue.style.display = '';
-          uiController.optType.style.display = '';
-          uiController.optVoice.style.display = '';
-        }, 3000);
-      });
+      this.speakNarration(afterText, () => {
+        // Part 2: Kết Thúc
+        const endText = "Phần hướng dẫn của chúng mình đến đây là hết. Bạn có thể đi vòng quanh bảo tàng để xem những vật phẩm trưng bày của chúng mình, bao gồm những loại giấy dó, cây mò, liềm seo.";
+        uiController.showDialogueBubble("Hướng dẫn viên", endText);
+        
+        uiController.optContinue.textContent = "Bỏ qua thuyết minh";
+        uiController.optContinue.style.display = '';
+        uiController.optType.style.display = 'none';
+        uiController.optVoice.style.display = 'none';
+        if (uiController.optCancel) {
+          uiController.optCancel.textContent = "Hủy";
+          uiController.optCancel.style.display = '';
+        }
+
+        this.speakNarration(endText, () => {
+          setTimeout(() => {
+            this.endTour();
+            // Restore button displays for next potential run
+            uiController.optContinue.style.display = '';
+            uiController.optType.style.display = '';
+            uiController.optVoice.style.display = '';
+            if (uiController.optCancel) uiController.optCancel.style.display = '';
+          }, 3000);
+        }, '/audio/narration/end.wav');
+      }, '/audio/narration/after.wav');
     } else {
       // Walk to next station
       const nextStation = this.stations[this.currentStationIdx];
@@ -327,6 +496,10 @@ export class TourManager {
       const targetXZ = new THREE.Vector3(guideStandPos.x, guidePos.y, guideStandPos.z);
       const distToStation = guidePos.distanceTo(targetXZ);
 
+      if (Math.random() < 0.01) {
+        console.log(`[TourManager] WALKING - StationIdx: ${this.currentStationIdx}, Guide Pos: (${guidePos.x.toFixed(2)}, ${guidePos.z.toFixed(2)}), Target: (${targetXZ.x.toFixed(2)}, ${targetXZ.z.toFixed(2)}), Dist: ${distToStation.toFixed(2)}`);
+      }
+
       if (distToStation > 0.25) {
         const dir = new THREE.Vector3().subVectors(targetXZ, guidePos).normalize();
         guidePos.x += dir.x * this.guideSpeed * delta;
@@ -342,7 +515,7 @@ export class TourManager {
         this.fadePlayerAction(this.playerActions.walk);
       } else {
         // Arrived at station
-        this.guideFSM.transitionTo(GUIDE_STATES.TALKING);
+        console.log(`[TourManager] ARRIVED - StationIdx: ${this.currentStationIdx}, Guide Pos: (${guidePos.x.toFixed(2)}, ${guidePos.z.toFixed(2)}), Target: (${targetXZ.x.toFixed(2)}, ${targetXZ.z.toFixed(2)})`);
         this.fadePlayerAction(this.playerActions.idle);
         this.playerState = PLAYER_STATES.WATCHING_DIALOGUE;
 
@@ -350,30 +523,13 @@ export class TourManager {
         const dirToPlayer = new THREE.Vector3().subVectors(this.player.position, guidePos).normalize();
         this.guide.rotation.y = Math.atan2(dirToPlayer.x, dirToPlayer.z);
 
-        uiController.optContinue.style.display = 'none';
-        uiController.optType.style.display = 'none';
-        uiController.optVoice.style.display = 'none';
-        if (uiController.optCancel) uiController.optCancel.style.display = 'none';
-
-        uiController.showDialogueBubble("Hướng dẫn viên", currentStation.narration);
-
-        this.speakNarration(currentStation.narration, () => {
-          this.guideFSM.transitionTo(GUIDE_STATES.WAITING_QUESTION);
-          uiController.showDialogueBubble(
-            "Hướng dẫn viên",
-            "Quy trình của bước này là như vậy. Bạn có câu hỏi nào cần tôi giải đáp không?",
-            {
-              onContinue: () => {},
-              onType: () => {},
-              onVoice: () => {},
-              onCancel: () => this.cancelFollow()
-            }
-          );
-          uiController.optContinue.style.display = '';
-          uiController.optType.style.display = '';
-          uiController.optVoice.style.display = '';
-          if (uiController.optCancel) uiController.optCancel.style.display = '';
-        });
+        if (this.isWelcoming) {
+          // Stay in TALKING state showing the welcome bubble
+          this.guideFSM.transitionTo(GUIDE_STATES.TALKING);
+          this.hasArrivedAtFirstStation = true;
+        } else {
+          this.triggerStationArrival();
+        }
       }
     }
 

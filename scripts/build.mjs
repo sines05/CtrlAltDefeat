@@ -92,6 +92,7 @@ await viteBuild({
 await cp(resolve(repoRoot, 'apps/web/asset'), resolve(buildDir, 'asset'), { recursive: true });
 await cp(resolve(repoRoot, 'apps/web/guide_girl'), resolve(buildDir, 'guide_girl'), { recursive: true });
 await cp(resolve(repoRoot, 'apps/web/making_step'), resolve(buildDir, 'making_step'), { recursive: true });
+await cp(resolve(repoRoot, 'apps/web/audio'), resolve(buildDir, 'audio'), { recursive: true });
 await cp(resolve(repoRoot, 'services/api/src'), resolve(buildDir, 'api/src'), { recursive: true });
 await cp(resolve(repoRoot, 'content/approved'), resolve(buildDir, 'content/approved'), { recursive: true });
 await cp(resolve(repoRoot, 'assets/avatar'), resolve(buildDir, 'assets/avatar'), { recursive: true });
