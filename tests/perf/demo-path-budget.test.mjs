@@ -28,9 +28,10 @@ test('test_demo_path_long_tasks_returns_complete_data', async () => {
 });
 
 test('test_media_bootstrap_keeps_manifest_metadata_only_and_scopes_eager_to_guides', async () => {
-  const [manifest, mainSource] = await Promise.all([
+  const [manifest, mainSource, landingSource] = await Promise.all([
     getMediaManifest('tay-ho-giay-do-room-01'),
     readFile(path.join(repoRoot, 'apps/web/src/main.js'), 'utf8'),
+    readFile(path.join(repoRoot, 'apps/web/src/landing.js'), 'utf8'),
   ]);
   const serializedManifest = JSON.stringify(manifest);
   const eagerAssetIds = manifest.assets
@@ -45,6 +46,12 @@ test('test_media_bootstrap_keeps_manifest_metadata_only_and_scopes_eager_to_guid
       : asset.preload === 'none'
   )));
   assert.doesNotMatch(serializedManifest, /(?:data:|base64)/iu);
+  assert.match(mainSource, /const LANDING_PRELOAD_GUIDE_ROLES = \['guide-model', 'guide-idle'\];/u);
+  assert.match(landingSource, /connection\?\.saveData/u);
+  assert.match(landingSource, /connection\?\.effectiveType === '4g'/u);
+  assert.match(landingSource, /Number\.isFinite\(navigator\.deviceMemory\) && navigator\.deviceMemory >= 4/u);
+  assert.match(landingSource, /window\.innerWidth >= 1024/u);
   assert.doesNotMatch(mainSource, /stations\.forEach\(station => \{\n\s+station\.videoDisplay\.load\(\);/u);
   assert.doesNotMatch(mainSource, /Promise\.all\(\[\n\s+loadWithLog\(modelPath,/u);
+  assert.doesNotMatch(landingSource, /assets\.map\([^)]*load/u);
 });

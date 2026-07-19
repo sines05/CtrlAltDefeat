@@ -26,7 +26,7 @@ Trả đúng 5 approved tour steps cho tour hiện tại.
 
 ### `GET /api/media/{sceneId}`
 
-Trả approved metadata cho model/video của một scene, gồm cả preload policy để runtime phân biệt guide eager sau bootstrap với media lazy mặc định.
+Trả approved metadata cho model/video của một scene, gồm preload policy để runtime phân biệt guide preload/promotion có kiểm soát với media lazy mặc định.
 
 Response:
 
@@ -103,5 +103,5 @@ Trả capability/health metadata để demo runtime.
 
 - Citation phải map về approved expert content.
 - Approved 5-step tour độc lập với 10 media process stations.
-- `assets[].preload` là runtime policy metadata; `"eager"` hiện chỉ dành cho guide assets promote sau shell/bootstrap, không phải signal để eager-load toàn bộ media ở initial route.
+- `assets[].preload` là runtime policy metadata; `"eager"` chỉ áp cho guide path. Landing có thể preload subset model + idle sau intent trên fast desktop, nhưng initial route không preload FBX/MP4 và full promotion chỉ chạy sau entry.
 - API không trả factual QA content ngoài approved evidence.

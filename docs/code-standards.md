@@ -39,7 +39,7 @@ Cập nhật: 2026-07-18
 - Browser không gọi LLM/TTS provider trực tiếp khi API có capability tương ứng.
 - Scene, tour, citation, và media manifest có schema riêng; không hardcode prose dài trong UI.
 - Media manifest ở `content/approved/media/` là metadata-only: public path, role, format, byte length, preload policy, và process station binding.
-- MP4 và non-guide FBX/GLB giữ lazy semantics; guide animated FBX chỉ được eager sau shell/bootstrap, và không thêm startup loop hoặc `Promise.all` làm block first render.
+- MP4 và non-guide FBX/GLB giữ lazy semantics; landing chỉ preload tuần tự `guide-model` + `guide-idle` khi browser xác nhận 4g, RAM >= 4 GiB, desktop pointer/viewport và không Data Saver; probe thiếu phải fail-closed. Full guide promotion chạy sau first render, không preload-all.
 - Một lỗi stretch hoặc media không được làm hỏng luồng bắt buộc.
 
 ## Error handling
@@ -68,7 +68,7 @@ Trước demo chạy `npm test`, `npm run lint`, `npm run typecheck`, và `npm r
 
 - Browser smoke mở Vite-built runtime mà không có unresolved bare import.
 - API contract giữ scene, tour 5 bước, và `/api/media/{sceneId}`.
-- Media smoke xác nhận MP4 và non-guide FBX không eager-load từ initial route, guide eager vẫn chỉ giới hạn ở guide path sau bootstrap, fallback render được, và copy process station đến từ manifest đã duyệt.
+- Media smoke xác nhận initial route chỉ warm module không mount WebGL; partial guide preload bị network/device-gate và chỉ gồm model + idle; MP4/non-guide FBX vẫn lazy, fallback render được, và process copy đến từ manifest đã duyệt.
 - QA/TTS smoke xác nhận grounded citations hoặc degraded transcript.
 
 ## Accessibility và UX baseline

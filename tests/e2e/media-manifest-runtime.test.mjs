@@ -68,21 +68,33 @@ test('test_bootstrap_media_failure_isolated_from_scene_and_tour', async () => {
   assert.equal(result.tour.tourId, 'tour-01');
 });
 
-test('test_runtime_source_keeps_guide_promotion_eager_and_staged', async () => {
+test('test_runtime_source_keeps_guide_preload_scoped_and_promotion_staged', async () => {
   const [mainSource, clientSource] = await Promise.all([
     readFile(path.join(repoRoot, 'apps/web/src/main.js'), 'utf8'),
     readFile(path.join(repoRoot, 'apps/web/src/media/client.js'), 'utf8'),
   ]);
-  const bootstrapSection = mainSource.split('async function bootstrapApprovedMedia() {')[1] ?? '';
-  const promotionSection = mainSource.split('async function promoteAnimatedCharacters')[1] ?? '';
+  const preloadSection = mainSource.split('export async function preloadMuseumGuides() {')[1]?.split('function fadeToAction')[0] ?? '';
+  const promotionSection = mainSource.split('async function promoteAnimatedCharacters')[1]?.split('function maybeLoadSceneProps')[0] ?? '';
   const promotionFrameYields = [...promotionSection.matchAll(/await waitForNextFrame\(\);/gu)].length;
 
   assert.match(mainSource, /fetchBootstrapContent\(/u);
   assert.match(clientSource, /\/api\/scene\/\$\{sceneId\}/u);
   assert.match(clientSource, /\/api\/tour\/\$\{tourId\}/u);
   assert.match(clientSource, /\/api\/media\/\$\{sceneId\}/u);
+  assert.match(mainSource, /const SCENE_PROP_ACTIVATION_DISTANCE = 12;/u);
   assert.match(mainSource, /const GUIDE_PROMOTION_ROLES = \['guide-model', 'guide-idle', 'guide-walk', 'guide-talk'\];/u);
-  assert.match(bootstrapSection, /modelRegistry = createModelRegistry\(bootstrapState\.media\);\n\s+const guidePromotionLoad = Promise\.all\(GUIDE_PROMOTION_ROLES\.map\(\(role\) => modelRegistry\.loadRole\(role\)\)\);\n\s+void promoteAnimatedCharacters\(guidePromotionLoad\);/u);
+  assert.match(mainSource, /const LANDING_PRELOAD_GUIDE_ROLES = \['guide-model', 'guide-idle'\];/u);
+  assert.match(mainSource, /function ensureGuidePromotionLoad\(\)/u);
+  assert.match(mainSource, /approvedBootstrapPromise = null;\n\s+throw approvedContent\.mediaError;/u);
+  assert.match(mainSource, /for \(let attempt = 0; attempt < 2; attempt \+= 1\)/u);
+  assert.match(mainSource, /function resetRuntimeShell\(\)/u);
+  assert.match(mainSource, /resetRuntimeShell\(\);\n\s+runtimeStartPromise = null;/u);
+  assert.match(mainSource, /const nextScene = new THREE\.Scene\(\);/u);
+  assert.match(mainSource, /scene = nextScene;\n\s+camera = nextCamera;\n\s+renderer = nextRenderer;/u);
+  assert.match(mainSource, /Promise\.all\(GUIDE_PROMOTION_ROLES\.map\(\(role\) => modelRegistry\.loadRole\(role\)\)\)/u);
+  assert.match(preloadSection, /for \(const role of LANDING_PRELOAD_GUIDE_ROLES\) \{\n\s+await modelRegistry\.loadRole\(role\);\n\s+await waitForNextFrame\(\);/u);
+  assert.match(mainSource, /export function startMuseumApp\(\)/u);
+  assert.doesNotMatch(mainSource, /\ninitializeBaseScene\(\);\nvoid /u);
   assert.equal(promotionFrameYields, 2);
   assert.match(promotionSection, /guideModel\.visible = false;/u);
   assert.match(promotionSection, /guideModel\.visible = true;\n\s+removeSceneObject\(previousPlayer\);\n\s+removeSceneObject\(previousGuide\);/u);

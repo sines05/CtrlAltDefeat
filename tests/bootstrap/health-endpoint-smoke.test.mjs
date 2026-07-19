@@ -50,7 +50,11 @@ test('test_health_endpoint_smoke', async (t) => {
   assert.doesNotMatch(rootHtml, /<script type="module" src="\/src\/main\.js"><\/script>/);
 
   assert.equal(landingEntryResponse.status, 200);
-  assert.match(await landingEntryResponse.text(), /import\('\.\/main\.js'\)/);
+  const landingEntrySource = await landingEntryResponse.text();
+  assert.match(landingEntrySource, /import\('\.\/main\.js'\)/);
+  assert.match(landingEntrySource, /museum\.startMuseumApp\(\)/);
+  assert.match(landingEntrySource, /connection\?\.saveData/u);
+  assert.match(landingEntrySource, /connection\?\.effectiveType/u);
 
   assert.equal(sceneResponse.status, 200);
   assert.equal((await sceneResponse.json()).sceneId, 'tay-ho-giay-do-room-01');

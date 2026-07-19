@@ -1,18 +1,18 @@
 /**
  * @file main.js
  * @description Frontend entry point driving the immersive 3D museum corridor and guide interactions.
- * 
+ *
  * SYSTEM ENTRYPOINT & CLIENT-SIDE ARCHITECTURE SPECIFICATION:
- * - Core Design Rationale: Traditional heritage preservation (such as Vietnamese Dó papermaking) has historically 
- *   been restricted to static exhibits that struggle to capture the interest of modern and international visitors. 
- *   Dó.AI resolves this engagement bottleneck by implementing a multisensory "living museum" paradigm directly 
+ * - Core Design Rationale: Traditional heritage preservation (such as Vietnamese Dó papermaking) has historically
+ *   been restricted to static exhibits that struggle to capture the interest of modern and international visitors.
+ *   Dó.AI resolves this engagement bottleneck by implementing a multisensory "living museum" paradigm directly
  *   within a web interface.
- * - Edge-Computing Transcoding Pipeline: To bridge the gap between browser audio capture (WebM Opus/AAC) and the 
- *   strict raw PCM requirements of real-time multi-modal LLM APIs, the system decodes and resamples audio files 
- *   to exactly 16000Hz mono dynamically on the client side using decodeAudioData and OfflineAudioContext. This avoids 
+ * - Edge-Computing Transcoding Pipeline: To bridge the gap between browser audio capture (WebM Opus/AAC) and the
+ *   strict raw PCM requirements of real-time multi-modal LLM APIs, the system decodes and resamples audio files
+ *   to exactly 16000Hz mono dynamically on the client side using decodeAudioData and OfflineAudioContext. This avoids
  *   heavy backend transcription server overhead, limits data payload transit, and optimizes mobile device battery life.
- * - Resource Lifecycle & Gestures: Manages a unified AudioContext pool (sharedAudioCtx) to circumvent browser limits 
- *   on concurrent audio channels. The initialization is deferred behind a Landing Page user gesture to satisfy browser 
+ * - Resource Lifecycle & Gestures: Manages a unified AudioContext pool (sharedAudioCtx) to circumvent browser limits
+ *   on concurrent audio channels. The initialization is deferred behind a Landing Page user gesture to satisfy browser
  *   autoplay requirements and ensure smooth, crash-free preloading of 3D WebGL assets.
  */
 
@@ -34,7 +34,7 @@ import { readLiveCapability, submitQuestionTurn } from './qa/live-client.js';
 
 const SCENE_ID = 'tay-ho-giay-do-room-01';
 const TOUR_ID = 'tour-01';
-const SCENE_PROP_ACTIVATION_DISTANCE = 16;
+const SCENE_PROP_ACTIVATION_DISTANCE = 12;
 const SCENE_PROP_TARGETS = [
   { role: 'exhibit-village-picture', activationZ: -18 },
   { role: 'exhibit-product-showing', activationZ: -9 },
@@ -44,8 +44,13 @@ const SCENE_PROP_TARGETS = [
   { role: 'exhibit-wooden-mould', activationZ: 18 },
 ];
 const GUIDE_PROMOTION_ROLES = ['guide-model', 'guide-idle', 'guide-walk', 'guide-talk'];
+const LANDING_PRELOAD_GUIDE_ROLES = ['guide-model', 'guide-idle'];
 
-const scene = new THREE.Scene();
+let scene = null;
+let camera = null;
+let renderer = null;
+let controls = null;
+let clock = null;
 let videoActivationSystem = null;
 let character = null;
 let currentAction = null;
@@ -54,6 +59,13 @@ let mixers = [];
 let tourManager = null;
 let stations = [];
 let modelRegistry = null;
+let runtimeStarted = false;
+let runtimeStartPromise = null;
+let runtimeEventsBound = false;
+let animationStarted = false;
+let approvedBootstrapPromise = null;
+let guidePromotionLoad = null;
+let approvedMediaApplied = false;
 let bootstrapState = {
   scene: null,
   tour: null,
@@ -118,45 +130,83 @@ async function submitGuideTurn({ question = '', audio = null } = {}) {
   }
 }
 
-const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
-camera.position.set(0, 3, -35);
-scene.add(camera);
+function ensureRuntimeShell() {
+  if (scene) {
+    return;
+  }
 
-const renderer = new THREE.WebGLRenderer({ antialias: false });
-renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.0));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.75;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-document.body.prepend(renderer.domElement);
+  const nextScene = new THREE.Scene();
+  const nextCamera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+  nextCamera.position.set(0, 3, -35);
+  nextScene.add(nextCamera);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 1.3, -32);
-controls.enableDamping = false;
-controls.rotateSpeed = 0.45;
-controls.minDistance = 0.01;
-controls.maxDistance = 0.1;
-controls.enableZoom = false;
-controls.enablePan = false;
-controls.maxPolarAngle = Math.PI / 1.9;
-controls.minPolarAngle = Math.PI / 3.0;
-controls.update();
+  const nextRenderer = new THREE.WebGLRenderer({ antialias: false });
+  nextRenderer.setSize(innerWidth, innerHeight);
+  nextRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.0));
+  nextRenderer.shadowMap.enabled = true;
+  nextRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  nextRenderer.toneMapping = THREE.ACESFilmicToneMapping;
+  nextRenderer.toneMappingExposure = 1.75;
+  nextRenderer.outputColorSpace = THREE.SRGBColorSpace;
 
-const sunLight = new THREE.DirectionalLight(0xffe2ab, 2.2);
-sunLight.position.set(10, 15, -10);
-sunLight.castShadow = true;
-sunLight.shadow.mapSize.width = 1024;
-sunLight.shadow.mapSize.height = 1024;
-sunLight.shadow.camera.near = 0.5;
-sunLight.shadow.camera.far = 40;
-sunLight.shadow.camera.left = -8;
-sunLight.shadow.camera.right = 8;
-sunLight.shadow.camera.top = 8;
-sunLight.shadow.camera.bottom = -8;
-sunLight.shadow.bias = -0.0005;
-scene.add(sunLight);
+  const nextControls = new OrbitControls(nextCamera, nextRenderer.domElement);
+  nextControls.target.set(0, 1.3, -32);
+  nextControls.enableDamping = false;
+  nextControls.rotateSpeed = 0.45;
+  nextControls.minDistance = 0.01;
+  nextControls.maxDistance = 0.1;
+  nextControls.enableZoom = false;
+  nextControls.enablePan = false;
+  nextControls.maxPolarAngle = Math.PI / 1.9;
+  nextControls.minPolarAngle = Math.PI / 3.0;
+  nextControls.update();
+
+  const sunLight = new THREE.DirectionalLight(0xffe2ab, 2.2);
+  sunLight.position.set(10, 15, -10);
+  sunLight.castShadow = true;
+  sunLight.shadow.mapSize.width = 1024;
+  sunLight.shadow.mapSize.height = 1024;
+  sunLight.shadow.camera.near = 0.5;
+  sunLight.shadow.camera.far = 40;
+  sunLight.shadow.camera.left = -8;
+  sunLight.shadow.camera.right = 8;
+  sunLight.shadow.camera.top = 8;
+  sunLight.shadow.camera.bottom = -8;
+  sunLight.shadow.bias = -0.0005;
+  nextScene.add(sunLight);
+
+  document.body.prepend(nextRenderer.domElement);
+  scene = nextScene;
+  camera = nextCamera;
+  renderer = nextRenderer;
+  controls = nextControls;
+  clock = new THREE.Clock();
+}
+
+function resetRuntimeShell() {
+  disposeStations(stations);
+  controls?.dispose?.();
+  renderer?.domElement?.remove();
+  renderer?.dispose?.();
+  sceneProps.clear();
+  scenePropLoadPromises.clear();
+  loadedScenePropRoles.clear();
+  scene = null;
+  camera = null;
+  renderer = null;
+  controls = null;
+  clock = null;
+  videoActivationSystem = null;
+  character = null;
+  currentAction = null;
+  mixers = [];
+  tourManager = null;
+  stations = [];
+  runtimeStarted = false;
+  animationStarted = false;
+  approvedMediaApplied = false;
+  didSignalFirstFrame = false;
+}
 
 const keys = { w: false, a: false, s: false, d: false, ' ': false };
 const velocity = new THREE.Vector3();
@@ -589,6 +639,7 @@ function applyScenePropModel(role, model) {
 function initializeBaseScene() {
   createMuseumCorridor(scene);
   rebuildStations(bootstrapState.media.stations);
+  approvedMediaApplied = bootstrapState.media.status === 'ready';
 
   const { playerModel, guideModel, guideFSM, mockActions } = createFallbackCharacters();
   tourManager = new TourManager(
@@ -730,44 +781,118 @@ function maybeLoadSceneProps() {
   }
 }
 
-async function bootstrapApprovedMedia() {
-  // Scene and tour are the mandatory walkthrough contract. Media is intentionally layered on
-  // afterwards so a culturally meaningful path still exists when heavier assets or services fail.
-  let approvedContent;
-
-  try {
-    approvedContent = await fetchBootstrapContent({ sceneId: SCENE_ID, tourId: TOUR_ID });
-  } catch (error) {
-    console.warn('[MediaRuntime] Scene/tour bootstrap unavailable; keeping degraded media shell.', error);
-    return;
-  }
-
-  bootstrapState = {
-    scene: approvedContent.scene,
-    tour: approvedContent.tour,
-    media: approvedContent.media
-      ? adaptMediaManifest(approvedContent.media)
-      : createDegradedMediaState({ sceneId: SCENE_ID, error: approvedContent.mediaError }),
-  };
-
-  if (bootstrapState.tour?.steps?.length !== 5) {
-    console.warn('[MediaRuntime] Approved tour contract changed unexpectedly.', bootstrapState.tour);
-  }
-
-  if (approvedContent.mediaError) {
-    console.warn('[MediaRuntime] Media manifest unavailable; keeping degraded media UI only.', approvedContent.mediaError);
-    return;
-  }
-
-  if (bootstrapState.media.status !== 'ready') {
-    console.warn('[MediaRuntime] Media manifest malformed; keeping degraded media UI only.', bootstrapState.media.error);
+function applyApprovedMediaIfRunning() {
+  if (!runtimeStarted || approvedMediaApplied || bootstrapState.media.status !== 'ready') {
     return;
   }
 
   rebuildStations(bootstrapState.media.stations);
-  modelRegistry = createModelRegistry(bootstrapState.media);
-  const guidePromotionLoad = Promise.all(GUIDE_PROMOTION_ROLES.map((role) => modelRegistry.loadRole(role)));
-  void promoteAnimatedCharacters(guidePromotionLoad);
+  approvedMediaApplied = true;
+}
+
+function ensureApprovedBootstrap() {
+  if (approvedBootstrapPromise) {
+    return approvedBootstrapPromise;
+  }
+
+  // Scene and tour are the mandatory walkthrough contract. Speculative preload may fail, but
+  // the click path must still be able to retry and fall back to the degraded museum shell.
+  approvedBootstrapPromise = fetchBootstrapContent({ sceneId: SCENE_ID, tourId: TOUR_ID })
+    .then((approvedContent) => {
+      bootstrapState = {
+        scene: approvedContent.scene,
+        tour: approvedContent.tour,
+        media: approvedContent.media
+          ? adaptMediaManifest(approvedContent.media)
+          : createDegradedMediaState({ sceneId: SCENE_ID, error: approvedContent.mediaError }),
+      };
+
+      if (bootstrapState.tour?.steps?.length !== 5) {
+        console.warn('[MediaRuntime] Approved tour contract changed unexpectedly.', bootstrapState.tour);
+      }
+
+      if (approvedContent.mediaError) {
+        console.warn('[MediaRuntime] Media manifest unavailable; keeping degraded media UI only.', approvedContent.mediaError);
+        approvedBootstrapPromise = null;
+        throw approvedContent.mediaError;
+      }
+
+      if (bootstrapState.media.status !== 'ready') {
+        const error = bootstrapState.media.error ?? new Error('Media manifest is malformed.');
+        console.warn('[MediaRuntime] Media manifest malformed; keeping degraded media UI only.', error);
+        approvedBootstrapPromise = null;
+        throw error;
+      }
+
+      modelRegistry = createModelRegistry(bootstrapState.media);
+      applyApprovedMediaIfRunning();
+      return bootstrapState;
+    })
+    .catch((error) => {
+      approvedBootstrapPromise = null;
+      throw error;
+    });
+
+  return approvedBootstrapPromise;
+}
+
+function ensureGuidePromotionLoad() {
+  if (guidePromotionLoad) {
+    return guidePromotionLoad;
+  }
+
+  guidePromotionLoad = ensureApprovedBootstrap()
+    .then(() => {
+      if (!modelRegistry) {
+        throw new Error('Approved guide assets are unavailable.');
+      }
+
+      return Promise.all(GUIDE_PROMOTION_ROLES.map((role) => modelRegistry.loadRole(role)));
+    })
+    .catch((error) => {
+      guidePromotionLoad = null;
+      throw error;
+    });
+
+  return guidePromotionLoad;
+}
+
+export async function preloadMuseumGuides() {
+  try {
+    await ensureApprovedBootstrap();
+    if (!modelRegistry) {
+      return false;
+    }
+
+    for (const role of LANDING_PRELOAD_GUIDE_ROLES) {
+      await modelRegistry.loadRole(role);
+      await waitForNextFrame();
+    }
+    performance.mark('museum:landing-guides-ready');
+    return true;
+  } catch (error) {
+    console.warn('[MediaRuntime] Landing guide preload unavailable; deferring to museum entry.', error);
+    return false;
+  }
+}
+
+async function upgradeApprovedMediaAfterStart() {
+  let lastError = null;
+
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      await ensureApprovedBootstrap();
+      applyApprovedMediaIfRunning();
+      if (modelRegistry) {
+        void promoteAnimatedCharacters(ensureGuidePromotionLoad());
+      }
+      return;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  console.warn('[MediaRuntime] Scene/tour bootstrap unavailable; keeping degraded media shell.', lastError);
 }
 
 function fadeToAction(action) {
@@ -882,48 +1007,62 @@ function updateMovement(delta) {
   }
 }
 
-document.addEventListener('keydown', (event) => {
-  if (tourManager && tourManager.playerState === PLAYER_STATES.QUESTION_INPUT) {
+function bindRuntimeEvents() {
+  if (runtimeEventsBound) {
     return;
   }
 
-  const key = event.key.toLowerCase();
-  if (key === 'e' && tourManager && tourManager.playerState !== PLAYER_STATES.FREE) {
-    tourManager.cancelFollow();
-    event.preventDefault();
-    return;
-  }
+  runtimeEventsBound = true;
+  document.addEventListener('keydown', (event) => {
+    if (tourManager && tourManager.playerState === PLAYER_STATES.QUESTION_INPUT) {
+      return;
+    }
 
-  if (key === 'f') {
-    isTalking = !isTalking;
-    console.log('[Input] Toggle Talking:', isTalking);
-    event.preventDefault();
-  }
+    const key = event.key.toLowerCase();
+    if (key === 'e' && tourManager && tourManager.playerState !== PLAYER_STATES.FREE) {
+      tourManager.cancelFollow();
+      event.preventDefault();
+      return;
+    }
 
-  if (key in keys) {
-    keys[key] = true;
-    event.preventDefault();
-  }
-});
+    if (key === 'f') {
+      isTalking = !isTalking;
+      console.log('[Input] Toggle Talking:', isTalking);
+      event.preventDefault();
+    }
 
-document.addEventListener('keyup', (event) => {
-  const key = event.key.toLowerCase();
-  if (key in keys) {
-    keys[key] = false;
-    event.preventDefault();
-  }
-});
+    if (key in keys) {
+      keys[key] = true;
+      event.preventDefault();
+    }
+  });
 
-addEventListener('resize', () => {
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth, innerHeight);
-});
+  document.addEventListener('keyup', (event) => {
+    const key = event.key.toLowerCase();
+    if (key in keys) {
+      keys[key] = false;
+      event.preventDefault();
+    }
+  });
 
-const clock = new THREE.Clock();
+  addEventListener('resize', () => {
+    if (!camera || !renderer) {
+      return;
+    }
+
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+}
+
 let didSignalFirstFrame = false;
 
 function animate() {
+  if (!runtimeStarted || !clock || !scene || !camera || !renderer || !controls) {
+    return;
+  }
+
   requestAnimationFrame(animate);
   const delta = Math.min(clock.getDelta(), 0.05);
 
@@ -952,6 +1091,7 @@ function animate() {
 
   if (!didSignalFirstFrame) {
     didSignalFirstFrame = true;
+    performance.mark('museum:first-frame');
     window.dispatchEvent(new Event('museum:first-frame'));
   }
 }
@@ -968,9 +1108,16 @@ function getSharedAudioContext() {
   return sharedAudioCtx;
 }
 
+/**
+ * Transcodes a containerized browser audio blob (WebM/MP4 Opus) into a raw 16kHz mono Int16 PCM byte array.
+ * Reuses the shared AudioContext and invokes OfflineAudioContext for zero-dependency client-side resampling.
+ *
+ * @param {Blob} blob - The recorded browser audio blob containing the user's speech query.
+ * @returns {Promise<ArrayBuffer>} Promise resolving to the raw Int16 PCM data buffer.
+ */
 async function convertBlobToPcm(blob) {
   const arrayBuffer = await blob.arrayBuffer();
-  
+
   const audioCtx = getSharedAudioContext();
   let audioBuffer;
   try {
@@ -986,15 +1133,15 @@ async function convertBlobToPcm(blob) {
     Math.ceil(audioBuffer.duration * targetSampleRate),
     targetSampleRate
   );
-  
+
   const bufferSource = offlineCtx.createBufferSource();
   bufferSource.buffer = audioBuffer;
   bufferSource.connect(offlineCtx.destination);
   bufferSource.start();
-  
+
   const renderedBuffer = await offlineCtx.startRendering();
   const floatSamples = renderedBuffer.getChannelData(0);
-  
+
   const buffer = new ArrayBuffer(floatSamples.length * 2);
   const view = new DataView(buffer);
   for (let i = 0; i < floatSamples.length; i++) {
@@ -1002,7 +1149,7 @@ async function convertBlobToPcm(blob) {
     const intVal = s < 0 ? s * 0x8000 : s * 0x7fff;
     view.setInt16(i * 2, intVal, true); // little-endian
   }
-  
+
   return {
     mimeType: 'audio/pcm;rate=16000',
     dataBase64: arrayBufferToBase64(buffer)
@@ -1049,10 +1196,37 @@ uiController.setQuestionHandlers({
   },
 });
 
-void readLiveCapability().then((capability) => {
-  liveCapability = capability;
-});
+export function startMuseumApp() {
+  if (runtimeStartPromise) {
+    return runtimeStartPromise;
+  }
 
-initializeBaseScene();
-void bootstrapApprovedMedia();
-animate();
+  runtimeStartPromise = Promise.resolve()
+    .then(() => {
+      performance.mark('museum:start');
+      ensureRuntimeShell();
+      performance.mark('museum:shell-ready');
+      bindRuntimeEvents();
+      initializeBaseScene();
+      performance.mark('museum:base-scene-ready');
+      runtimeStarted = true;
+
+      if (!animationStarted) {
+        animationStarted = true;
+        animate();
+      }
+
+      void readLiveCapability().then((capability) => {
+        liveCapability = capability;
+      });
+
+      void upgradeApprovedMediaAfterStart();
+    })
+    .catch((error) => {
+      resetRuntimeShell();
+      runtimeStartPromise = null;
+      throw error;
+    });
+
+  return runtimeStartPromise;
+}

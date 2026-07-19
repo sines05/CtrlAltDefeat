@@ -3,6 +3,10 @@ const heroStage = document.querySelector('.hero-stage');
 const liftButton = document.querySelector('.sheet-lift');
 const enterButtons = [...document.querySelectorAll('[data-enter-museum]')];
 const errorMessages = [...document.querySelectorAll('.landing-error')];
+const MODULE_WARMUP_BLOCKED_CONNECTIONS = new Set(['slow-2g', '2g']);
+const GUIDE_PRELOAD_BLOCKED_CONNECTIONS = new Set(['slow-2g', '2g', '3g']);
+let museumModulePromise = null;
+let guidePreloadStarted = false;
 let isStarting = false;
 
 function waitForFirstMuseumFrame(timeoutMs = 4000) {
@@ -15,9 +19,100 @@ function waitForFirstMuseumFrame(timeoutMs = 4000) {
   });
 }
 
+function getConnection() {
+  return navigator.connection ?? navigator.mozConnection ?? navigator.webkitConnection ?? null;
+}
+
+function canAutoWarmModule() {
+  const connection = getConnection();
+  return document.visibilityState === 'visible'
+    && connection?.saveData !== true
+    && !MODULE_WARMUP_BLOCKED_CONNECTIONS.has(connection?.effectiveType);
+}
+
+function canPreloadGuides() {
+  const connection = getConnection();
+  const hasFastConnection = connection?.effectiveType === '4g';
+  const hasEnoughMemory = Number.isFinite(navigator.deviceMemory) && navigator.deviceMemory >= 4;
+
+  return document.visibilityState === 'visible'
+    && connection?.saveData !== true
+    && hasFastConnection
+    && !GUIDE_PRELOAD_BLOCKED_CONNECTIONS.has(connection?.effectiveType)
+    && window.innerWidth >= 1024
+    && window.matchMedia?.('(pointer: fine)').matches === true
+    && hasEnoughMemory;
+}
+
+function warmMuseumModule() {
+  if (!museumModulePromise) {
+    museumModulePromise = import('./main.js').catch((error) => {
+      museumModulePromise = null;
+      throw error;
+    });
+  }
+
+  return museumModulePromise;
+}
+
+function warmMuseumModuleForIntent() {
+  void warmMuseumModule().catch((error) => {
+    console.warn('[Landing] Museum module warmup unavailable; entry will retry.', error);
+  });
+}
+
+function preloadGuidesForIntent() {
+  if (guidePreloadStarted || !canPreloadGuides()) {
+    return false;
+  }
+
+  guidePreloadStarted = true;
+  void warmMuseumModule()
+    .then((museum) => museum.preloadMuseumGuides())
+    .then((preloaded) => {
+      if (!preloaded) {
+        guidePreloadStarted = false;
+      }
+    })
+    .catch((error) => {
+      guidePreloadStarted = false;
+      console.warn('[Landing] Guide preload unavailable; entry will use fallback assets.', error);
+    });
+  return true;
+}
+
+function scheduleModuleWarmup() {
+  const schedule = () => {
+    const warm = () => {
+      if (canAutoWarmModule()) {
+        warmMuseumModuleForIntent();
+      }
+    };
+
+    if (typeof requestIdleCallback === 'function') {
+      requestIdleCallback(warm, { timeout: 1500 });
+      return;
+    }
+
+    setTimeout(warm, 1200);
+  };
+
+  if (document.visibilityState === 'visible') {
+    schedule();
+    return;
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      schedule();
+    }
+  }, { once: true });
+}
+
 liftButton?.addEventListener('click', () => {
   heroStage?.classList.add('is-lifted');
   liftButton.setAttribute('aria-expanded', 'true');
+  preloadGuidesForIntent();
 });
 
 const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -32,6 +127,16 @@ const revealObserver = new IntersectionObserver((entries, observer) => {
 }, { threshold: 0.18 });
 
 document.querySelectorAll('.process-item').forEach((item) => revealObserver.observe(item));
+
+const processSection = document.getElementById('quy-trinh');
+if (processSection) {
+  const guidePreloadObserver = new IntersectionObserver((entries, observer) => {
+    if (entries.some((entry) => entry.isIntersecting) && preloadGuidesForIntent()) {
+      observer.disconnect();
+    }
+  }, { threshold: 0.1 });
+  guidePreloadObserver.observe(processSection);
+}
 
 async function enterMuseum() {
   if (isStarting) {
@@ -50,7 +155,8 @@ async function enterMuseum() {
 
   try {
     const firstFrame = waitForFirstMuseumFrame();
-    await import('./main.js');
+    const museum = await warmMuseumModule();
+    await museum.startMuseumApp();
     await firstFrame;
     document.body.classList.add('museum-active');
     document.body.classList.remove('is-entering');
@@ -78,4 +184,11 @@ async function enterMuseum() {
   }
 }
 
-enterButtons.forEach((button) => button.addEventListener('click', enterMuseum));
+enterButtons.forEach((button) => {
+  button.addEventListener('pointerenter', warmMuseumModuleForIntent, { once: true });
+  button.addEventListener('focusin', warmMuseumModuleForIntent, { once: true });
+  button.addEventListener('pointerdown', warmMuseumModuleForIntent, { once: true });
+  button.addEventListener('click', enterMuseum);
+});
+
+scheduleModuleWarmup();

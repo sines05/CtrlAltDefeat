@@ -53,14 +53,14 @@ Xem thêm: `docs/system-architecture.md`, `docs/engineering/api-contract.md`, `d
 - scene + tour 5 bước;
 - approved media manifest qua `/api/media/{sceneId}`;
 - grounded QA/TTS;
-- guide path policy hóa bằng manifest preload metadata: guide animated assets eager sau shell/bootstrap, scene props/video vẫn lazy/degraded;
+- landing warm module Three.js khi idle; fast desktop có thể preload tuần tự guide model + idle sau intent, còn full guide promotion chạy sau entry và scene props/video vẫn lazy/degraded;
 - guide voice integration ở mức gesture + audio playback;
 - browser/build/test gates cho media runtime và docs contract.
 
 ## Deferred issues đã biết
 
 Repo này không giả vờ mọi thứ đã hoàn hảo. Một số media/runtime lệch pha đã được nhận diện và để dành cho pass sau, ví dụ:
-- một phần scene-prop lazy activation còn cần siết lại trong guided flow;
+- spawn point đã không còn kích hoạt non-guide prop trước first frame, nhưng guided-flow sequencing sâu hơn vẫn cần một pass riêng;
 - shared model registry còn một số nợ kỹ thuật quanh GLB role/loader alignment.
 
 Các điểm này không phủ nhận giá trị của MVP hiện tại; chúng phản ánh đúng trade-off của một build 48 giờ đang cố ship đồng thời 3D runtime, approved-content architecture, và grounded AI.
