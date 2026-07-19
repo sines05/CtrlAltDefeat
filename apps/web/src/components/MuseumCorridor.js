@@ -7,7 +7,7 @@ function createStoneFloorTexture() {
   const ctx = canvas.getContext('2d');
   
   // Warm beige traditional stone tiles base
-  ctx.fillStyle = '#d2c7a3';
+  ctx.fillStyle = '#c2aa6b';
   ctx.fillRect(0, 0, 512, 512);
   
   // Add natural stone texture grain/noise
@@ -21,7 +21,7 @@ function createStoneFloorTexture() {
   }
   
   // Draw mortar lines
-  ctx.strokeStyle = '#b6ae93';
+  ctx.strokeStyle = '#a69157';
   ctx.lineWidth = 3;
   const tileSize = 128;
   for (let x = 0; x <= 512; x += tileSize) {
@@ -346,23 +346,26 @@ export function createMuseumCorridor(scene) {
   purlinRight.position.set(pillarX * 0.5, height + 0.85, 0);
   scene.add(purlinRight);
 
-  // 5. Ceiling Planks (Bright cream ivory planks matching the walls)
-  const roofPlaneGeo = new THREE.PlaneGeometry(pillarX + 1.8, corridorLength);
-  const roofPlaneMat = new THREE.MeshStandardMaterial({ 
-    color: 0xe4d8be, // Warm cream plaster ceiling
-    roughness: 0.95 
+  // 5. Gabled roof planes — slope up toward ridge beam at center
+  const roofPlaneWidth = pillarX + 4;
+  const roofPlaneGeo = new THREE.PlaneGeometry(roofPlaneWidth, corridorLength);
+  const roofPlaneMat = new THREE.MeshStandardMaterial({
+    color: 0xe4d8be,
+    roughness: 0.95,
+    side: THREE.DoubleSide,
   });
+  const roofPitch = Math.PI / 10;
 
   const roofPlaneLeft = new THREE.Mesh(roofPlaneGeo, roofPlaneMat);
-  roofPlaneLeft.position.set(-pillarX / 2, height + 1.1, 0);
+  roofPlaneLeft.position.set(-(pillarX / 2 + 0.6), height + 0.6, 0);
   roofPlaneLeft.rotation.x = Math.PI / 2;
-  roofPlaneLeft.rotation.y = -Math.PI / 10; // Match rafter angle
+  roofPlaneLeft.rotation.y = roofPitch;
   scene.add(roofPlaneLeft);
 
   const roofPlaneRight = new THREE.Mesh(roofPlaneGeo, roofPlaneMat);
-  roofPlaneRight.position.set(pillarX / 2, height + 1.1, 0);
+  roofPlaneRight.position.set(pillarX / 2 + 0.6, height + 0.6, 0);
   roofPlaneRight.rotation.x = Math.PI / 2;
-  roofPlaneRight.rotation.y = Math.PI / 10; // Match rafter angle
+  roofPlaneRight.rotation.y = -roofPitch;
   scene.add(roofPlaneRight);
 
   // 6. Wall Details (Skirting and trims to enhance character)

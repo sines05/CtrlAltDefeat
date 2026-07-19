@@ -1723,7 +1723,23 @@
 
     /* Guide Head Ask Bubble (hidden — replaced by proximity menu) */
     #guide-ask-bubble {
-      display: none !important;
+      position: fixed;
+      background: rgba(22, 15, 10, 0.85);
+      border: 1px solid rgba(255, 183, 77, 0.3);
+      color: #ffe0b2;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: 20px;
+      pointer-events: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 99;
+      transform: translateX(-50%);
+      white-space: nowrap;
     }
     
     /* Loading Screen overlay */
@@ -1908,6 +1924,12 @@
   <div id="loading-screen">
     <div class="spinner"></div>
     <div class="loading-text">Đang tải tài nguyên triển lãm...</div>
+    <div class="loading-progress-container" style="width: 280px; display: flex; flex-direction: column; align-items: center; margin: 15px 0;">
+      <div class="loading-progress-bar-wrapper" style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255, 183, 77, 0.15); box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);">
+        <div id="loading-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #ffb74d, #ff8f00); transition: width 0.2s ease; box-shadow: 0 0 8px rgba(255, 183, 77, 0.5);"></div>
+      </div>
+      <div id="loading-progress-text" style="color: #ffb74d; font-size: 13px; font-weight: 600; margin-top: 8px; font-family: Arial, sans-serif; letter-spacing: 0.5px;">0% (0/10 tài nguyên)</div>
+    </div>
     <div class="loading-subtext">Vui lòng chờ trong giây lát</div>
   </div>
 
@@ -2433,6 +2455,12 @@
 
   <!-- Center Reticle Dot -->
   <div id="reticle-dot"></div>
+
+  <!-- Guide Ask Bubble (above guide's head, shown during free explore) -->
+  <div id="guide-ask-bubble" class="museum-ui">Hướng dẫn viên</div>
+
+  <!-- Follow Button (auto-follow guide) -->
+  <button id="follow-btn" class="museum-ui" style="display:none; position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,#8b5a2b,#b37d4e); border:none; color:#fff; padding:12px 28px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; z-index:200; box-shadow:0 6px 20px rgba(0,0,0,0.5);">Bắt đầu tham quan</button>
 
   <script type="module" src="/src/landing.js"></script>
 </body>

@@ -267,25 +267,6 @@ sunLight.shadow.camera.bottom = -8;
 sunLight.shadow.bias = -0.0005;
 scene.add(sunLight);
 
-const loader = new FBXLoader();
-const modelPath = '/guide_girl/huongdanvien.fbx';
-const idlePath = '/guide_girl/Idle.fbx';
-const walkPath = '/guide_girl/Walking.fbx';
-const talkingPath = '/guide_girl/Talking.fbx';
-const productShowingPath = '/asset/product_showing.fbx';
-const showingTreePath = '/asset/showing_tree_01.fbx';
-const villagePicturePath = '/asset/village_picture.fbx';
-const mortarPath = '/asset/mortar.fbx';
-const paperShowingPath = '/asset/paper_showing.fbx';
-const woodenMouldPath = '/asset/woodenmould.fbx';
-const cabinPath = '/asset/cabin.fbx';
-const productShowing02Path = '/asset/product_showing_02.fbx';
-
-let character; // The user's controllable player character
-let currentAction;
-let mixers = [];
-let tourManager = null;
-let stations = [];
 let plaque;
 let villagePictureGroup;
 let productGroup;
@@ -302,7 +283,8 @@ const GUIDE_PROXIMITY_RANGE = 2.5;
 const keys = { w: false, a: false, s: false, d: false, ' ': false };
 const velocity = new THREE.Vector3();
 const acceleration = 22;
-const maxSpeed = 4.5;const friction = 25;
+const maxSpeed = 4.5;
+const friction = 25;
 
 function removeLoadingScreen() {
   const loadingScreen = document.getElementById('loading-screen');
@@ -449,7 +431,8 @@ function registerSceneProp(role, object3d) {
 
 function createFallbackCharacters() {
   const geometry = new THREE.CylinderGeometry(0.3, 0.3, 1.8, 8);
-  const playerModel = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x44aaff }));  playerModel.position.set(0, 0, -32);
+  const playerModel = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ color: 0x44aaff }));
+  playerModel.position.set(0, 0, -32);
   playerModel.castShadow = false;
   playerModel.receiveShadow = false;
   playerModel.visible = false;
@@ -648,6 +631,7 @@ function placeVillagePictureModel(villagePictureModel) {
 
   group.position.set(posX, posY, posZ);
   scene.add(group);
+  villagePictureGroup = group;
   return registerSceneProp('exhibit-village-picture', group);
 }
 
@@ -656,9 +640,10 @@ function placeMortarModel(mortarModel) {
   autoScaleAndGround(mortarModel, 1.0);
   const currentScale = mortarModel.scale.clone();
   mortarModel.scale.set(currentScale.x * 1.3, currentScale.y * 1.3, currentScale.z * 1.3);
-  mortarModel.position.set(5.0, 0, 0);
+  mortarModel.position.set(5.5, 0, -3.5);
   CharacterGrounding.ground(mortarModel);
   scene.add(mortarModel);
+  mortarGroup = mortarModel;
   return registerSceneProp('exhibit-mortar', mortarModel);
 }
 
@@ -721,6 +706,7 @@ function placePaperShowingModel(paperShowingModel) {
 
   group.position.set(posX, posY, posZ);
   scene.add(group);
+  paperGroup = group;
   return registerSceneProp('exhibit-paper-showing', group);
 }
 
@@ -729,6 +715,7 @@ function placeWoodenMouldModel(woodenMouldModel) {
   woodenMouldModel.position.set(4.0, 0, 18.0);
   scene.add(woodenMouldModel);
   autoScaleAndGround(woodenMouldModel, 1.2);
+  woodenMouldGroup = woodenMouldModel;
   return registerSceneProp('exhibit-wooden-mould', woodenMouldModel);
 }
 
@@ -775,7 +762,6 @@ function initializeBaseScene() {
   );
 
   createFallbackSceneProps();
-  removeLoadingScreen();
 }
 
 async function promoteAnimatedCharacters(guidePromotionLoad) {
@@ -910,6 +896,7 @@ async function bootstrapApprovedMedia() {
     approvedContent = await fetchBootstrapContent({ sceneId: SCENE_ID, tourId: TOUR_ID });
   } catch (error) {
     console.warn('[MediaRuntime] Scene/tour bootstrap unavailable; keeping degraded media shell.', error);
+    removeLoadingScreen();
     return;
   }
 
@@ -927,18 +914,78 @@ async function bootstrapApprovedMedia() {
 
   if (approvedContent.mediaError) {
     console.warn('[MediaRuntime] Media manifest unavailable; keeping degraded media UI only.', approvedContent.mediaError);
+    removeLoadingScreen();
     return;
   }
 
   if (bootstrapState.media.status !== 'ready') {
     console.warn('[MediaRuntime] Media manifest malformed; keeping degraded media UI only.', bootstrapState.media.error);
+    removeLoadingScreen();
     return;
   }
 
   rebuildStations(bootstrapState.media.stations);
   modelRegistry = createModelRegistry(bootstrapState.media);
-  const guidePromotionLoad = Promise.all(GUIDE_PROMOTION_ROLES.map((role) => modelRegistry.loadRole(role)));
-  void promoteAnimatedCharacters(guidePromotionLoad);
+
+  // Load all assets sequentially or in parallel and track progress
+  const allRoles = [
+    ...GUIDE_PROMOTION_ROLES,
+    ...SCENE_PROP_TARGETS.map(t => t.role)
+  ];
+
+  const progressBar = document.getElementById('loading-progress-bar');
+  const progressText = document.getElementById('loading-progress-text');
+
+  let loadedCount = 0;
+  const totalCount = allRoles.length;
+
+  function updateProgress() {
+    loadedCount++;
+    const percent = Math.round((loadedCount / totalCount) * 100);
+    if (progressBar) progressBar.style.width = `${percent}%`;
+    if (progressText) progressText.textContent = `${percent}% (${loadedCount}/${totalCount} tài nguyên)`;
+  }
+
+  if (progressText) progressText.textContent = `0% (0/${totalCount} tài nguyên)`;
+  if (progressBar) progressBar.style.width = `0%`;
+
+  try {
+    const promises = allRoles.map(async (role) => {
+      try {
+        const model = await modelRegistry.loadRole(role);
+        updateProgress();
+        return { role, model, success: true };
+      } catch (err) {
+        console.warn(`Failed to load role: ${role}`, err);
+        updateProgress();
+        return { role, model: null, success: false };
+      }
+    });
+
+    const results = await Promise.all(promises);
+
+    // Apply the guide
+    const guideModelAsset = results.find(r => r.role === 'guide-model')?.model;
+    const idleAnimAsset = results.find(r => r.role === 'guide-idle')?.model;
+    const walkAnimAsset = results.find(r => r.role === 'guide-walk')?.model;
+    const talkingAnimAsset = results.find(r => r.role === 'guide-talk')?.model;
+
+    const guidePromotionLoad = Promise.resolve([guideModelAsset, idleAnimAsset, walkAnimAsset, talkingAnimAsset]);
+    await promoteAnimatedCharacters(guidePromotionLoad);
+
+    // Apply the scene props and register them as loaded
+    const propResults = results.filter(r => !GUIDE_PROMOTION_ROLES.includes(r.role));
+    for (const res of propResults) {
+      if (res.success && res.model) {
+        applyScenePropModel(res.role, res.model);
+        loadedScenePropRoles.add(res.role);
+      }
+    }
+  } catch (err) {
+    console.error('[MediaRuntime] Error during pre-loading flow.', err);
+  } finally {
+    removeLoadingScreen();
+  }
 }
 
 function fadeToAction(action) {
@@ -982,7 +1029,8 @@ function updateMovement(delta) {
     return;
   }
 
-  // If the Guided Tour is active, the TourManager controls player movement  if (tourManager && tourManager.playerState !== PLAYER_STATES.FREE) {
+  // If the Guided Tour is active, the TourManager controls player movement
+  if (tourManager && tourManager.playerState !== PLAYER_STATES.FREE) {
     tourManager.update(delta, clock.getElapsedTime());
     return;
   }
@@ -1046,7 +1094,8 @@ function updateMovement(delta) {
     { x: 5.0, z: -19.0, radius: 0.7 },  // historical paper pedestal
     { x: 6.0, z: 0.5, radius: 0.8 },    // drying rack (moved from -4.5, 1.5)
     { x: 3.0, z: 14.0, radius: 0.8 },   // printing display
-    { x: 0.0, z: 26.0, radius: 1.2 }    // village diorama  ];
+    { x: 0.0, z: 26.0, radius: 1.2 }    // village diorama
+  ];
 
   colliders.forEach((collider) => {
     const dx = newX - collider.x;
@@ -2020,7 +2069,8 @@ function animate() {
     }
   }
 
-  // Update secondary mixer (Guide NPC) during free explore, optimized by distance culling  if (tourManager && mixers[1]) {
+  // Update secondary mixer (Guide NPC) during free explore, optimized by distance culling
+  if (tourManager && mixers[1]) {
     const shouldUpdateGuide = tourManager.playerState !== PLAYER_STATES.FREE ||
       (character && character.position.distanceTo(tourManager.guide.position) < 15);
     if (shouldUpdateGuide) {

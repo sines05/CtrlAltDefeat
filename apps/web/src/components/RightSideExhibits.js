@@ -392,9 +392,9 @@ export function createRightSideExhibits(scene) {
   
   endSpaceGroup.add(displayTableGroup);
   
-  // D. Bench facing the end wall (X = 0, Z = 28.0)
+  // D. Bench facing the end wall (X = 0, Z = 29.0)
   const benchGroup = new THREE.Group();
-  benchGroup.position.set(0, 0, 28.0);
+  benchGroup.position.set(0, 0, 29.0);
   const seatPlank = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.08, 0.5), woodMaterial);
   seatPlank.position.y = 0.45;
   seatPlank.castShadow = true;
