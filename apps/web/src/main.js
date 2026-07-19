@@ -2420,9 +2420,10 @@ function animate() {
     (document.getElementById('printing-modal') && document.getElementById('printing-modal').classList.contains('visible')) ||
     (document.getElementById('diorama-modal') && document.getElementById('diorama-modal').classList.contains('visible'));
 
-    if (inRange && !tourActive && !anyExhibitOpen && guidePanel === null) {
+    const isDialogueBubbleOpen = document.getElementById('dialogue-bubble') && document.getElementById('dialogue-bubble').classList.contains('visible');
+    if (inRange && !tourActive && !anyExhibitOpen && !isDialogueBubbleOpen && guidePanel === null) {
       setGuidePanel('proximity-menu');
-    } else if (!inRange && guidePanel === 'proximity-menu') {
+    } else if ((!inRange || isDialogueBubbleOpen) && guidePanel === 'proximity-menu') {
       setGuidePanel(null);
     }
   }
