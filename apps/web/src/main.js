@@ -19,6 +19,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 
 import { createMuseumCorridor, updateCeilingFans } from './components/MuseumCorridor.js';
 import { createExhibitionWall } from './components/ExhibitionWall/ExhibitionWall.js';
@@ -333,6 +334,7 @@ function resetRuntimeShell() {
 
 let plaque;
 let villagePictureGroup;
+let cabinGroup;
 let productGroup;
 let mortarGroup;
 let paperGroup;
@@ -595,6 +597,7 @@ function createFallbackSceneProps() {
   cabinFallback.position.set(1.5, 0, 0.0);
   scene.add(cabinFallback);
   CharacterGrounding.ground(cabinFallback);
+  cabinGroup = cabinFallback;
 
   // Fallback for product_showing_02: a cylinder/box
   const product02Fallback = new THREE.Mesh(
@@ -1057,6 +1060,30 @@ async function upgradeApprovedMediaAfterStart() {
       applyApprovedMediaIfRunning();
       if (modelRegistry) {
         void promoteAnimatedCharacters(ensureGuidePromotionLoad());
+
+        // Load the missing cabin and product_showing_02 FBX models programmatically
+        const fbxLoader = new FBXLoader();
+        fbxLoader.loadAsync('/asset/cabin.fbx')
+          .then((model) => {
+            prepareAsset(model, true);
+            model.position.set(1.5, 0, 0.0);
+            autoScaleAndGround(model, 2.4);
+            removeSceneObject(cabinGroup);
+            scene.add(model);
+            cabinGroup = model;
+          })
+          .catch((err) => console.warn('[MediaRuntime] Failed to load cabin model programmatically.', err));
+
+        fbxLoader.loadAsync('/asset/product_showing_02.fbx')
+          .then((model) => {
+            prepareAsset(model, true);
+            model.position.set(2.5, 0, 24.0);
+            autoScaleAndGround(model, 1.2);
+            removeSceneObject(productGroup);
+            scene.add(model);
+            productGroup = model;
+          })
+          .catch((err) => console.warn('[MediaRuntime] Failed to load product_showing_02 model programmatically.', err));
       }
       return;
     } catch (error) {
