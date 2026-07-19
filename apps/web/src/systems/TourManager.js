@@ -144,7 +144,9 @@ export class TourManager {
     const welcomeText = this.language === 'en' ? welcomeTextEn : welcomeTextVi;
     const speaker = this.language === 'en' ? "Tour Guide" : "Hướng dẫn viên";
 
-    uiController.showDialogueBubble(speaker, welcomeText);
+    uiController.showDialogueBubble(speaker, welcomeText, {
+      onCancel: () => this.cancelFollow()
+    });
     
     uiController.optContinue.textContent = this.language === 'en' ? "Skip Intro" : "Bỏ qua giới thiệu";
     uiController.optContinue.style.display = '';
@@ -179,7 +181,9 @@ export class TourManager {
     this.guideFSM.transitionTo(GUIDE_STATES.TALKING);
     const speaker = this.language === 'en' ? "Tour Guide" : "Hướng dẫn viên";
     const narrationText = this.language === 'en' ? (currentStation.narrationEn || currentStation.narration) : currentStation.narration;
-    uiController.showDialogueBubble(speaker, narrationText);
+    uiController.showDialogueBubble(speaker, narrationText, {
+      onCancel: () => this.cancelFollow()
+    });
 
     uiController.optContinue.textContent = this.language === 'en' ? "Skip Narration" : "Bỏ qua thuyết minh";
     uiController.optContinue.style.display = '';
@@ -358,6 +362,13 @@ export class TourManager {
       uiController.showToast("Guided tour cancelled.");
     } else {
       uiController.showToast("Đã hủy theo hướng dẫn viên.");
+    }
+
+    const canvasElement = document.getElementById('museum-canvas') || document.querySelector('canvas');
+    if (canvasElement && document.pointerLockElement !== canvasElement) {
+      setTimeout(() => {
+        canvasElement.requestPointerLock();
+      }, 50);
     }
   }
 

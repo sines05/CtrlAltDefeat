@@ -1248,7 +1248,24 @@ function bindRuntimeEvents() {
       return;
     }
 
-    const key = e.key.toLowerCase();
+    let key = e.key.toLowerCase();
+    if (key === 'arrowup') key = 'w';
+    if (key === 'arrowdown') key = 's';
+    if (key === 'arrowleft') key = 'a';
+    if (key === 'arrowright') key = 'd';
+
+    // If dialogue bubble is open and has a cancel button visible, Esc or Q can trigger cancel
+    const isDialogueBubbleOpen = document.getElementById('dialogue-bubble') && document.getElementById('dialogue-bubble').classList.contains('visible');
+    if (isDialogueBubbleOpen) {
+      if (key === 'escape' || key === 'q') {
+        const optCancel = document.getElementById('opt-cancel');
+        if (optCancel && optCancel.style.display !== 'none') {
+          optCancel.click();
+          e.preventDefault();
+          return;
+        }
+      }
+    }
 
     // Get active modal statuses
     const plaqueModal = document.getElementById('plaque-modal');
@@ -1607,7 +1624,11 @@ function bindRuntimeEvents() {
 
 
   document.addEventListener('keyup', (event) => {
-    const key = event.key.toLowerCase();
+    let key = event.key.toLowerCase();
+    if (key === 'arrowup') key = 'w';
+    if (key === 'arrowdown') key = 's';
+    if (key === 'arrowleft') key = 'a';
+    if (key === 'arrowright') key = 'd';
     if (key in keys) {
       keys[key] = false;
       event.preventDefault();

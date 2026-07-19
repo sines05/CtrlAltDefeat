@@ -170,6 +170,12 @@ export class UIController {
     if (this.plaqueClose) {
       this.plaqueClose.onclick = () => {
         this.plaqueModal.classList.remove('visible');
+        const canvasElement = document.getElementById('museum-canvas') || document.querySelector('canvas');
+        setTimeout(() => {
+          if (canvasElement && document.pointerLockElement !== canvasElement) {
+            canvasElement.requestPointerLock();
+          }
+        }, 50);
       };
     }
 
@@ -177,6 +183,12 @@ export class UIController {
     if (this.villageClose) {
       this.villageClose.onclick = () => {
         this.villageModal.classList.remove('visible');
+        const canvasElement = document.getElementById('museum-canvas') || document.querySelector('canvas');
+        setTimeout(() => {
+          if (canvasElement && document.pointerLockElement !== canvasElement) {
+            canvasElement.requestPointerLock();
+          }
+        }, 50);
       };
     }
   }
