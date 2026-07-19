@@ -2149,19 +2149,37 @@ function triggerGuideQaDialogue() {
     tourManager.guideFSM.transitionTo(GUIDE_STATES.WAITING_QUESTION);
   }
   if (tourManager) {
+    if (!tourManager.previousPlayerState) {
+      tourManager.previousPlayerState = tourManager.playerState;
+    }
     tourManager.playerState = PLAYER_STATES.QUESTION_INPUT;
   }
   
+  const lang = window.currentLanguage || 'vi';
+  const introText = lang === 'en'
+    ? "I am ready to answer any questions you have about Dó paper, Yen Thai village, the production process, and the exhibits displayed here."
+    : "Tôi sẵn sàng giải đáp mọi thắc mắc của bạn về giấy Dó, làng nghề Yên Thái, quy trình sản xuất và các hiện vật trưng bày ở đây.";
+
   uiController.showDialogueBubble(
     "Hướng dẫn viên",
-    "Tôi sẵn sàng giải đáp mọi thắc mắc của bạn về giấy Dó, làng nghề Yên Thái, quy trình sản xuất và các hiện vật trưng bày ở đây.",
+    introText,
     {
       onType: () => {
-        if (tourManager) tourManager.playerState = PLAYER_STATES.QUESTION_INPUT;
+        if (tourManager) {
+          if (!tourManager.previousPlayerState) {
+            tourManager.previousPlayerState = tourManager.playerState;
+          }
+          tourManager.playerState = PLAYER_STATES.QUESTION_INPUT;
+        }
         uiController.openTypingModal();
       },
       onVoice: () => {
-        if (tourManager) tourManager.playerState = PLAYER_STATES.QUESTION_VOICE;
+        if (tourManager) {
+          if (!tourManager.previousPlayerState) {
+            tourManager.previousPlayerState = tourManager.playerState;
+          }
+          tourManager.playerState = PLAYER_STATES.QUESTION_VOICE;
+        }
         uiController.openVoiceModal();
       },
       onContinue: () => {},
@@ -2170,7 +2188,10 @@ function triggerGuideQaDialogue() {
         if (tourManager?.guideFSM) {
           tourManager.guideFSM.transitionTo(GUIDE_STATES.IDLE);
         }
-        if (tourManager) tourManager.playerState = PLAYER_STATES.FREE;
+        if (tourManager) {
+          tourManager.playerState = tourManager.previousPlayerState || PLAYER_STATES.FREE;
+          tourManager.previousPlayerState = null;
+        }
         if (uiController.optCancel) uiController.optCancel.textContent = "Hủy";
       }
     }

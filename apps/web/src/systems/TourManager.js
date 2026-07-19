@@ -66,7 +66,8 @@ export class TourManager {
       this.playerState === PLAYER_STATES.QUESTION_INPUT
       || this.playerState === PLAYER_STATES.QUESTION_VOICE
     ) {
-      this.playerState = PLAYER_STATES.WATCHING_DIALOGUE;
+      this.playerState = this.previousPlayerState || PLAYER_STATES.FREE;
+      this.previousPlayerState = null;
     }
   }
 
@@ -84,6 +85,7 @@ export class TourManager {
     uiController.optType.addEventListener('click', (e) => {
       e.stopPropagation();
       if (this.playerState === PLAYER_STATES.WATCHING_DIALOGUE) {
+        this.previousPlayerState = PLAYER_STATES.WATCHING_DIALOGUE;
         this.playerState = PLAYER_STATES.QUESTION_INPUT;
         uiController.openTypingModal();
       }
@@ -92,6 +94,7 @@ export class TourManager {
     uiController.optVoice.addEventListener('click', (e) => {
       e.stopPropagation();
       if (this.playerState === PLAYER_STATES.WATCHING_DIALOGUE) {
+        this.previousPlayerState = PLAYER_STATES.WATCHING_DIALOGUE;
         this.playerState = PLAYER_STATES.QUESTION_VOICE;
         uiController.openVoiceModal();
       }
