@@ -34,7 +34,9 @@
 
   body:not(.museum-active) > canvas,
   body:not(.museum-active) #info,
-  body:not(.museum-active) #reticle-dot {
+  body:not(.museum-active) #reticle-dot,
+  body:not(.museum-active) #gfx-toggle,
+  body:not(.museum-active) #lang-toggle {
     opacity: 0;
     pointer-events: none;
   }
