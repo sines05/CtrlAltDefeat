@@ -85,6 +85,7 @@ async function restFallback({ sceneId, question, postJson }) {
   const qaPacket = await postJson('/api/qa', {
     sceneId,
     question,
+    language: window.currentLanguage || 'vi',
   });
 
   if (qaPacket.abstained) {
@@ -158,14 +159,17 @@ export async function submitQuestionTurn({
   postJson = defaultPostJson,
 } = {}) {
   const liveAttempted = Boolean(capability?.enabled);
+  const lang = window.currentLanguage || 'vi';
   const payload = audio
     ? {
         sceneId,
         audio,
+        language: lang,
       }
     : {
         sceneId,
         text: question,
+        language: lang,
       };
 
   if (!liveAttempted) {
@@ -174,7 +178,11 @@ export async function submitQuestionTurn({
         liveAttempted,
         liveUsed: false,
         qaPacket: null,
-        ttsState: toAudioRecoveryState('Hỏi bằng giọng nói đang tạm không khả dụng. Hãy nhập câu hỏi bằng chữ.'),
+        ttsState: toAudioRecoveryState(
+          lang === 'en'
+            ? 'Voice Q&A is currently unavailable. Please type your question.'
+            : 'Hỏi bằng giọng nói đang tạm không khả dụng. Hãy nhập câu hỏi bằng chữ.'
+        ),
       };
     }
 
@@ -196,7 +204,7 @@ export async function submitQuestionTurn({
         ttsState: toTtsState(livePacket, {
           inputTranscript: livePacket.inputTranscript ?? question,
           outputTranscript: livePacket.outputTranscript ?? livePacket.answer,
-          recoveryMessage: 'Live lỗi, đã fallback sang REST.',
+          recoveryMessage: lang === 'en' ? 'Live error, fallback to REST.' : 'Live lỗi, đã fallback sang REST.',
         }),
       };
     }
@@ -220,8 +228,8 @@ export async function submitQuestionTurn({
         qaPacket: null,
         ttsState: toAudioRecoveryState(
           isTranscriptionFailure
-            ? 'Audio chưa đủ để tạo transcript, hãy thử lại.'
-            : 'Audio chưa có transcript, hãy nhập câu hỏi bằng chữ.',
+            ? (lang === 'en' ? 'Audio is too short/unclear, please try again.' : 'Audio chưa đủ để tạo transcript, hãy thử lại.')
+            : (lang === 'en' ? 'Audio has no transcript, please type your question.' : 'Audio chưa có transcript, hãy nhập câu hỏi bằng chữ.'),
           isTranscriptionFailure
             ? ''
             : error instanceof Error ? error.message : 'Live voice unavailable'
@@ -236,7 +244,7 @@ export async function submitQuestionTurn({
       liveUsed: false,
       ttsState: {
         ...restPacket.ttsState,
-        recoveryMessage: 'Live lỗi, đã fallback sang REST.',
+        recoveryMessage: lang === 'en' ? 'Live error, fallback to REST.' : 'Live lỗi, đã fallback sang REST.',
       },
     };
   }

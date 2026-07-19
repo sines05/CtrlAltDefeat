@@ -116,7 +116,24 @@ function renderChunkContext(chunks) {
     .join('\n\n');
 }
 
-function buildAnswerPrompt({ inputTranscript, sceneTitle, sceneSummary, chunks, policy = 'grounded' }) {
+function buildAnswerPrompt({ inputTranscript, sceneTitle, sceneSummary, chunks, policy = 'grounded', language = 'vi' }) {
+  if (language === 'en') {
+    return [
+      'You are a professional female tour guide at the Dó paper-making gallery. Always answer in English with a gentle, elegant, expressive, polite, and hospitable tone. Refer to yourself as "I" and the listener as "you". Answers should be natural, concise, and fluent, as if having a direct face-to-face conversation.',
+      'Only use approved chunks for any factual assertions about exhibits, history, processes, names, numbers, or external information.',
+      'Do not speculate or invent details not present in the context, and always answer in English.',
+      'Conversation: answer naturally and politely, max 2 sentences; do not add facts about the room.',
+      'Overview: summarize approved chunks, max 3 short sentences.',
+      'Boundary: answer naturally and politely. If the information is outside the documents or this gallery, explain gently and guide the user back to the Dó paper-making processes (do not invent specific dates or numbers).',
+      `Policy: ${policy}`,
+      `Scene: ${sceneTitle}`,
+      `Summary: ${sceneSummary}`,
+      `User transcript: ${inputTranscript}`,
+      chunks.length ? 'Approved chunks:' : 'Approved chunks: none.',
+      chunks.length ? renderChunkContext(chunks) : 'Do not introduce factual claims not explicitly supplied above.',
+    ].join('\n\n');
+  }
+
   return [
     'Bạn là một nữ hướng dẫn viên du lịch chuyên nghiệp tại phòng trưng bày quy trình làm giấy dó. Hãy luôn trả lời bằng tiếng Việt với giọng điệu nhẹ nhàng, thanh thoát, truyền cảm, lịch sự và hiếu khách. Xưng hô là "tôi" hoặc "mình" và gọi người nghe là "bạn". Câu trả lời cần tự nhiên, ngắn gọn và trôi chảy như đang trò chuyện trực tiếp.',
     'Chỉ dùng approved chunks cho mọi claim thực tế về hiện vật, lịch sử, quy trình, tên riêng, số liệu hoặc thông tin ngoài phòng.',
@@ -308,6 +325,7 @@ export async function answerWithGeminiLive({
   sceneSummary,
   chunks,
   policy = 'grounded',
+  language = 'vi',
   env = process.env,
   signal,
   createSocket: createSocketImpl,
@@ -335,7 +353,11 @@ export async function answerWithGeminiLive({
       },
       outputAudioTranscription: {},
       systemInstruction: {
-        parts: [{ text: 'Bạn là một nữ hướng dẫn viên du lịch chuyên nghiệp tại phòng trưng bày quy trình làm giấy dó. Hãy luôn trả lời bằng tiếng Việt với giọng điệu nhẹ nhàng, thanh thoát, truyền cảm, lịch sự và hiếu khách. Xưng hô là "tôi" hoặc "mình" và gọi người nghe là "bạn". Trả lời ngắn gọn, tự nhiên, và trôi chảy.' }],
+        parts: [{
+          text: language === 'en'
+            ? 'You are a professional female tour guide at the Dó paper-making gallery. Always answer in English with a gentle, elegant, expressive, polite, and hospitable tone. Refer to yourself as "I" and the listener as "you". Answers should be natural, concise, and fluent.'
+            : 'Bạn là một nữ hướng dẫn viên du lịch chuyên nghiệp tại phòng trưng bày quy trình làm giấy dó. Hãy luôn trả lời bằng tiếng Việt với giọng điệu nhẹ nhàng, thanh thoát, truyền cảm, lịch sự và hiếu khách. Xưng hô là "tôi" hoặc "mình" và gọi người nghe là "bạn". Trả lời ngắn gọn, tự nhiên, và trôi chảy.'
+        }],
       },
     },
     messages: [
@@ -351,6 +373,7 @@ export async function answerWithGeminiLive({
                   sceneSummary,
                   chunks,
                   policy,
+                  language,
                 }),
               }],
             },

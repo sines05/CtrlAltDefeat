@@ -1928,6 +1928,158 @@ document.getElementById('gfx-warning-cancel')?.addEventListener('click', () => {
   }, 50);
 });
 
+// Language management
+window.currentLanguage = 'vi';
+
+const TRANSLATIONS = {
+  vi: {
+    guideTitle: "NGƯỜI HƯỚNG DẪN",
+    guideDesc: "Bạn muốn người hướng dẫn hỗ trợ điều gì?",
+    guideOpt1: "Hỏi – Đáp với hướng dẫn viên",
+    guideOpt2: "Yêu cầu hướng dẫn viên thuyết minh",
+    qaTitle: "HỎI – ĐÁP VỚI HƯỚNG DẪN VIÊN",
+    qaBody1: "Chức năng hỏi – đáp thông minh đang được phát triển.",
+    qaBody2: "Trong phiên bản tiếp theo, bạn có thể đặt câu hỏi về giấy dó, làng nghề Yên Thái, quy trình sản xuất, các hiện vật và nội dung đang được trưng bày.",
+    qaBodyNote: "Hiện tại, vui lòng khám phá các bảng thông tin hoặc chọn chức năng thuyết minh để tìm hiểu thêm.",
+    qaBack: "Quay lại",
+    qaClose: "Đóng",
+    tourTitle: "THUYẾT MINH QUY TRÌNH LÀM GIẤY DÓ",
+    tourBody: "Người hướng dẫn sẽ đưa bạn đến từng khu vực để giới thiệu các công đoạn chính trong quá trình sản xuất giấy dó.",
+    tourCancel: "Để sau",
+    tourStart: "Bắt đầu thuyết minh",
+    gfxLabel: "ĐỒ HỌA",
+    gfxLow: "Thấp",
+    gfxMedium: "Trung bình",
+    gfxHigh: "Cao",
+    langLabel: "NGÔN NGỮ",
+    warnTitle: "YÊU CẦU ĐỒ HỌA CAO",
+    warnDesc: "Chế độ đồ họa cao tăng gấp đôi độ phân giải dựng hình và đổ bóng chi tiết, có thể gây sụt giảm khung hình trên thiết bị di động hoặc máy tính cấu hình thấp.",
+    warnConfirm: "Tôi hiểu, tiếp tục",
+    warnCancel: "Hủy bỏ",
+    bubbleSpeaker: "Hướng dẫn viên",
+    bubbleSkipIntro: "Bỏ qua giới thiệu",
+    bubbleSkipNarration: "Bỏ qua thuyết minh",
+    bubbleCancel: "Hủy",
+    bubbleQuestionPrompt: "Quy trình của bước này là như vậy. Bạn có câu hỏi nào cần tôi giải đáp không?",
+    bubbleContinue: "Tiếp tục hành trình",
+    bubbleType: "Đặt câu hỏi (Nhập)",
+    bubbleVoice: "Hỏi bằng giọng nói",
+  },
+  en: {
+    guideTitle: "TOUR GUIDE",
+    guideDesc: "How can the guide help you?",
+    guideOpt1: "Q&A with the tour guide",
+    guideOpt2: "Request guided narration",
+    qaTitle: "Q&A WITH TOUR GUIDE",
+    qaBody1: "Smart Q&A function is under development.",
+    qaBody2: "In the next version, you can ask questions about Dó paper, Yen Thai village, production processes, and exhibits.",
+    qaBodyNote: "Currently, please explore the info boards or select guided narration to learn more.",
+    qaBack: "Back",
+    qaClose: "Close",
+    tourTitle: "DÓ PAPER MAKING TOUR",
+    tourBody: "The guide will lead you to each area to introduce the main stages of traditional Dó paper production.",
+    tourCancel: "Later",
+    tourStart: "Start Narration",
+    gfxLabel: "GRAPHICS",
+    gfxLow: "Low",
+    gfxMedium: "Medium",
+    gfxHigh: "High",
+    langLabel: "LANGUAGE",
+    warnTitle: "HIGH GRAPHICS REQUESTED",
+    warnDesc: "High graphics mode doubles rendering resolution and enables detailed shadows, which may cause frame rate drops on mobile devices or low-end PCs.",
+    warnConfirm: "I understand, continue",
+    warnCancel: "Cancel",
+    bubbleSpeaker: "Tour Guide",
+    bubbleSkipIntro: "Skip Intro",
+    bubbleSkipNarration: "Skip Narration",
+    bubbleCancel: "Cancel",
+    bubbleQuestionPrompt: "This is how the process works for this step. Do you have any questions for me?",
+    bubbleContinue: "Continue Journey",
+    bubbleType: "Ask a Question (Type)",
+    bubbleVoice: "Ask with Voice",
+  }
+};
+
+function updateLanguageUI() {
+  const lang = window.currentLanguage;
+  const trans = TRANSLATIONS[lang];
+
+  // Update GFX label & buttons
+  const gfxLabel = document.querySelector('#gfx-toggle .gfx-label');
+  if (gfxLabel) gfxLabel.textContent = trans.gfxLabel;
+  const gfxLowBtn = document.querySelector('#gfx-toggle .gfx-btn[data-quality="low"]');
+  if (gfxLowBtn) gfxLowBtn.textContent = trans.gfxLow;
+  const gfxMedBtn = document.querySelector('#gfx-toggle .gfx-btn[data-quality="medium"]');
+  if (gfxMedBtn) gfxMedBtn.textContent = trans.gfxMedium;
+  const gfxHighBtn = document.querySelector('#gfx-toggle .gfx-btn[data-quality="high"]');
+  if (gfxHighBtn) gfxHighBtn.textContent = trans.gfxHigh;
+
+  // Update GFX Warning modal
+  const warnTitle = document.querySelector('#gfx-warning-modal h3');
+  if (warnTitle) warnTitle.textContent = trans.warnTitle;
+  const warnDesc = document.querySelector('#gfx-warning-modal p');
+  if (warnDesc) warnDesc.textContent = trans.warnDesc;
+  const warnConfirm = document.getElementById('gfx-warning-confirm');
+  if (warnConfirm) warnConfirm.textContent = trans.warnConfirm;
+  const warnCancel = document.getElementById('gfx-warning-cancel');
+  if (warnCancel) warnCancel.textContent = trans.warnCancel;
+
+  // Update Lang toggle label
+  const langLabel = document.querySelector('#lang-toggle .lang-label');
+  if (langLabel) langLabel.textContent = trans.langLabel;
+
+  // Update Guide menu
+  const guideTitle = document.querySelector('#guide-proximity-menu .guide-menu-title');
+  if (guideTitle) guideTitle.textContent = trans.guideTitle;
+  const guideDesc = document.querySelector('#guide-proximity-menu .guide-menu-desc');
+  if (guideDesc) guideDesc.textContent = trans.guideDesc;
+  const guideOpt1 = document.querySelector('#guide-proximity-menu .guide-menu-btn[data-option="1"] .guide-btn-label');
+  if (guideOpt1) guideOpt1.textContent = trans.guideOpt1;
+  const guideOpt2 = document.querySelector('#guide-proximity-menu .guide-menu-btn[data-option="2"] .guide-btn-label');
+  if (guideOpt2) guideOpt2.textContent = trans.guideOpt2;
+
+  // Update QA panel
+  const qaTitle = document.querySelector('#guide-qa-panel .guide-panel-title');
+  if (qaTitle) qaTitle.textContent = trans.qaTitle;
+  const qaBodyPs = document.querySelectorAll('#guide-qa-panel .guide-panel-body p');
+  if (qaBodyPs.length >= 3) {
+    qaBodyPs[0].textContent = trans.qaBody1;
+    qaBodyPs[1].textContent = trans.qaBody2;
+    qaBodyPs[2].textContent = trans.qaBodyNote;
+  }
+  const qaBack = document.getElementById('guide-qa-back');
+  if (qaBack) qaBack.textContent = trans.qaBack;
+  const qaClose = document.getElementById('guide-qa-close');
+  if (qaClose) qaClose.textContent = trans.qaClose;
+
+  // Update Tour panel
+  const tourTitle = document.querySelector('#guide-tour-panel .guide-panel-title');
+  if (tourTitle) tourTitle.textContent = trans.tourTitle;
+  const tourBody = document.querySelector('#guide-tour-panel .guide-panel-body p');
+  if (tourBody) tourBody.textContent = trans.tourBody;
+  const tourCancel = document.getElementById('guide-tour-cancel');
+  if (tourCancel) tourCancel.textContent = trans.tourCancel;
+  const tourStart = document.getElementById('guide-tour-start');
+  if (tourStart) tourStart.textContent = trans.tourStart;
+}
+
+function setSystemLanguage(lang) {
+  window.currentLanguage = lang;
+  document.querySelectorAll('#lang-toggle .lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  updateLanguageUI();
+}
+
+// Bind Lang toggle buttons
+document.querySelectorAll('#lang-toggle .lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const lang = btn.dataset.lang;
+    if (lang === window.currentLanguage) return;
+    setSystemLanguage(lang);
+  });
+});
+
 // Guide panel state management
 function setGuidePanel(panel) {
   const proximityMenu = document.getElementById('guide-proximity-menu');

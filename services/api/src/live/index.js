@@ -149,6 +149,8 @@ function validateLivePayload(payload) {
     return createValidationError('LIVE_QA_INPUT_REQUIRED', 'Provide text or audio.');
   }
 
+  const language = typeof payload.language === 'string' ? payload.language.trim() : 'vi';
+
   if (hasText) {
     const text = String(payload.text ?? '').trim();
     if (!text) {
@@ -159,6 +161,7 @@ function validateLivePayload(payload) {
       sceneId: payload.sceneId.trim(),
       text,
       audio: null,
+      language,
     };
   }
 
@@ -195,6 +198,7 @@ function validateLivePayload(payload) {
       durationMs,
       byteLength: decodedAudio.bytes.length,
     },
+    language,
   };
 }
 
@@ -209,12 +213,13 @@ function createProvider(env, liveProviderFactory) {
   };
 }
 
-async function buildRestFallback({ sceneId, inputTranscript, signal }) {
+async function buildRestFallback({ sceneId, inputTranscript, language = 'vi', signal }) {
   throwIfAborted(signal);
 
   const qaPacket = await runAbortable(() => answerQuestion({
     sceneId,
     question: inputTranscript,
+    language,
   }), signal);
 
   throwIfAborted(signal);
@@ -267,7 +272,7 @@ async function buildRestFallback({ sceneId, inputTranscript, signal }) {
   }
 }
 
-async function buildLiveSuccess({ sceneId, inputTranscript, provider, signal }) {
+async function buildLiveSuccess({ sceneId, inputTranscript, provider, language = 'vi', signal }) {
   throwIfAborted(signal);
 
   const grounding = await resolveGroundingContext({
@@ -276,14 +281,14 @@ async function buildLiveSuccess({ sceneId, inputTranscript, provider, signal }) 
   });
 
   if (grounding.abort) {
-    return buildRestFallback({ sceneId, inputTranscript, signal });
+    return buildRestFallback({ sceneId, inputTranscript, language, signal });
   }
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
     let livePacket;
 
     try {
-      livePacket = await runAbortable(() => provider.generateAnswer({
+      const generateArgs = {
         inputTranscript,
         question: grounding.exactExample?.question ?? grounding.question,
         sceneTitle: grounding.source.title,
@@ -291,10 +296,14 @@ async function buildLiveSuccess({ sceneId, inputTranscript, provider, signal }) 
         chunks: grounding.selectedChunks,
         policy: grounding.policy,
         signal,
-      }), signal);
+      };
+      if (language !== 'vi') {
+        generateArgs.language = language;
+      }
+      livePacket = await runAbortable(() => provider.generateAnswer(generateArgs), signal);
     } catch {
       throwIfAborted(signal);
-      return buildRestFallback({ sceneId, inputTranscript, signal });
+      return buildRestFallback({ sceneId, inputTranscript, language, signal });
     }
 
     if (normalizeCanonicalText(livePacket.answer) !== normalizeCanonicalText(livePacket.outputTranscript)) {
@@ -349,6 +358,7 @@ export async function answerLiveQuestion({ payload, env = process.env, signal, l
       sceneId: parsed.sceneId,
       inputTranscript: parsed.text,
       provider,
+      language: parsed.language,
       signal,
     });
   }
@@ -380,6 +390,7 @@ export async function answerLiveQuestion({ payload, env = process.env, signal, l
     sceneId: parsed.sceneId,
     inputTranscript,
     provider,
+    language: parsed.language,
     signal,
   });
 }

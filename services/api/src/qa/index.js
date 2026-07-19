@@ -312,7 +312,7 @@ export async function resolveGroundingContext({ sceneId, question, traceId = ran
   };
 }
 
-export async function answerQuestion({ sceneId, question }) {
+export async function answerQuestion({ sceneId, question, language = 'vi' }) {
   const grounding = await resolveGroundingContext({ sceneId, question });
 
   if (grounding.abort) {
@@ -328,11 +328,13 @@ export async function answerQuestion({ sceneId, question }) {
       question: grounding.exactExample?.question ?? grounding.question,
       chunks: grounding.selectedChunks,
       policy: grounding.policy,
+      language,
     });
   } catch {
     groundedAnswer = generateLocalGroundedAnswer({
       chunks: grounding.selectedChunks,
       policy: grounding.policy,
+      language,
     });
   }
 

@@ -118,6 +118,10 @@ export class TourManager {
     this.playerCurrentAction = action;
   }
 
+  get language() {
+    return window.currentLanguage || 'vi';
+  }
+
   startTour() {
     this.playerState = PLAYER_STATES.FOLLOWING_GUIDE;
     uiController.showFollowButton(false);
@@ -132,16 +136,19 @@ export class TourManager {
     this.isWelcoming = true;
     this.hasArrivedAtFirstStation = false;
 
-    const welcomeText = "Kính chào quý vị và các bạn đến với mô phỏng phòng trưng bày phương pháp làm giấy nằm ở 189 Trích Sài, Hồ Tây, Hà Nội.\n\nTrước khi bắt đầu, bạn có biết rằng Việt Nam có một loại giấy truyền thống được gọi là giấy Dó. Loại giấy này được dân ta sử dụng để vẽ tranh Đông Hồ, làm chiếu chỉ hoàng gia, hay là lưu trữ kinh Phật. Phương pháp làm giấy dó này đã được lưu truyền từ thê kỷ thứ 13, tuy nhiên, do những thay đổi trong chính sách kinh tế trong giai đoạn Đổi Mới những năm 1980, những gia đình làm giấy thủ công truyền thống đổi sang những công việc khác khiến cho phương pháp làm giấy Dó truyền thống gần như bị mất. Hiện tại, chỉ còn trên dưới 10 hộ gia đình còn tiếp tục làm giấy Dó khắp Việt Nam.\n\nKhu vực Tây Hồ này hồi trước có một làng nghề làm giấy nổi tiếng là làng Yên Thái. Chúng mình đã mô phỏng lại phòng trưng bày các bước làm giấy Dó ở Trích Sài.";
+    const welcomeTextVi = "Kính chào quý vị và các bạn đến với mô phỏng phòng trưng bày phương pháp làm giấy nằm ở 189 Trích Sài, Hồ Tây, Hà Nội.\n\nTrước khi bắt đầu, bạn có biết rằng Việt Nam có một loại giấy truyền thống được gọi là giấy Dó. Loại giấy này được dân ta sử dụng để vẽ tranh Đông Hồ, làm chiếu chỉ hoàng gia, hay là lưu trữ kinh Phật. Phương pháp làm giấy dó này đã được lưu truyền từ thê kỷ thứ 13, tuy nhiên, do những thay đổi trong chính sách kinh tế trong giai đoạn Đổi Mới những năm 1980, những gia đình làm giấy thủ công truyền thống đổi sang những công việc khác khiến cho phương pháp làm giấy Dó truyền thống gần như bị mất. Hiện tại, chỉ còn trên dưới 10 hộ gia đình còn tiếp tục làm giấy Dó khắp Việt Nam.\n\nKhu vực Tây Hồ này hồi trước có một làng nghề làm giấy nổi tiếng là làng Yên Thái. Chúng mình đã mô phỏng lại phòng trưng bày các bước làm giấy Dó ở Trích Sài.";
+    const welcomeTextEn = "Welcome, ladies and gentlemen, to the simulation of the paper-making gallery located at 189 Trich Sai, Tay Ho, Hanoi. Before we begin, did you know that Vietnam has a traditional paper called Dó paper? This paper was used by our people to paint Dong Ho paintings, write royal decrees, or store Buddhist scriptures. The method of making this Dó paper has been passed down since the 13th century. However, due to economic changes during the Doi Moi period in the 1980s, traditional hand-made paper families switched to other jobs, causing the traditional Dó paper method to almost fade away. Here, I will introduce to you the 10 steps in this traditional Dó paper making process.";
+    const welcomeText = this.language === 'en' ? welcomeTextEn : welcomeTextVi;
+    const speaker = this.language === 'en' ? "Tour Guide" : "Hướng dẫn viên";
 
-    uiController.showDialogueBubble("Hướng dẫn viên", welcomeText);
+    uiController.showDialogueBubble(speaker, welcomeText);
     
-    uiController.optContinue.textContent = "Bỏ qua giới thiệu";
+    uiController.optContinue.textContent = this.language === 'en' ? "Skip Intro" : "Bỏ qua giới thiệu";
     uiController.optContinue.style.display = '';
     uiController.optType.style.display = 'none';
     uiController.optVoice.style.display = 'none';
     if (uiController.optCancel) {
-      uiController.optCancel.textContent = "Hủy";
+      uiController.optCancel.textContent = this.language === 'en' ? "Cancel" : "Hủy";
       uiController.optCancel.style.display = '';
     }
 
@@ -150,11 +157,12 @@ export class TourManager {
       if (this.hasArrivedAtFirstStation) {
         this.triggerStationArrival();
       }
-    }, '/audio/narration/welcome.wav');
+    }, this.language === 'en' ? '/audio/narration/welcome_en.wav' : '/audio/narration/welcome.wav');
 
     // Walk to the first station immediately
     const currentStation = this.stations[this.currentStationIdx];
-    uiController.showProgress(currentStation.stepNum, this.stations.length, currentStation.name);
+    const stationName = this.language === 'en' ? (currentStation.nameEn || currentStation.name) : currentStation.name;
+    uiController.showProgress(currentStation.stepNum, this.stations.length, stationName);
 
     this.guideFSM.transitionTo(GUIDE_STATES.WALKING);
     this.fadePlayerAction(this.playerActions.walk);
@@ -166,22 +174,27 @@ export class TourManager {
     if (!currentStation) return;
 
     this.guideFSM.transitionTo(GUIDE_STATES.TALKING);
-    uiController.showDialogueBubble("Hướng dẫn viên", currentStation.narration);
+    const speaker = this.language === 'en' ? "Tour Guide" : "Hướng dẫn viên";
+    const narrationText = this.language === 'en' ? (currentStation.narrationEn || currentStation.narration) : currentStation.narration;
+    uiController.showDialogueBubble(speaker, narrationText);
 
-    uiController.optContinue.textContent = "Bỏ qua thuyết minh";
+    uiController.optContinue.textContent = this.language === 'en' ? "Skip Narration" : "Bỏ qua thuyết minh";
     uiController.optContinue.style.display = '';
     uiController.optType.style.display = 'none';
     uiController.optVoice.style.display = 'none';
     if (uiController.optCancel) {
-      uiController.optCancel.textContent = "Hủy";
+      uiController.optCancel.textContent = this.language === 'en' ? "Cancel" : "Hủy";
       uiController.optCancel.style.display = '';
     }
 
-    this.speakNarration(currentStation.narration, () => {
+    this.speakNarration(narrationText, () => {
       this.guideFSM.transitionTo(GUIDE_STATES.WAITING_QUESTION);
+      const qPrompt = this.language === 'en' ? 
+        "This is how the process works for this step. Do you have any questions for me?" : 
+        "Quy trình của bước này là như vậy. Bạn có câu hỏi nào cần tôi giải đáp không?";
       uiController.showDialogueBubble(
-        "Hướng dẫn viên",
-        "Quy trình của bước này là như vậy. Bạn có câu hỏi nào cần tôi giải đáp không?",
+        speaker,
+        qPrompt,
         {
           onContinue: () => {},
           onType: () => {},
@@ -189,15 +202,17 @@ export class TourManager {
           onCancel: () => this.cancelFollow()
         }
       );
-      uiController.optContinue.textContent = "Tiếp tục hành trình";
+      uiController.optContinue.textContent = this.language === 'en' ? "Continue Journey" : "Tiếp tục hành trình";
       uiController.optContinue.style.display = '';
+      uiController.optType.textContent = this.language === 'en' ? "Ask a Question (Type)" : "Đặt câu hỏi (Nhập)";
       uiController.optType.style.display = '';
+      uiController.optVoice.textContent = this.language === 'en' ? "Ask with Voice" : "Hỏi bằng giọng nói";
       uiController.optVoice.style.display = '';
       if (uiController.optCancel) {
-        uiController.optCancel.textContent = "Hủy";
+        uiController.optCancel.textContent = this.language === 'en' ? "Cancel" : "Hủy";
         uiController.optCancel.style.display = '';
       }
-    }, `/audio/narration/step${this.currentStationIdx + 1}.wav`);
+    }, this.language === 'en' ? `/audio/narration/step${this.currentStationIdx + 1}_en.wav` : `/audio/narration/step${this.currentStationIdx + 1}.wav`);
   }
 
   skipCurrentNarration() {
@@ -230,9 +245,13 @@ export class TourManager {
     } else {
       // Station narration skip
       this.guideFSM.transitionTo(GUIDE_STATES.WAITING_QUESTION);
+      const speaker = this.language === 'en' ? "Tour Guide" : "Hướng dẫn viên";
+      const qPrompt = this.language === 'en' ? 
+        "This is how the process works for this step. Do you have any questions for me?" : 
+        "Quy trình của bước này là như vậy. Bạn có câu hỏi nào cần tôi giải đáp không?";
       uiController.showDialogueBubble(
-        "Hướng dẫn viên",
-        "Quy trình của bước này là như vậy. Bạn có câu hỏi nào cần tôi giải đáp không?",
+        speaker,
+        qPrompt,
         {
           onContinue: () => {},
           onType: () => {},
@@ -240,12 +259,14 @@ export class TourManager {
           onCancel: () => this.cancelFollow()
         }
       );
-      uiController.optContinue.textContent = "Tiếp tục hành trình";
+      uiController.optContinue.textContent = this.language === 'en' ? "Continue Journey" : "Tiếp tục hành trình";
       uiController.optContinue.style.display = '';
+      uiController.optType.textContent = this.language === 'en' ? "Ask a Question (Type)" : "Đặt câu hỏi (Nhập)";
       uiController.optType.style.display = '';
+      uiController.optVoice.textContent = this.language === 'en' ? "Ask with Voice" : "Hỏi bằng giọng nói";
       uiController.optVoice.style.display = '';
       if (uiController.optCancel) {
-        uiController.optCancel.textContent = "Hủy";
+        uiController.optCancel.textContent = this.language === 'en' ? "Cancel" : "Hủy";
         uiController.optCancel.style.display = '';
       }
     }
@@ -395,29 +416,34 @@ export class TourManager {
       this.playerState = PLAYER_STATES.WATCHING_DIALOGUE;
       this.guideFSM.transitionTo(GUIDE_STATES.TALKING);
       
-      const afterText = "Giấy dó thường được làm ở trong một số mùa nhất định khi thời tiết không mưa, không nắng quá, và không ẩm. Người dân Yên Thái hồi trước vừa là nông dân vừa là nghệ nhân làm giấy. Khi hết mùa làm nông, nghệ nhân sẽ chuyển sang làm giấy vì có thời gian. Học làm giấy không khó, chỉ mất một năm; nhưng để làm ra một tờ giấy chất lượng thì một người dân trong làng phải làm từ 5 đến 6 năm trở lên.";
+      const afterTextVi = "Giấy dó thường được làm ở trong một số mùa nhất định khi thời tiết không mưa, không nắng quá, và không ẩm. Người dân Yên Thái hồi trước vừa là nông dân vừa là nghệ nhân làm giấy. Khi hết mùa làm nông, nghệ nhân sẽ chuyển sang làm giấy vì có thời gian. Học làm giấy không khó, chỉ mất một năm; nhưng để làm ra một tờ giấy chất lượng thì một người dân trong làng phải làm từ 5 đến 6 năm trở lên.";
+      const afterTextEn = "Dó paper is usually made in certain seasons when the weather is not too rainy, not too sunny, and not humid. The people of Yen Thai village in the past were both farmers and paper-making artisans. When the agricultural season ended, they switched to making paper since they had time. Learning to make paper is not difficult, taking only a year; but to make a high-quality sheet of paper, a villager had to practice for 5 to 6 years or more.";
+      const afterText = this.language === 'en' ? afterTextEn : afterTextVi;
+      const speaker = this.language === 'en' ? "Tour Guide" : "Hướng dẫn viên";
       
-      uiController.showDialogueBubble("Hướng dẫn viên", afterText);
-      uiController.optContinue.textContent = "Bỏ qua thuyết minh";
+      uiController.showDialogueBubble(speaker, afterText);
+      uiController.optContinue.textContent = this.language === 'en' ? "Skip Narration" : "Bỏ qua thuyết minh";
       uiController.optContinue.style.display = '';
       uiController.optType.style.display = 'none';
       uiController.optVoice.style.display = 'none';
       if (uiController.optCancel) {
-        uiController.optCancel.textContent = "Hủy";
+        uiController.optCancel.textContent = this.language === 'en' ? "Cancel" : "Hủy";
         uiController.optCancel.style.display = '';
       }
 
       this.speakNarration(afterText, () => {
         // Part 2: Kết Thúc
-        const endText = "Phần hướng dẫn của chúng mình đến đây là hết. Bạn có thể đi vòng quanh bảo tàng để xem những vật phẩm trưng bày của chúng mình, bao gồm những loại giấy dó, cây mò, liềm seo.";
-        uiController.showDialogueBubble("Hướng dẫn viên", endText);
+        const endTextVi = "Phần hướng dẫn của chúng mình đến đây là hết. Bạn có thể đi vòng quanh bảo tàng để xem những vật phẩm trưng bày của chúng mình, bao gồm những loại giấy dó, cây mò, liềm seo.";
+        const endTextEn = "Here, our simulation journey has come to an end. Thank you very much for accompanying me. You can walk around the museum to view our exhibits, including types of Dó paper, the Mò tree, and the paper moulds.";
+        const endText = this.language === 'en' ? endTextEn : endTextVi;
+        uiController.showDialogueBubble(speaker, endText);
         
-        uiController.optContinue.textContent = "Bỏ qua thuyết minh";
+        uiController.optContinue.textContent = this.language === 'en' ? "Skip Narration" : "Bỏ qua thuyết minh";
         uiController.optContinue.style.display = '';
         uiController.optType.style.display = 'none';
         uiController.optVoice.style.display = 'none';
         if (uiController.optCancel) {
-          uiController.optCancel.textContent = "Hủy";
+          uiController.optCancel.textContent = this.language === 'en' ? "Cancel" : "Hủy";
           uiController.optCancel.style.display = '';
         }
 
@@ -430,12 +456,13 @@ export class TourManager {
             uiController.optVoice.style.display = '';
             if (uiController.optCancel) uiController.optCancel.style.display = '';
           }, 3000);
-        }, '/audio/narration/end.wav');
-      }, '/audio/narration/after.wav');
+        }, this.language === 'en' ? '/audio/narration/end_en.wav' : '/audio/narration/end.wav');
+      }, this.language === 'en' ? '/audio/narration/after_en.wav' : '/audio/narration/after.wav');
     } else {
       // Walk to next station
       const nextStation = this.stations[this.currentStationIdx];
-      uiController.showProgress(nextStation.stepNum, this.stations.length, nextStation.name);
+      const stationName = this.language === 'en' ? (nextStation.nameEn || nextStation.name) : nextStation.name;
+      uiController.showProgress(nextStation.stepNum, this.stations.length, stationName);
       uiController.hideDialogueBubble();
       
       this.playerState = PLAYER_STATES.FOLLOWING_GUIDE;

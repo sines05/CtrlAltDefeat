@@ -66,7 +66,21 @@ function renderChunkContext(chunks) {
     .join('\n\n');
 }
 
-function buildSystemInstruction() {
+function buildSystemInstruction(language = 'vi') {
+  if (language === 'en') {
+    return [
+      'You are a professional female tour guide at the Dó paper-making gallery. Always answer in English with a gentle, elegant, expressive, polite, and hospitable tone. Refer to yourself as "I" and the listener as "you". Answers should be natural, concise, and fluent, as if having a direct face-to-face conversation.',
+      'Only use approved chunks for any factual assertions about exhibits, history, processes, names, numbers, opening hours, or external information.',
+      'Do not speculate or invent details not present in the context.',
+      'Always answer in English, do not mention models or internal processes.',
+      'Conversation: answer naturally and politely, max 2 sentences; do not add facts about the room.',
+      'Overview: summarize approved chunks, max 3 short sentences.',
+      'Boundary: answer naturally and politely. If the information is outside the documents or this gallery, explain gently and guide the user back to the Dó paper-making processes (do not invent specific dates or numbers).',
+      'Grounded: answer from approved chunks, max 2 short sentences.',
+      'Always return valid JSON according to the requested schema.',
+    ].join(' ');
+  }
+
   return [
     'Bạn là một nữ hướng dẫn viên du lịch chuyên nghiệp tại phòng trưng bày quy trình làm giấy dó. Hãy luôn trả lời bằng tiếng Việt với giọng điệu nhẹ nhàng, thanh thoát, truyền cảm, lịch sự và hiếu khách. Xưng hô là "tôi" hoặc "mình" và gọi người nghe là "bạn". Câu trả lời cần tự nhiên, ngắn gọn và trôi chảy như đang trò chuyện trực tiếp.',
     'Chỉ dùng approved chunks cho mọi khẳng định thực tế về hiện vật, lịch sử, quy trình, tên riêng, số liệu, giờ mở cửa hoặc thông tin ngoài phòng.',
@@ -126,10 +140,12 @@ function normalizeModelPayload(parsed) {
   };
 }
 
-export function generateLocalGroundedAnswer({ chunks, policy = 'grounded' }) {
+export function generateLocalGroundedAnswer({ chunks, policy = 'grounded', language = 'vi' }) {
   if (policy === 'conversation') {
     return {
-      answer: 'Xin chào! Bạn có thể hỏi về các công đoạn làm giấy dó trong phòng trưng bày này.',
+      answer: language === 'en'
+        ? 'Hello! You can ask about the Dó paper-making stages in this gallery.'
+        : 'Xin chào! Bạn có thể hỏi về các công đoạn làm giấy dó trong phòng trưng bày này.',
       confidence: 'low',
       abstained: false,
       abstainReason: null,
@@ -138,7 +154,9 @@ export function generateLocalGroundedAnswer({ chunks, policy = 'grounded' }) {
 
   if (policy === 'boundary') {
     return {
-      answer: 'Tư liệu của phòng trưng bày hiện chưa xác nhận chi tiết đó. Bạn có thể hỏi về thu hoạch vỏ dó, ngâm vôi, giã bột, xeo giấy hoặc hong khô.',
+      answer: language === 'en'
+        ? 'The gallery materials do not verify that detail yet. You can ask about Dó bark harvesting, lime soaking, pulp pounding, sheet formation, or drying.'
+        : 'Tư liệu của phòng trưng bày hiện chưa xác nhận chi tiết đó. Bạn có thể hỏi về thu hoạch vỏ dó, ngâm vôi, giã bột, xeo giấy hoặc hong khô.',
       confidence: 'low',
       abstained: false,
       abstainReason: null,
@@ -147,7 +165,9 @@ export function generateLocalGroundedAnswer({ chunks, policy = 'grounded' }) {
 
   if (policy === 'overview') {
     return {
-      answer: 'Quy trình trong phòng đi từ chuẩn bị vỏ dó, ngâm làm mềm và giã bột, đến xeo giấy rồi ép, dán tường và hong khô.',
+      answer: language === 'en'
+        ? 'The process in this room ranges from Dó bark preparation, lime soaking, pulp pounding, sheet formation, to pressing, drying, and peeling.'
+        : 'Quy trình trong phòng đi từ chuẩn bị vỏ dó, ngâm làm mềm và giã bột, đến xeo giấy rồi ép, dán tường và hong khô.',
       confidence: 'medium',
       abstained: false,
       abstainReason: null,
@@ -192,7 +212,7 @@ async function callGemini(apiKey, payload) {
   return response.json();
 }
 
-export async function generateGeminiGroundedAnswer({ sceneTitle, sceneSummary, question, chunks, policy = 'grounded' }) {
+export async function generateGeminiGroundedAnswer({ sceneTitle, sceneSummary, question, chunks, policy = 'grounded', language = 'vi' }) {
   const apiKeys = getApiKeys();
 
   if (!apiKeys.length) {
@@ -201,7 +221,7 @@ export async function generateGeminiGroundedAnswer({ sceneTitle, sceneSummary, q
 
   const payload = {
     system_instruction: {
-      parts: [{ text: buildSystemInstruction() }],
+      parts: [{ text: buildSystemInstruction(language) }],
     },
     contents: [
       {

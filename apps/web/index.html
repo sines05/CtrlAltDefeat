@@ -534,6 +534,58 @@
       background: linear-gradient(135deg, #a06b3a, #c68e5d);
     }
 
+    /* Language Selector Toggle */
+    #lang-toggle {
+      position: fixed;
+      top: 74px;
+      left: 24px;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(22, 15, 10, 0.8);
+      border: 1px solid rgba(255, 183, 77, 0.2);
+      border-radius: 8px;
+      padding: 6px 12px;
+      backdrop-filter: blur(8px);
+    }
+    #lang-toggle .lang-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #ffb74d;
+      margin-right: 4px;
+    }
+    #lang-toggle .lang-options {
+      display: flex;
+      gap: 4px;
+    }
+    #lang-toggle .lang-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 183, 77, 0.15);
+      color: #c5b8a8;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: system-ui, sans-serif;
+    }
+    #lang-toggle .lang-btn:hover {
+      background: rgba(255, 183, 77, 0.1);
+      border-color: rgba(255, 183, 77, 0.4);
+      color: #eae3d2;
+    }
+    #lang-toggle .lang-btn.active {
+      background: linear-gradient(135deg, #8b5a2b, #b37d4e);
+      border-color: transparent;
+      color: #fff;
+    }
+    #lang-toggle .lang-btn.active:hover {
+      background: linear-gradient(135deg, #a06b3a, #c68e5d);
+    }
+
     /* Graphics Warning Modal */
     #gfx-warning-modal {
       position: fixed;
@@ -1964,6 +2016,15 @@
       <button class="gfx-btn" data-quality="low">Thấp</button>
       <button class="gfx-btn active" data-quality="medium">Trung bình</button>
       <button class="gfx-btn" data-quality="high">Cao</button>
+    </div>
+  </div>
+
+  <!-- Language Selector Toggle -->
+  <div id="lang-toggle" class="museum-ui">
+    <div class="lang-label">NGÔN NGỮ</div>
+    <div class="lang-options">
+      <button class="lang-btn active" data-lang="vi">Tiếng Việt</button>
+      <button class="lang-btn" data-lang="en">English</button>
     </div>
   </div>
 
