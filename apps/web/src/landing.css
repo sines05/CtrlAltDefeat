@@ -620,14 +620,6 @@
     font-size: 0.85rem;
   }
 
-  .summary-item {
-    counter-increment: none;
-  }
-
-  .summary-item::before {
-    content: "" !important;
-  }
-
   body.museum-active .museum-ui,
   body.museum-active #info,
   body.museum-active #loading-screen {
