@@ -23,6 +23,7 @@ export function buildStationZCoordinates(numStations) {
 export function createExhibitionWall(scene, stationViewModels = []) {
   const stations = [];
   const stationModels = Array.isArray(stationViewModels) ? stationViewModels : [];
+
   const leftWallX = -10.8;
   const rotationY = Math.PI / 2;
   const zCoordinates = buildStationZCoordinates(stationModels.length);

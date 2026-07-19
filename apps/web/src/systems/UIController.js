@@ -33,6 +33,7 @@ export class UIController {
     this.optType = document.getElementById('opt-type');
     this.optVoice = document.getElementById('opt-voice');
     this.optContinue = document.getElementById('opt-continue');
+    this.optCancel = document.getElementById('opt-cancel');
 
     this.progress = document.getElementById('tour-progress');
     this.progressStepText = document.getElementById('progress-step-text');
@@ -56,6 +57,14 @@ export class UIController {
     this.recordingStartedAt = 0;
     this.recordingStopTimeout = null;
     this.discardRecording = false;
+
+    this.plaquePrompt = document.getElementById('plaque-prompt');
+    this.plaqueModal = document.getElementById('plaque-modal');
+    this.plaqueClose = document.getElementById('plaque-close');
+
+    this.villagePrompt = document.getElementById('village-prompt');
+    this.villageModal = document.getElementById('village-modal');
+    this.villageClose = document.getElementById('village-close');
     this.isRecording = false;
     this.toastTimeout = null;
 
@@ -94,6 +103,11 @@ export class UIController {
     this.optContinue.onclick = (e) => {
       e.stopPropagation();
       if (options.onContinue) options.onContinue();
+    };
+
+    this.optCancel.onclick = (e) => {
+      e.stopPropagation();
+      if (options.onCancel) options.onCancel();
     };
   }
 
@@ -151,6 +165,20 @@ export class UIController {
 
       this.stopRecording();
     };
+
+    // Plaque Modal listeners
+    if (this.plaqueClose) {
+      this.plaqueClose.onclick = () => {
+        this.plaqueModal.classList.remove('visible');
+      };
+    }
+
+    // Village Modal listeners
+    if (this.villageClose) {
+      this.villageClose.onclick = () => {
+        this.villageModal.classList.remove('visible');
+      };
+    }
   }
 
   setQuestionHandlers(handlers) {

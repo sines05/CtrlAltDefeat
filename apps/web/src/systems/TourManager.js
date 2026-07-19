@@ -53,6 +53,7 @@ export class TourManager {
     
     // Save original camera target/distance settings to restore after tour
     this.originalTarget = new THREE.Vector3().copy(controls.target);
+    this.speechTimeout = null;
     
     this.setupUIEvents();
   }
@@ -136,6 +137,15 @@ export class TourManager {
 
   endTour() {
     this.playerState = PLAYER_STATES.FREE;
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    if (this.speechTimeout) {
+      clearTimeout(this.speechTimeout);
+      this.speechTimeout = null;
+    }
+    this.isSpeaking = false;
+
     uiController.hideProgress();
     uiController.hideDialogueBubble();
     uiController.showCancelNotice(false);
@@ -153,6 +163,10 @@ export class TourManager {
 
   cancelFollow() {
     this.playerState = PLAYER_STATES.FREE;
+    if (this.speechTimeout) {
+      clearTimeout(this.speechTimeout);
+      this.speechTimeout = null;
+    }
     
     // Stop speech synthesis if speaking
     if ('speechSynthesis' in window) {
@@ -186,7 +200,7 @@ export class TourManager {
       if (!response.ok) throw new Error('TTS status not ok');
       const data = await response.json();
       if (!data.audioUrl) throw new Error('No audioUrl in TTS response');
-      
+
       const audio = new Audio(data.audioUrl);
       const spoke = await this.guideFSM.playAnswerAudio(audio);
       if (spoke) {
@@ -203,24 +217,22 @@ export class TourManager {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'vi-VN';
-        utterance.rate = 0.95; // slightly slower for premium tone
-        
+        utterance.rate = 0.95;
+
         utterance.onend = () => {
           this.isSpeaking = false;
           if (callback) callback();
         };
-        
+
         utterance.onerror = (e) => {
           console.error("Speech synthesis error, using timer fallback:", e);
           this.isSpeaking = false;
-          // Fallback timer based on character length
           const duration = Math.max(4000, text.length * 65);
           setTimeout(() => { if (callback) callback(); }, duration);
         };
-        
+
         window.speechSynthesis.speak(utterance);
       } else {
-        // Fallback if speechSynthesis is not available
         this.isSpeaking = false;
         const duration = Math.max(4000, text.length * 65);
         setTimeout(() => { if (callback) callback(); }, duration);
@@ -265,13 +277,33 @@ export class TourManager {
 
   update(delta, time) {
     if (this.playerState === PLAYER_STATES.FREE) {
-      // Check distance to guide to show Follow Button
-      if (this.player && this.guide) {
-        const dist = this.player.position.distanceTo(this.guide.position);
-        if (dist < 2.5) {
-          uiController.showFollowButton(true, () => this.startTour());
+      if (this.guideTargetPos && this.guide) {
+        const guidePos = this.guide.position;
+        const targetXZ = new THREE.Vector3(this.guideTargetPos.x, guidePos.y, this.guideTargetPos.z);
+        const dist = guidePos.distanceTo(targetXZ);
+
+        if (dist > 0.15) {
+          this.guideFSM.transitionTo(GUIDE_STATES.WALKING);
+          const dir = new THREE.Vector3().subVectors(targetXZ, guidePos).normalize();
+          guidePos.x += dir.x * this.guideSpeed * delta;
+          guidePos.z += dir.z * this.guideSpeed * delta;
+          const targetAngle = Math.atan2(dir.x, dir.z);
+          let diff = targetAngle - this.guide.rotation.y;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          this.guide.rotation.y += diff * Math.min(1, 10 * delta);
+          if (this.guide.userData.groundY !== undefined) {
+            guidePos.y = this.guide.userData.groundY;
+          }
         } else {
-          uiController.showFollowButton(false);
+          this.guideTargetPos = null;
+          this.guideFSM.transitionTo(GUIDE_STATES.IDLE);
+          const statusEl = document.getElementById('guide-arrival-status');
+          if (statusEl) {
+            statusEl.innerText = "Người hướng dẫn đã sẵn sàng giải đáp.";
+          }
+          const dirToPlayer = new THREE.Vector3().subVectors(this.player.position, guidePos).normalize();
+          this.guide.rotation.y = Math.atan2(dirToPlayer.x, dirToPlayer.z);
         }
       }
       return;
@@ -283,117 +315,105 @@ export class TourManager {
     const guideStandPos = currentStation.guideStandPos;
     const guidePos = this.guide.position;
 
+    // Force guide state to WALKING if we're in FOLLOWING_GUIDE but not yet at station
+    if (this.playerState === PLAYER_STATES.FOLLOWING_GUIDE) {
+      const distToStation = guidePos.distanceTo(new THREE.Vector3(guideStandPos.x, guidePos.y, guideStandPos.z));
+      if (distToStation > 0.25) {
+        this.guideFSM.transitionTo(GUIDE_STATES.WALKING);
+      }
+    }
+
     if (this.guideFSM.currentState === GUIDE_STATES.WALKING) {
-      // 1a. Move guide strictly in X-Z plane, ignoring vertical coordinate to prevent sinking or floating
       const targetXZ = new THREE.Vector3(guideStandPos.x, guidePos.y, guideStandPos.z);
       const distToStation = guidePos.distanceTo(targetXZ);
 
       if (distToStation > 0.25) {
         const dir = new THREE.Vector3().subVectors(targetXZ, guidePos).normalize();
-        
-        // Update X-Z position only
         guidePos.x += dir.x * this.guideSpeed * delta;
         guidePos.z += dir.z * this.guideSpeed * delta;
-        
-        // Keep vertical height locked exactly to the grounded height
-        guidePos.y = this.guide.userData.groundY !== undefined ? this.guide.userData.groundY : guidePos.y;
-        
-        // Rotate guide to face target
+        if (this.guide.userData.groundY !== undefined) {
+          guidePos.y = this.guide.userData.groundY;
+        }
         const targetAngle = Math.atan2(dir.x, dir.z);
         let diff = targetAngle - this.guide.rotation.y;
         while (diff > Math.PI) diff -= Math.PI * 2;
         while (diff < -Math.PI) diff += Math.PI * 2;
         this.guide.rotation.y += diff * Math.min(1, 10 * delta);
-        
         this.fadePlayerAction(this.playerActions.walk);
       } else {
-        // Arrived at station! Turn to look at screen
+        // Arrived at station
         this.guideFSM.transitionTo(GUIDE_STATES.TALKING);
         this.fadePlayerAction(this.playerActions.idle);
         this.playerState = PLAYER_STATES.WATCHING_DIALOGUE;
 
-        // Rotate guide to face player
-        const dirToPlayer = new THREE.Vector3().subVectors(this.player.position, this.guide.position).normalize();
+        // Guide faces the PLAYER (not away from them)
+        const dirToPlayer = new THREE.Vector3().subVectors(this.player.position, guidePos).normalize();
         this.guide.rotation.y = Math.atan2(dirToPlayer.x, dirToPlayer.z);
 
-        // Hide options buttons while narration is playing
         uiController.optContinue.style.display = 'none';
         uiController.optType.style.display = 'none';
         uiController.optVoice.style.display = 'none';
-        
-        // Show narration text in dialogue bubble
+        if (uiController.optCancel) uiController.optCancel.style.display = 'none';
+
         uiController.showDialogueBubble("Hướng dẫn viên", currentStation.narration);
 
-        // Speak the narration text
         this.speakNarration(currentStation.narration, () => {
-          // Speak complete. Transition FSM to WAITING_QUESTION
           this.guideFSM.transitionTo(GUIDE_STATES.WAITING_QUESTION);
-          
-          // Re-show options and show "Do you have any questions?"
           uiController.showDialogueBubble(
-            "Hướng dẫn viên", 
-            "Quy trình của bước này là như vậy. Bạn có câu hỏi nào cần tôi giải đáp không?", 
+            "Hướng dẫn viên",
+            "Quy trình của bước này là như vậy. Bạn có câu hỏi nào cần tôi giải đáp không?",
             {
-              onContinue: () => {}, // Handled by addEventListener in constructor
+              onContinue: () => {},
               onType: () => {},
-              onVoice: () => {}
+              onVoice: () => {},
+              onCancel: () => this.cancelFollow()
             }
           );
-          
           uiController.optContinue.style.display = '';
           uiController.optType.style.display = '';
           uiController.optVoice.style.display = '';
+          if (uiController.optCancel) uiController.optCancel.style.display = '';
         });
       }
     }
 
-    // 2. Manage Player Auto-follow behind guide
+    // Player auto-follow
     if (this.playerState === PLAYER_STATES.FOLLOWING_GUIDE || this.playerState === PLAYER_STATES.WATCHING_DIALOGUE) {
       let targetPlayerPos;
       if (this.guideFSM.currentState === GUIDE_STATES.WALKING) {
-        // Calculate target position 1.5m behind the guide's movement direction
         const guideForward = new THREE.Vector3(0, 0, 1).applyQuaternion(this.guide.quaternion).normalize();
         targetPlayerPos = new THREE.Vector3()
           .copy(guidePos)
           .addScaledVector(guideForward, -this.playerFollowDistance);
       } else {
-        // Target is static player stand pos for current station (in front of the screen)
         targetPlayerPos = new THREE.Vector3().copy(currentStation.playerStandPos);
       }
-      
-      targetPlayerPos.y = this.player.position.y; // Keep vertical alignment
 
+      targetPlayerPos.y = this.player.position.y;
       const distToFollowTarget = this.player.position.distanceTo(targetPlayerPos);
 
       if (distToFollowTarget > 0.15) {
-        // Move player towards follow point
         const pDir = new THREE.Vector3().subVectors(targetPlayerPos, this.player.position).normalize();
-        const pSpeed = Math.min(this.guideSpeed * 1.1, distToFollowTarget * 4); // smooth ease
+        const pSpeed = Math.min(this.guideSpeed * 1.1, distToFollowTarget * 4);
         this.player.position.addScaledVector(pDir, pSpeed * delta);
-
-        // Rotate player to face the guide or target
         const pTargetAngle = Math.atan2(pDir.x, pDir.z);
         let pDiff = pTargetAngle - this.player.rotation.y;
         while (pDiff > Math.PI) pDiff -= Math.PI * 2;
         while (pDiff < -Math.PI) pDiff += Math.PI * 2;
         this.player.rotation.y += pDiff * Math.min(1, 10 * delta);
-
         this.fadePlayerAction(this.playerActions.walk);
       } else {
-        // Arrived at standing position
         this.fadePlayerAction(this.playerActions.idle);
-        
-        // If stationary at station, make player face the screen and guide face the player
         if (this.guideFSM.currentState === GUIDE_STATES.TALKING || this.guideFSM.currentState === GUIDE_STATES.WAITING_QUESTION) {
-          // Make guide face the player
-          const dirToPlayer = new THREE.Vector3().subVectors(this.player.position, this.guide.position).normalize();
-          const guideTargetAngle = Math.atan2(dirToPlayer.x, dirToPlayer.z);
-          let gDiff = guideTargetAngle - this.guide.rotation.y;
-          while (gDiff > Math.PI) gDiff -= Math.PI * 2;
-          while (gDiff < -Math.PI) gDiff += Math.PI * 2;
-          this.guide.rotation.y += gDiff * Math.min(1, 10 * delta);
+          // Guide faces the player continuously
+          const guideDirToPlayer = new THREE.Vector3().subVectors(this.player.position, guidePos).normalize();
+          const guideTargetAngle = Math.atan2(guideDirToPlayer.x, guideDirToPlayer.z);
+          let guideDiff = guideTargetAngle - this.guide.rotation.y;
+          while (guideDiff > Math.PI) guideDiff -= Math.PI * 2;
+          while (guideDiff < -Math.PI) guideDiff += Math.PI * 2;
+          this.guide.rotation.y += guideDiff * Math.min(1, 10 * delta);
 
-          // Make player face the screen
+          // Player faces the screen
           const pDirToScreen = new THREE.Vector3().subVectors(currentStation.lookPos, this.player.position).normalize();
           const pTargetAngle = Math.atan2(pDirToScreen.x, pDirToScreen.z);
           let pDiff = pTargetAngle - this.player.rotation.y;
@@ -404,21 +424,50 @@ export class TourManager {
       }
     }
 
-    // 3. First Person Camera Tracking
+    // First Person Camera Tracking
     const headPos = new THREE.Vector3().copy(this.player.position).add(new THREE.Vector3(0, 1.3, 0));
-    
-    // Position camera exactly at player's head
     this.camera.position.copy(headPos);
-
-    // Keep player's current camera direction, allowing them to look around
     const dir = new THREE.Vector3();
     this.camera.getWorldDirection(dir);
     this.controls.target.copy(headPos).addScaledVector(dir, 0.05);
 
-    // Update mixers
     if (this.playerMixer) {
-      // Disabled player mixer update in first-person to save CPU/GPU skinning costs
-      // this.playerMixer.update(delta);
+      // Disabled player mixer update in first-person
+    }
+  }
+
+  requestContextualHelp(playerPos) {
+    if (!this.guide) return;
+    
+    // Prevent starting several movement requests simultaneously
+    if (this.guideTargetPos) return;
+    
+    const dist = this.guide.position.distanceTo(playerPos);
+    
+    // Set appropriate speed based on distance thresholds
+    if (dist < 10.0) {
+      this.guideSpeed = 1.8;
+    } else if (dist < 20.0) {
+      this.guideSpeed = 3.2;
+    } else {
+      this.guideSpeed = 4.5;
+    }
+    
+    // Calculate safe conversational position target (2.2m from player in direction of guide)
+    const dir = new THREE.Vector3().subVectors(this.guide.position, playerPos).normalize();
+    dir.y = 0;
+    const target = new THREE.Vector3().copy(playerPos).addScaledVector(dir, 2.2);
+    
+    // Clamp to museum boundaries to prevent going out of walls
+    target.x = Math.max(-9.0, Math.min(9.0, target.x));
+    target.z = Math.max(-33.0, Math.min(33.0, target.z));
+    
+    this.guideTargetPos = target;
+    
+    // Set status bar to "Người hướng dẫn đang tới..."
+    const statusEl = document.getElementById('guide-arrival-status');
+    if (statusEl) {
+      statusEl.innerText = "Người hướng dẫn đang tới...";
     }
   }
 }

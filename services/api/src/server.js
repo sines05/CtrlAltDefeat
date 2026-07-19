@@ -34,11 +34,13 @@ const MIME_TYPES = {
   '.jpg': 'image/jpeg',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
   '.mp4': 'video/mp4',
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
   '.wav': 'audio/wav',
   '.woff2': 'font/woff2',
+  '.fbx': 'application/octet-stream',
 };
 
 function send(response, statusCode, body, contentType = 'text/plain; charset=utf-8') {

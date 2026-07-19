@@ -27,6 +27,16 @@ import { GuideFSM, GUIDE_STATES } from './systems/GuideFSM.js';
 import { TourManager, PLAYER_STATES } from './systems/TourManager.js';
 import { uiController } from './systems/UIController.js';
 import { VideoActivationSystem } from './systems/VideoActivationSystem/VideoActivationSystem.js';
+import { Plaque } from './components/Plaque/Plaque.js';
+import { PRODUCT_EXHIBIT } from './data/productData.js';
+import { MORTAR_EXHIBIT } from './data/mortarData.js';
+import { PAPER_EXHIBIT } from './data/paperData.js';
+import { WOODEN_MOULD_EXHIBIT } from './data/woodenMouldData.js';
+import { HISTORICAL_PAPER_EXHIBIT } from './data/historicalPaperData.js';
+import { DRYING_RACK_EXHIBIT } from './data/dryingRackData.js';
+import { PRINTING_DISPLAY_EXHIBIT } from './data/printingDisplayData.js';
+import { VILLAGE_DIORAMA_EXHIBIT } from './data/villageDioramaData.js';
+import { createFourNewExhibits } from './components/FourNewExhibits.js';
 import { fetchBootstrapContent } from './media/client.js';
 import { adaptMediaManifest, createDegradedMediaState } from './media/manifest-adapter.js';
 import { createModelRegistry } from './media/model-registry.js';
@@ -130,6 +140,111 @@ async function submitGuideTurn({ question = '', audio = null } = {}) {
   }
 }
 
+let canvas = null;
+let isPointerLocked = false;
+let videosBlessed = false;
+
+function blessVideos() {
+  if (stations && stations.length > 0) {
+    stations.forEach(station => {
+      const video = station.videoDisplay?.video;
+      if (video && video.paused) {
+        video.play().then(() => {
+          video.pause();
+        }).catch(err => {
+          console.warn("[VideoDisplay] Blessing failed:", err.message);
+        });
+      }
+    });
+  }
+}
+
+function bindFPSPointerLockEvents(canvasElement) {
+  canvasElement.addEventListener('click', () => {
+    if (document.pointerLockElement !== canvasElement) {
+      canvasElement.requestPointerLock();
+    }
+    if (!videosBlessed) {
+      blessVideos();
+      videosBlessed = true;
+    }
+  });
+
+  const followBtn = document.getElementById('follow-btn');
+  if (followBtn) {
+    followBtn.addEventListener('click', () => {
+      setTimeout(() => {
+        if (document.pointerLockElement !== canvasElement) {
+          canvasElement.requestPointerLock();
+        }
+      }, 50);
+    });
+  }
+
+  const optContinue = document.getElementById('opt-continue');
+  if (optContinue) {
+    optContinue.addEventListener('click', () => {
+      setTimeout(() => {
+        if (document.pointerLockElement !== canvasElement) {
+          canvasElement.requestPointerLock();
+        }
+      }, 50);
+    });
+  }
+
+  document.addEventListener('pointerlockchange', () => {
+    if (document.pointerLockElement === canvasElement) {
+      isPointerLocked = true;
+      if (controls) controls.enabled = false;
+    } else {
+      isPointerLocked = false;
+      if (controls) {
+        controls.enabled = true;
+        // Sync OrbitControls target when exiting pointer lock
+        const dir = new THREE.Vector3();
+        camera.getWorldDirection(dir);
+        const headPos = new THREE.Vector3().copy(character ? character.position : camera.position).add(new THREE.Vector3(0, 1.3, 0));
+        controls.target.copy(headPos).addScaledVector(dir, 0.05);
+        controls.update();
+      }
+    }
+  });
+
+  const lookSensitivity = 0.002;
+  document.addEventListener('mousemove', (e) => {
+    if (!isPointerLocked || !camera) return;
+
+    camera.rotation.y -= e.movementX * lookSensitivity;
+    camera.rotation.x -= e.movementY * lookSensitivity;
+
+    // Clamp vertical look to -80 / +80 degrees to prevent flipping upside down
+    const maxPitch = Math.PI / 2.25;
+    camera.rotation.x = Math.max(-maxPitch, Math.min(maxPitch, camera.rotation.x));
+  });
+}
+
+function checkUIAndUnlock() {
+  const isUIOpen = 
+    (document.getElementById('dialogue-bubble') && document.getElementById('dialogue-bubble').classList.contains('visible')) ||
+    (document.getElementById('typing-modal') && document.getElementById('typing-modal').classList.contains('visible')) ||
+    (document.getElementById('voice-modal') && document.getElementById('voice-modal').classList.contains('visible')) ||
+    (document.getElementById('plaque-modal') && document.getElementById('plaque-modal').classList.contains('visible')) ||
+    (document.getElementById('village-modal') && document.getElementById('village-modal').classList.contains('visible')) ||
+    (document.getElementById('product-modal') && document.getElementById('product-modal').classList.contains('visible')) ||
+    (document.getElementById('mortar-modal') && document.getElementById('mortar-modal').classList.contains('visible')) ||
+    (document.getElementById('paper-modal') && document.getElementById('paper-modal').classList.contains('visible')) ||
+    (document.getElementById('wooden-mould-modal') && document.getElementById('wooden-mould-modal').classList.contains('visible')) ||
+    (document.getElementById('pedestal-modal') && document.getElementById('pedestal-modal').classList.contains('visible')) ||
+    (document.getElementById('drying-modal') && document.getElementById('drying-modal').classList.contains('visible')) ||
+    (document.getElementById('printing-modal') && document.getElementById('printing-modal').classList.contains('visible')) ||
+    (document.getElementById('diorama-modal') && document.getElementById('diorama-modal').classList.contains('visible')) ||
+    (document.getElementById('gfx-warning-modal') && document.getElementById('gfx-warning-modal').classList.contains('visible'));
+  
+  if (isUIOpen && canvas && document.pointerLockElement === canvas) {
+    document.exitPointerLock();
+  }
+}
+
 function ensureRuntimeShell() {
   if (scene) {
     return;
@@ -137,8 +252,9 @@ function ensureRuntimeShell() {
 
   const nextScene = new THREE.Scene();
   const nextCamera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
-  nextCamera.position.set(0, 3, -35);
-  nextScene.add(nextCamera);
+  nextCamera.position.set(0, 3, -35); // Start closer to the entrance walkway
+  nextCamera.rotation.order = 'YXZ'; // Set rotation order for FPS look controls
+  nextScene.add(nextCamera); // Ensure camera children (arms) are rendered
 
   const nextRenderer = new THREE.WebGLRenderer({ antialias: false });
   nextRenderer.setSize(innerWidth, innerHeight);
@@ -181,6 +297,10 @@ function ensureRuntimeShell() {
   renderer = nextRenderer;
   controls = nextControls;
   clock = new THREE.Clock();
+
+  // Initialize canvas reference and bind pointerlock/FPS controls
+  canvas = nextRenderer.domElement;
+  bindFPSPointerLockEvents(canvas);
 }
 
 function resetRuntimeShell() {
@@ -206,11 +326,28 @@ function resetRuntimeShell() {
   animationStarted = false;
   approvedMediaApplied = false;
   didSignalFirstFrame = false;
+  canvas = null;
+  isPointerLocked = false;
+  videosBlessed = false;
 }
+
+let plaque;
+let villagePictureGroup;
+let productGroup;
+let mortarGroup;
+let paperGroup;
+let woodenMouldGroup;
+let pedestalGroup;
+let dryingGroup;
+let printingGroup;
+let dioramaGroup;
+let guidePanel = null; // null | 'proximity-menu' | 'qa-placeholder' | 'tour-confirmation'
+const GUIDE_PROXIMITY_RANGE = 2.5;
 
 const keys = { w: false, a: false, s: false, d: false, ' ': false };
 const velocity = new THREE.Vector3();
-const maxSpeed = 2.4;
+const acceleration = 22;
+const maxSpeed = 4.5;
 const friction = 25;
 
 function removeLoadingScreen() {
@@ -324,7 +461,6 @@ function createMockAction() {
     setEffectiveWeight() {},
   };
 }
-
 function removeSceneObject(object3d) {
   if (!object3d) {
     return;
@@ -424,34 +560,66 @@ function createFallbackSceneProps() {
   );
   pictureFallback.position.set(10.75, 2.2, -18.0);
   scene.add(pictureFallback);
+  villagePictureGroup = pictureFallback;
   registerSceneProp('exhibit-village-picture', pictureFallback);
-
   const mortarFallback = new THREE.Mesh(
     new THREE.CylinderGeometry(0.5, 0.4, 1.0, 12),
     new THREE.MeshStandardMaterial({ color: 0x8d8072, roughness: 0.85 }),
   );
-  mortarFallback.position.set(5.0, 0, 0);
+  mortarFallback.position.set(5.5, 0, -3.5);
   scene.add(mortarFallback);
   CharacterGrounding.ground(mortarFallback);
+  mortarGroup = mortarFallback;
   registerSceneProp('exhibit-mortar', mortarFallback);
-
   const paperFallback = new THREE.Mesh(
     new THREE.BoxGeometry(0.08, 1.2, 1.8),
     new THREE.MeshStandardMaterial({ color: 0xd4c9a8, roughness: 0.5 }),
   );
   paperFallback.position.set(10.95, 2.2, -6.0);
   scene.add(paperFallback);
+  paperGroup = paperFallback;
   registerSceneProp('exhibit-paper-showing', paperFallback);
-
   const mouldFallback = new THREE.Mesh(
     new THREE.BoxGeometry(1.4, 0.15, 1.0),
     new THREE.MeshStandardMaterial({ color: 0xba9566, roughness: 0.7 }),
   );
   mouldFallback.position.set(4.0, 0.6, 18.0);
   scene.add(mouldFallback);
+  woodenMouldGroup = mouldFallback;
+
+  // Fallback for cabin: a large wooden cabin-like box
+  const cabinFallback = new THREE.Mesh(
+    new THREE.BoxGeometry(1.8, 1.8, 2.4),
+    new THREE.MeshStandardMaterial({ color: 0x8d6e63, roughness: 0.8 })
+  );
+  cabinFallback.position.set(1.5, 0, 0.0);
+  scene.add(cabinFallback);
+  CharacterGrounding.ground(cabinFallback);
+
+  // Fallback for product_showing_02: a cylinder/box
+  const product02Fallback = new THREE.Mesh(
+    new THREE.BoxGeometry(1.0, 1.2, 1.0),
+    new THREE.MeshStandardMaterial({ color: 0x8b6f47, roughness: 0.7 })
+  );
+  product02Fallback.position.set(2.5, 0, 24.0);
+  scene.add(product02Fallback);
+  CharacterGrounding.ground(product02Fallback);
+  productGroup = product02Fallback;
+
+  // Fallback for plaque
+  plaque = new Plaque(8.0, -12.0, -Math.PI / 2);
+  scene.add(plaque.group);
+
+  // Fallback four new exhibits
+  const newExhibitsData = createFourNewExhibits(scene);
+  newExhibitsData.forEach(ex => {
+    if (ex.id === 'historical_paper_pedestal') pedestalGroup = { position: ex.position };
+    else if (ex.id === 'traditional_paper_drying_rack') dryingGroup = { position: ex.position };
+    else if (ex.id === 'do_paper_printing_display') printingGroup = { position: ex.position };
+    else if (ex.id === 'yen_thai_village_diorama') dioramaGroup = { position: ex.position };
+  });
   registerSceneProp('exhibit-wooden-mould', mouldFallback);
 }
-
 function placeProductShowingModel(productShowingModel) {
   prepareAsset(productShowingModel, true);
   productShowingModel.position.set(2.5, 0, -9.0);
@@ -527,6 +695,7 @@ function placeVillagePictureModel(villagePictureModel) {
 
   group.position.set(posX, posY, posZ);
   scene.add(group);
+  villagePictureGroup = group;
   return registerSceneProp('exhibit-village-picture', group);
 }
 
@@ -535,9 +704,10 @@ function placeMortarModel(mortarModel) {
   autoScaleAndGround(mortarModel, 1.0);
   const currentScale = mortarModel.scale.clone();
   mortarModel.scale.set(currentScale.x * 1.3, currentScale.y * 1.3, currentScale.z * 1.3);
-  mortarModel.position.set(5.0, 0, 0);
+  mortarModel.position.set(5.5, 0, -3.5);
   CharacterGrounding.ground(mortarModel);
   scene.add(mortarModel);
+  mortarGroup = mortarModel;
   return registerSceneProp('exhibit-mortar', mortarModel);
 }
 
@@ -600,6 +770,7 @@ function placePaperShowingModel(paperShowingModel) {
 
   group.position.set(posX, posY, posZ);
   scene.add(group);
+  paperGroup = group;
   return registerSceneProp('exhibit-paper-showing', group);
 }
 
@@ -608,6 +779,7 @@ function placeWoodenMouldModel(woodenMouldModel) {
   woodenMouldModel.position.set(4.0, 0, 18.0);
   scene.add(woodenMouldModel);
   autoScaleAndGround(woodenMouldModel, 1.2);
+  woodenMouldGroup = woodenMouldModel;
   return registerSceneProp('exhibit-wooden-mould', woodenMouldModel);
 }
 
@@ -655,7 +827,6 @@ function initializeBaseScene() {
   );
 
   createFallbackSceneProps();
-  removeLoadingScreen();
 }
 
 async function promoteAnimatedCharacters(guidePromotionLoad) {
@@ -916,6 +1087,27 @@ function updateMovement(delta) {
   controls.target.copy(headPos).addScaledVector(direction, 0.05);
   camera.position.copy(headPos);
 
+  // Disable movement if any modal is open
+  const isPlaqueOpen = document.getElementById('plaque-modal') && document.getElementById('plaque-modal').classList.contains('visible');
+  const isVillageOpen = document.getElementById('village-modal') && document.getElementById('village-modal').classList.contains('visible');
+  const isProductOpen = document.getElementById('product-modal') && document.getElementById('product-modal').classList.contains('visible');
+  const isMortarOpen = document.getElementById('mortar-modal') && document.getElementById('mortar-modal').classList.contains('visible');
+  const isPaperOpen = document.getElementById('paper-modal') && document.getElementById('paper-modal').classList.contains('visible');
+  const isMouldOpen = document.getElementById('wooden-mould-modal') && document.getElementById('wooden-mould-modal').classList.contains('visible');
+  const isPedestalOpen = document.getElementById('pedestal-modal') && document.getElementById('pedestal-modal').classList.contains('visible');
+  const isDryingOpen = document.getElementById('drying-modal') && document.getElementById('drying-modal').classList.contains('visible');
+  const isPrintingOpen = document.getElementById('printing-modal') && document.getElementById('printing-modal').classList.contains('visible');
+  const isDioramaOpen = document.getElementById('diorama-modal') && document.getElementById('diorama-modal').classList.contains('visible');
+  const isGfxWarningOpen = document.getElementById('gfx-warning-modal') && document.getElementById('gfx-warning-modal').classList.contains('visible');
+  const isTypingOpen = document.getElementById('typing-modal') && document.getElementById('typing-modal').classList.contains('visible');
+  const isVoiceOpen = document.getElementById('voice-modal') && document.getElementById('voice-modal').classList.contains('visible');
+  
+  if (isPlaqueOpen || isVillageOpen || isProductOpen || isMortarOpen || isPaperOpen || isMouldOpen || isPedestalOpen || isDryingOpen || isPrintingOpen || isDioramaOpen || isGfxWarningOpen || isTypingOpen || isVoiceOpen || (tourManager && tourManager.playerState === PLAYER_STATES.QUESTION_INPUT)) {
+    velocity.set(0, 0, 0);
+    return;
+  }
+
+  // If the Guided Tour is active, the TourManager controls player movement
   if (tourManager && tourManager.playerState !== PLAYER_STATES.FREE) {
     tourManager.update(delta, clock.getElapsedTime());
     return;
@@ -968,11 +1160,19 @@ function updateMovement(delta) {
   newX = Math.max(-10.4, Math.min(10.4, newX));
   newZ = Math.max(-34, Math.min(34, newZ));
 
+  // Collision with floor objects (product_showing, showing_tree_01, mortar, wooden mould, cabin, product_showing_2, plaque)
   const colliders = [
-    { x: 2.5, z: -9.0, radius: 1.6 },
-    { x: 2.5, z: 9.0, radius: 1.5 },
-    { x: 5.0, z: 0, radius: 1.0 },
-    { x: 4.0, z: 18.0, radius: 1.2 },
+    { x: 2.5, z: -9.0, radius: 1.6 },  // product_showing
+    { x: 2.5, z: 9.0, radius: 1.5 },   // showing_tree_01
+    { x: 5.5, z: -3.5, radius: 1.0 },  // mortar
+    { x: 4.0, z: 18.0, radius: 1.2 },  // wooden mould
+    { x: 1.5, z: 0.0, radius: 1.2 },   // cabin
+    { x: 2.5, z: 24.0, radius: 0.9 },  // product_showing_02
+    { x: 8.0, z: -12.0, radius: 0.8 },  // plaque
+    { x: 5.0, z: -19.0, radius: 0.7 },  // historical paper pedestal
+    { x: 6.0, z: 0.5, radius: 0.8 },    // drying rack (moved from -4.5, 1.5)
+    { x: 3.0, z: 14.0, radius: 0.8 },   // printing display
+    { x: 0.0, z: 26.0, radius: 1.2 }    // village diorama
   ];
 
   colliders.forEach((collider) => {
@@ -1013,29 +1213,364 @@ function bindRuntimeEvents() {
   }
 
   runtimeEventsBound = true;
-  document.addEventListener('keydown', (event) => {
-    if (tourManager && tourManager.playerState === PLAYER_STATES.QUESTION_INPUT) {
+  document.addEventListener('keydown', (e) => {
+    const key = e.key.toLowerCase();
+
+    // Get active modal statuses
+    const plaqueModal = document.getElementById('plaque-modal');
+    const isPlaqueOpen = plaqueModal && plaqueModal.classList.contains('visible');
+    const villageModal = document.getElementById('village-modal');
+    const isVillageOpen = villageModal && villageModal.classList.contains('visible');
+    const productModal = document.getElementById('product-modal');
+    const isProductOpen = productModal && productModal.classList.contains('visible');
+    const mortarModal = document.getElementById('mortar-modal');
+    const isMortarOpen = mortarModal && mortarModal.classList.contains('visible');
+    const paperModal = document.getElementById('paper-modal');
+    const isPaperOpen = paperModal && paperModal.classList.contains('visible');
+    const woodenMouldModal = document.getElementById('wooden-mould-modal');
+    const isMouldOpen = woodenMouldModal && woodenMouldModal.classList.contains('visible');
+    const pedestalModal = document.getElementById('pedestal-modal');
+    const isPedestalOpen = pedestalModal && pedestalModal.classList.contains('visible');
+    const dryingModal = document.getElementById('drying-modal');
+    const isDryingOpen = dryingModal && dryingModal.classList.contains('visible');
+    const printingModal = document.getElementById('printing-modal');
+    const isPrintingOpen = printingModal && printingModal.classList.contains('visible');
+    const dioramaModal = document.getElementById('diorama-modal');
+    const isDioramaOpen = dioramaModal && dioramaModal.classList.contains('visible');
+    const isTypingOpen = document.getElementById('typing-modal') && document.getElementById('typing-modal').classList.contains('visible');
+    const isVoiceOpen = document.getElementById('voice-modal') && document.getElementById('voice-modal').classList.contains('visible');
+    const isGfxWarningOpen = document.getElementById('gfx-warning-modal') && document.getElementById('gfx-warning-modal').classList.contains('visible');
+
+    function closeModal(modalEl) {
+      modalEl.classList.remove('visible');
+      if (modalEl.id === 'product-modal') {
+        resetProductView();
+      }
+      if (modalEl.id === 'paper-modal') {
+        resetPaperView();
+      }
+      if (modalEl.id === 'wooden-mould-modal') {
+        resetWoodenMouldView();
+      }
+      if (modalEl.id === 'diorama-modal') {
+        resetDioramaView();
+      }
+      setTimeout(() => {
+        if (document.pointerLockElement !== canvas) {
+          canvas.requestPointerLock();
+        }
+      }, 50);
+    }
+
+    // If the plaque modal is open, the Q key or Esc/Close should close it. All other inputs are blocked.
+    if (isPlaqueOpen) {
+      if (key === 'q' || key === 'escape') {
+        closeModal(plaqueModal);
+        e.preventDefault();
+      }
       return;
     }
 
-    const key = event.key.toLowerCase();
-    if (key === 'e' && tourManager && tourManager.playerState !== PLAYER_STATES.FREE) {
-      tourManager.cancelFollow();
-      event.preventDefault();
+    // If the village modal is open, the Q key should close it. All other inputs are blocked.
+    if (isVillageOpen) {
+      if (key === 'q' || key === 'escape') {
+        closeModal(villageModal);
+        e.preventDefault();
+      }
       return;
+    }
+
+    // If the product modal is open, Q or Esc should close it. All other inputs are blocked.
+    if (isProductOpen) {
+      if (key === 'q' || key === 'escape') {
+        closeModal(productModal);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    // If the mortar modal is open, Q or Esc should close it. All other inputs are blocked.
+    if (isMortarOpen) {
+      if (key === 'q' || key === 'escape') {
+        closeModal(mortarModal);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    // If the paper modal is open, Q or Esc should close it. All other inputs are blocked.
+    if (isPaperOpen) {
+      if (key === 'q' || key === 'escape') {
+        closeModal(paperModal);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    // If the wooden mould modal is open, Q or Esc should close it. All other inputs are blocked.
+    if (isMouldOpen) {
+      if (key === 'q' || key === 'escape') {
+        closeModal(woodenMouldModal);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    // If the pedestal modal is open, Q or Esc should close it. All other inputs are blocked.
+    if (isPedestalOpen) {
+      if (key === 'q' || key === 'escape') {
+        closeModal(pedestalModal);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    // If the drying modal is open, Q or Esc should close it. All other inputs are blocked.
+    if (isDryingOpen) {
+      if (key === 'q' || key === 'escape') {
+        closeModal(dryingModal);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    // If the printing modal is open, Q or Esc should close it. All other inputs are blocked.
+    if (isPrintingOpen) {
+      if (key === 'q' || key === 'escape') {
+        closeModal(printingModal);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    // If the diorama modal is open, Q or Esc should close it. All other inputs are blocked.
+    if (isDioramaOpen) {
+      if (key === 'q' || key === 'escape') {
+        closeModal(dioramaModal);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    // If other modals are open, block all keyboard inputs
+    if (isTypingOpen || isVoiceOpen || isGfxWarningOpen || (tourManager && tourManager.playerState === PLAYER_STATES.QUESTION_INPUT)) {
+      if (isGfxWarningOpen && (key === 'escape')) {
+        document.getElementById('gfx-warning-modal')?.classList.remove('visible');
+        const gfxBtns = document.querySelectorAll('#gfx-toggle .gfx-btn');
+        gfxBtns.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.quality === currentQuality);
+        });
+        setTimeout(() => {
+          if (document.pointerLockElement !== canvas) {
+            canvas.requestPointerLock();
+          }
+        }, 50);
+        e.preventDefault();
+      }
+      return;
+    }
+
+    if (key === 'q' && guidePanel !== 'qa-placeholder' && guidePanel !== 'tour-confirmation') {
+      // Check plaque proximity
+      if (plaque && character) {
+        const dist = character.position.distanceTo(plaque.group.position);
+        if (dist < 3.0) {
+          if (plaqueModal) {
+            plaqueModal.classList.add('visible');
+            if (document.pointerLockElement === canvas) {
+              document.exitPointerLock();
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Check village picture proximity (using X-Z distance)
+      if (villagePictureGroup && character) {
+        const p1 = new THREE.Vector2(character.position.x, character.position.z);
+        const p2 = new THREE.Vector2(villagePictureGroup.position.x, villagePictureGroup.position.z);
+        const distXZ = p1.distanceTo(p2);
+        if (distXZ < 3.0) {
+          if (villageModal) {
+            villageModal.classList.add('visible');
+            if (document.pointerLockElement === canvas) {
+              document.exitPointerLock();
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Check product exhibit proximity
+      if (productGroup && character) {
+        const dist = character.position.distanceTo(productGroup.position);
+        if (dist < PRODUCT_EXHIBIT.proximityRange) {
+          if (productModal) {
+            productModal.classList.add('visible');
+            buildProductCategories();
+            if (document.pointerLockElement === canvas) {
+              document.exitPointerLock();
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Check mortar exhibit proximity
+      if (mortarGroup && character) {
+        const dist = character.position.distanceTo(mortarGroup.position);
+        if (dist < MORTAR_EXHIBIT.proximityRange) {
+          if (mortarModal) {
+            mortarModal.classList.add('visible');
+            if (document.pointerLockElement === canvas) {
+              document.exitPointerLock();
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Check paper exhibit proximity
+      if (paperGroup && character) {
+        const dist = character.position.distanceTo(paperGroup.position);
+        if (dist < PAPER_EXHIBIT.proximityRange) {
+          if (paperModal) {
+            paperModal.classList.add('visible');
+            buildPaperAdvantages();
+            if (document.pointerLockElement === canvas) {
+              document.exitPointerLock();
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Check wooden mould exhibit proximity
+      if (woodenMouldGroup && character) {
+        const dist = character.position.distanceTo(woodenMouldGroup.position);
+        if (dist < WOODEN_MOULD_EXHIBIT.proximityRange) {
+          if (woodenMouldModal) {
+            woodenMouldModal.classList.add('visible');
+            buildWoodenMouldFunctions();
+            if (document.pointerLockElement === canvas) {
+              document.exitPointerLock();
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Check pedestal exhibit proximity
+      if (pedestalGroup && character) {
+        const dist = character.position.distanceTo(pedestalGroup.position);
+        if (dist < HISTORICAL_PAPER_EXHIBIT.proximityRange) {
+          if (pedestalModal) {
+            pedestalModal.classList.add('visible');
+            if (document.pointerLockElement === canvas) {
+              document.exitPointerLock();
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Check drying rack exhibit proximity
+      if (dryingGroup && character) {
+        const dist = character.position.distanceTo(dryingGroup.position);
+        if (dist < DRYING_RACK_EXHIBIT.proximityRange) {
+          if (dryingModal) {
+            dryingModal.classList.add('visible');
+            if (document.pointerLockElement === canvas) {
+              document.exitPointerLock();
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Check printing display exhibit proximity
+      if (printingGroup && character) {
+        const dist = character.position.distanceTo(printingGroup.position);
+        if (dist < PRINTING_DISPLAY_EXHIBIT.proximityRange) {
+          if (printingModal) {
+            printingModal.classList.add('visible');
+            if (document.pointerLockElement === canvas) {
+              document.exitPointerLock();
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+      }
+
+      // Check diorama exhibit proximity
+      if (dioramaGroup && character) {
+        const dist = character.position.distanceTo(dioramaGroup.position);
+        if (dist < VILLAGE_DIORAMA_EXHIBIT.proximityRange) {
+          if (dioramaModal) {
+            dioramaModal.classList.add('visible');
+            buildDioramaSections();
+            if (document.pointerLockElement === canvas) {
+              document.exitPointerLock();
+            }
+          }
+          e.preventDefault();
+          return;
+        }
+      }
+    }
+
+    // Guide panel keyboard handling
+    if (guidePanel === 'proximity-menu') {
+      if (e.repeat) return;
+      if (document.activeElement && ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'].includes(document.activeElement.tagName)) return;
+      if (key === '1' || key === 'numpad1') {
+        setGuidePanel('qa-placeholder');
+        e.preventDefault();
+        return;
+      }
+      if (key === '2' || key === 'numpad2') {
+        setGuidePanel('tour-confirmation');
+        e.preventDefault();
+        return;
+      }
+    }
+    if (guidePanel === 'qa-placeholder' || guidePanel === 'tour-confirmation') {
+      if (key === 'escape') {
+        setGuidePanel(null);
+        e.preventDefault();
+        return;
+      }
+    }
+
+    if (key === 'e') {
+      if (tourManager && tourManager.playerState !== PLAYER_STATES.FREE) {
+        tourManager.cancelFollow();
+        e.preventDefault();
+        return;
+      }
     }
 
     if (key === 'f') {
       isTalking = !isTalking;
       console.log('[Input] Toggle Talking:', isTalking);
-      event.preventDefault();
+      e.preventDefault();
     }
 
     if (key in keys) {
       keys[key] = true;
-      event.preventDefault();
+      e.preventDefault();
     }
   });
+
 
   document.addEventListener('keyup', (event) => {
     const key = event.key.toLowerCase();
@@ -1056,6 +1591,390 @@ function bindRuntimeEvents() {
   });
 }
 
+// Product exhibit modal data and UI
+const productData = PRODUCT_EXHIBIT;
+
+function buildProductCategories() {
+  const grid = document.querySelector('#product-modal .products-grid');
+  if (!grid || grid.children.length > 0) return;
+  productData.categories.forEach((cat, i) => {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.textContent = cat.title;
+    card.addEventListener('click', () => showProductDetail(i));
+    grid.appendChild(card);
+  });
+}
+
+function showProductDetail(index) {
+  const cat = productData.categories[index];
+  document.getElementById('product-top-view').style.display = 'none';
+  document.getElementById('product-detail-view').style.display = '';
+  document.getElementById('product-detail-title').textContent = cat.title;
+  document.getElementById('product-detail-body').textContent = cat.content;
+  document.getElementById('product-back').style.display = 'inline-block';
+}
+
+function resetProductView() {
+  document.getElementById('product-detail-view').style.display = 'none';
+  document.getElementById('product-top-view').style.display = '';
+  document.getElementById('product-back').style.display = 'none';
+}
+
+// Product modal button bindings
+const productModal = document.getElementById('product-modal');
+document.getElementById('product-close')?.addEventListener('click', () => {
+  if (productModal) {
+    productModal.classList.remove('visible');
+    resetProductView();
+    setTimeout(() => {
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock();
+      }
+    }, 50);
+  }
+});
+document.getElementById('product-back')?.addEventListener('click', () => {
+  resetProductView();
+});
+
+// Mortar modal button binding
+const mortarModal = document.getElementById('mortar-modal');
+document.getElementById('mortar-close')?.addEventListener('click', () => {
+  if (mortarModal) {
+    mortarModal.classList.remove('visible');
+    setTimeout(() => {
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock();
+      }
+    }, 50);
+  }
+});
+
+// Paper exhibit modal data and UI
+const paperData = PAPER_EXHIBIT;
+
+function buildPaperAdvantages() {
+  const grid = document.querySelector('#paper-modal .advantages-grid');
+  if (!grid || grid.children.length > 0) return;
+  paperData.advantages.forEach((adv, i) => {
+    const card = document.createElement('div');
+    card.className = 'advantage-card';
+    card.textContent = adv.title;
+    card.addEventListener('click', () => showPaperDetail(i));
+    grid.appendChild(card);
+  });
+}
+
+function showPaperDetail(index) {
+  const adv = paperData.advantages[index];
+  document.getElementById('paper-main-view').style.display = 'none';
+  document.getElementById('paper-detail-view').style.display = '';
+  document.getElementById('paper-detail-title').textContent = adv.title;
+  document.getElementById('paper-detail-body').textContent = adv.content;
+  document.getElementById('paper-back').style.display = 'inline-block';
+  document.querySelectorAll('#paper-modal .advantage-card').forEach((c, i) => {
+    c.classList.toggle('selected', i === index);
+  });
+}
+
+function resetPaperView() {
+  document.getElementById('paper-detail-view').style.display = 'none';
+  document.getElementById('paper-main-view').style.display = '';
+  document.getElementById('paper-back').style.display = 'none';
+  document.querySelectorAll('#paper-modal .advantage-card').forEach(c => {
+    c.classList.remove('selected');
+  });
+}
+
+// Paper modal button bindings
+const paperModal = document.getElementById('paper-modal');
+document.getElementById('paper-close')?.addEventListener('click', () => {
+  if (paperModal) {
+    paperModal.classList.remove('visible');
+    resetPaperView();
+    setTimeout(() => {
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock();
+      }
+    }, 50);
+  }
+});
+document.getElementById('paper-back')?.addEventListener('click', () => {
+  resetPaperView();
+});
+
+// Wooden mould exhibit modal data and UI
+const mouldData = WOODEN_MOULD_EXHIBIT;
+
+function buildWoodenMouldFunctions() {
+  const grid = document.querySelector('#wooden-mould-modal .mould-functions-grid');
+  if (!grid || grid.children.length > 0) return;
+  mouldData.functions.forEach((fn, i) => {
+    const card = document.createElement('div');
+    card.className = 'mould-function-card';
+    card.textContent = fn.title;
+    card.addEventListener('click', () => showMouldFunctionDetail(i));
+    grid.appendChild(card);
+  });
+}
+
+function showMouldFunctionDetail(index) {
+  const fn = mouldData.functions[index];
+  document.getElementById('wooden-mould-main-view').style.display = 'none';
+  document.getElementById('wooden-mould-detail-view').style.display = '';
+  document.getElementById('wooden-mould-detail-title').textContent = fn.title;
+  document.getElementById('wooden-mould-detail-body').textContent = fn.content;
+  document.getElementById('wooden-mould-back').style.display = 'inline-block';
+  document.querySelectorAll('#wooden-mould-modal .mould-function-card').forEach((c, i) => {
+    c.classList.toggle('selected', i === index);
+  });
+}
+
+function resetWoodenMouldView() {
+  document.getElementById('wooden-mould-detail-view').style.display = 'none';
+  document.getElementById('wooden-mould-main-view').style.display = '';
+  document.getElementById('wooden-mould-back').style.display = 'none';
+  document.querySelectorAll('#wooden-mould-modal .mould-function-card').forEach(c => {
+    c.classList.remove('selected');
+  });
+}
+
+// Wooden mould modal button bindings
+const woodenMouldModal = document.getElementById('wooden-mould-modal');
+document.getElementById('wooden-mould-close')?.addEventListener('click', () => {
+  if (woodenMouldModal) {
+    woodenMouldModal.classList.remove('visible');
+    resetWoodenMouldView();
+    setTimeout(() => {
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock();
+      }
+    }, 50);
+  }
+});
+document.getElementById('wooden-mould-back')?.addEventListener('click', () => {
+  resetWoodenMouldView();
+});
+
+// New exhibit modal button bindings
+const pedestalModal = document.getElementById('pedestal-modal');
+document.getElementById('pedestal-close')?.addEventListener('click', () => {
+  if (pedestalModal) {
+    pedestalModal.classList.remove('visible');
+    setTimeout(() => {
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock();
+      }
+    }, 50);
+  }
+});
+
+const dryingModal = document.getElementById('drying-modal');
+document.getElementById('drying-close')?.addEventListener('click', () => {
+  if (dryingModal) {
+    dryingModal.classList.remove('visible');
+    setTimeout(() => {
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock();
+      }
+    }, 50);
+  }
+});
+
+const printingModal = document.getElementById('printing-modal');
+document.getElementById('printing-close')?.addEventListener('click', () => {
+  if (printingModal) {
+    printingModal.classList.remove('visible');
+    setTimeout(() => {
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock();
+      }
+    }, 50);
+  }
+});
+
+// Diorama exhibit modal data and UI
+const dioramaData = VILLAGE_DIORAMA_EXHIBIT;
+
+function buildDioramaSections() {
+  const grid = document.querySelector('#diorama-modal .diorama-sections-grid');
+  if (!grid) return;
+  grid.querySelectorAll('.diorama-section-btn').forEach(btn => {
+    btn.removeEventListener('click', handleDioramaSectionClick);
+    btn.addEventListener('click', handleDioramaSectionClick);
+  });
+}
+
+function handleDioramaSectionClick(e) {
+  const idx = parseInt(e.currentTarget.getAttribute('data-section'), 10);
+  showDioramaDetail(idx);
+}
+
+function showDioramaDetail(index) {
+  const section = dioramaData.sections[index];
+  if (!section) return;
+  document.getElementById('diorama-main-view').style.display = 'none';
+  document.getElementById('diorama-detail-view').style.display = '';
+  document.getElementById('diorama-detail-title').textContent = section.id + ' – ' + section.title;
+  document.getElementById('diorama-detail-body').textContent = section.content;
+  document.getElementById('diorama-back').style.display = 'inline-block';
+}
+
+function resetDioramaView() {
+  document.getElementById('diorama-detail-view').style.display = 'none';
+  document.getElementById('diorama-main-view').style.display = '';
+  document.getElementById('diorama-back').style.display = 'none';
+}
+
+const dioramaModal = document.getElementById('diorama-modal');
+document.getElementById('diorama-close')?.addEventListener('click', () => {
+  if (dioramaModal) {
+    dioramaModal.classList.remove('visible');
+    resetDioramaView();
+    setTimeout(() => {
+      if (document.pointerLockElement !== canvas) {
+        canvas.requestPointerLock();
+      }
+    }, 50);
+  }
+});
+document.getElementById('diorama-back')?.addEventListener('click', () => {
+  resetDioramaView();
+});
+
+// Graphics quality management
+let currentQuality = 'medium';
+
+function setGraphicsQuality(level) {
+  currentQuality = level;
+
+  const gfxBtns = document.querySelectorAll('#gfx-toggle .gfx-btn');
+  gfxBtns.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.quality === level);
+  });
+
+  switch (level) {
+    case 'low':
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 0.5));
+      renderer.shadowMap.enabled = false;
+      sunLight.castShadow = false;
+      renderer.toneMappingExposure = 1.4;
+      break;
+
+    case 'medium':
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.0));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      sunLight.castShadow = true;
+      renderer.toneMappingExposure = 1.75;
+      break;
+
+    case 'high':
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      sunLight.castShadow = true;
+      renderer.toneMappingExposure = 2.0;
+      break;
+  }
+  renderer.shadowMap.needsUpdate = true;
+}
+
+// Graphics toggle button bindings
+document.querySelectorAll('#gfx-toggle .gfx-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const quality = btn.dataset.quality;
+    if (quality === currentQuality) return;
+
+    if (quality === 'high') {
+      const warningModal = document.getElementById('gfx-warning-modal');
+      if (warningModal) {
+        warningModal.classList.add('visible');
+        if (document.pointerLockElement === canvas) {
+          document.exitPointerLock();
+        }
+        return;
+      }
+    }
+
+    setGraphicsQuality(quality);
+  });
+});
+
+document.getElementById('gfx-warning-confirm')?.addEventListener('click', () => {
+  document.getElementById('gfx-warning-modal')?.classList.remove('visible');
+  setGraphicsQuality('high');
+  setTimeout(() => {
+    if (document.pointerLockElement !== canvas) {
+      canvas.requestPointerLock();
+    }
+  }, 50);
+});
+
+document.getElementById('gfx-warning-cancel')?.addEventListener('click', () => {
+  document.getElementById('gfx-warning-modal')?.classList.remove('visible');
+  // Stay on current level
+  // Re-highlight the active button
+  const gfxBtns = document.querySelectorAll('#gfx-toggle .gfx-btn');
+  gfxBtns.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.quality === currentQuality);
+  });
+  setTimeout(() => {
+    if (document.pointerLockElement !== canvas) {
+      canvas.requestPointerLock();
+    }
+  }, 50);
+});
+
+// Guide panel state management
+function setGuidePanel(panel) {
+  const proximityMenu = document.getElementById('guide-proximity-menu');
+  const qaPanel = document.getElementById('guide-qa-panel');
+  const tourPanel = document.getElementById('guide-tour-panel');
+
+  [proximityMenu, qaPanel, tourPanel].forEach(el => {
+    if (el) el.classList.remove('visible');
+  });
+
+  guidePanel = panel;
+
+  if (panel === 'proximity-menu') {
+    if (proximityMenu) proximityMenu.classList.add('visible');
+  } else if (panel === 'qa-placeholder') {
+    if (qaPanel) qaPanel.classList.add('visible');
+    if (document.pointerLockElement === canvas) document.exitPointerLock();
+  } else if (panel === 'tour-confirmation') {
+    if (tourPanel) tourPanel.classList.add('visible');
+    if (document.pointerLockElement === canvas) document.exitPointerLock();
+  }
+}
+
+// Guide panel button bindings
+document.querySelectorAll('.guide-menu-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const opt = btn.getAttribute('data-option');
+    if (opt === '1') setGuidePanel('qa-placeholder');
+    else if (opt === '2') setGuidePanel('tour-confirmation');
+  });
+});
+document.getElementById('guide-qa-back')?.addEventListener('click', () => {
+  setGuidePanel('proximity-menu');
+});
+document.getElementById('guide-qa-close')?.addEventListener('click', () => {
+  setGuidePanel(null);
+});
+document.getElementById('guide-tour-cancel')?.addEventListener('click', () => {
+  setGuidePanel('proximity-menu');
+});
+document.getElementById('guide-tour-start')?.addEventListener('click', () => {
+  if (tourManager && tourManager.playerState === PLAYER_STATES.FREE) {
+    setGuidePanel(null);
+    tourManager.startTour();
+  }
+});
+
+
 let didSignalFirstFrame = false;
 
 function animate() {
@@ -1066,6 +1985,8 @@ function animate() {
   requestAnimationFrame(animate);
   const delta = Math.min(clock.getDelta(), 0.05);
 
+  checkUIAndUnlock();
+
   updateMovement(delta);
   updateCeilingFans(delta);
 
@@ -1074,6 +1995,183 @@ function animate() {
     videoActivationSystem.update(time, character.position, tourManager ? tourManager.guide.position : null);
   }
 
+  // Update plaque prompt visibility based on player distance
+  if (plaque && character) {
+    const dist = character.position.distanceTo(plaque.group.position);
+    const plaquePrompt = document.getElementById('plaque-prompt');
+    const plaqueModal = document.getElementById('plaque-modal');
+    if (plaquePrompt && plaqueModal) {
+      const isModalOpen = plaqueModal.classList.contains('visible');
+      if (dist < 3.0 && !isModalOpen) {
+        plaquePrompt.classList.add('visible');
+      } else {
+        plaquePrompt.classList.remove('visible');
+      }
+    }
+  }
+
+  // Update village picture prompt visibility based on player distance
+  if (villagePictureGroup && character) {
+    const p1 = new THREE.Vector2(character.position.x, character.position.z);
+    const p2 = new THREE.Vector2(villagePictureGroup.position.x, villagePictureGroup.position.z);
+    const distXZ = p1.distanceTo(p2);
+    const villagePrompt = document.getElementById('village-prompt');
+    const villageModal = document.getElementById('village-modal');
+    if (villagePrompt && villageModal) {
+      const isModalOpen = villageModal.classList.contains('visible');
+      if (distXZ < 3.0 && !isModalOpen) {
+        villagePrompt.classList.add('visible');
+      } else {
+        villagePrompt.classList.remove('visible');
+      }
+    }
+  }
+
+  // Update product exhibit prompt visibility based on player distance
+  if (productGroup && character) {
+    const dist = character.position.distanceTo(productGroup.position);
+    const productPrompt = document.getElementById('product-prompt');
+    const productModal = document.getElementById('product-modal');
+    if (productPrompt && productModal) {
+      const isModalOpen = productModal.classList.contains('visible');
+      if (dist < PRODUCT_EXHIBIT.proximityRange && !isModalOpen) {
+        productPrompt.classList.add('visible');
+      } else {
+        productPrompt.classList.remove('visible');
+      }
+    }
+  }
+
+  // Update mortar exhibit prompt visibility based on player distance
+  if (mortarGroup && character) {
+    const dist = character.position.distanceTo(mortarGroup.position);
+    const mortarPrompt = document.getElementById('mortar-prompt');
+    const mortarModal = document.getElementById('mortar-modal');
+    if (mortarPrompt && mortarModal) {
+      const isModalOpen = mortarModal.classList.contains('visible');
+      if (dist < MORTAR_EXHIBIT.proximityRange && !isModalOpen) {
+        mortarPrompt.classList.add('visible');
+      } else {
+        mortarPrompt.classList.remove('visible');
+      }
+    }
+  }
+
+  // Update paper exhibit prompt visibility based on player distance
+  if (paperGroup && character) {
+    const dist = character.position.distanceTo(paperGroup.position);
+    const paperPrompt = document.getElementById('paper-prompt');
+    const paperModal = document.getElementById('paper-modal');
+    if (paperPrompt && paperModal) {
+      const isModalOpen = paperModal.classList.contains('visible');
+      if (dist < PAPER_EXHIBIT.proximityRange && !isModalOpen) {
+        paperPrompt.classList.add('visible');
+      } else {
+        paperPrompt.classList.remove('visible');
+      }
+    }
+  }
+
+  // Update wooden mould exhibit prompt visibility based on player distance
+  if (woodenMouldGroup && character) {
+    const dist = character.position.distanceTo(woodenMouldGroup.position);
+    const mouldPrompt = document.getElementById('wooden-mould-prompt');
+    const mouldModal = document.getElementById('wooden-mould-modal');
+    if (mouldPrompt && mouldModal) {
+      const isModalOpen = mouldModal.classList.contains('visible');
+      if (dist < WOODEN_MOULD_EXHIBIT.proximityRange && !isModalOpen) {
+        mouldPrompt.classList.add('visible');
+      } else {
+        mouldPrompt.classList.remove('visible');
+      }
+    }
+  }
+
+  // Update pedestal exhibit prompt visibility
+  if (pedestalGroup && character) {
+    const dist = character.position.distanceTo(pedestalGroup.position);
+    const pedestalPrompt = document.getElementById('pedestal-prompt');
+    const pedestalModal = document.getElementById('pedestal-modal');
+    if (pedestalPrompt && pedestalModal) {
+      const isModalOpen = pedestalModal.classList.contains('visible');
+      if (dist < HISTORICAL_PAPER_EXHIBIT.proximityRange && !isModalOpen) {
+        pedestalPrompt.classList.add('visible');
+      } else {
+        pedestalPrompt.classList.remove('visible');
+      }
+    }
+  }
+
+  // Update drying rack exhibit prompt visibility
+  if (dryingGroup && character) {
+    const dist = character.position.distanceTo(dryingGroup.position);
+    const dryingPrompt = document.getElementById('drying-prompt');
+    const dryingModal = document.getElementById('drying-modal');
+    if (dryingPrompt && dryingModal) {
+      const isModalOpen = dryingModal.classList.contains('visible');
+      if (dist < DRYING_RACK_EXHIBIT.proximityRange && !isModalOpen) {
+        dryingPrompt.classList.add('visible');
+      } else {
+        dryingPrompt.classList.remove('visible');
+      }
+    }
+  }
+
+  // Update printing display exhibit prompt visibility
+  if (printingGroup && character) {
+    const dist = character.position.distanceTo(printingGroup.position);
+    const printingPrompt = document.getElementById('printing-prompt');
+    const printingModal = document.getElementById('printing-modal');
+    if (printingPrompt && printingModal) {
+      const isModalOpen = printingModal.classList.contains('visible');
+      if (dist < PRINTING_DISPLAY_EXHIBIT.proximityRange && !isModalOpen) {
+        printingPrompt.classList.add('visible');
+      } else {
+        printingPrompt.classList.remove('visible');
+      }
+    }
+  }
+
+  // Update diorama exhibit prompt visibility
+  if (dioramaGroup && character) {
+    const dist = character.position.distanceTo(dioramaGroup.position);
+    const dioramaPrompt = document.getElementById('diorama-prompt');
+    const dioramaModal = document.getElementById('diorama-modal');
+    if (dioramaPrompt && dioramaModal) {
+      const isModalOpen = dioramaModal.classList.contains('visible');
+      if (dist < VILLAGE_DIORAMA_EXHIBIT.proximityRange && !isModalOpen) {
+        dioramaPrompt.classList.add('visible');
+      } else {
+        dioramaPrompt.classList.remove('visible');
+      }
+    }
+  }
+
+  // Guide proximity: show/hide the two-option panel based on distance to guide
+  if (character && tourManager && tourManager.guide) {
+    const dist = character.position.distanceTo(tourManager.guide.position);
+    const inRange = dist < GUIDE_PROXIMITY_RANGE;
+    const tourActive = tourManager.playerState !== PLAYER_STATES.FREE;
+    const anyExhibitOpen =
+      (document.getElementById('plaque-modal') && document.getElementById('plaque-modal').classList.contains('visible')) ||
+      (document.getElementById('village-modal') && document.getElementById('village-modal').classList.contains('visible')) ||
+      (document.getElementById('product-modal') && document.getElementById('product-modal').classList.contains('visible')) ||
+      (document.getElementById('mortar-modal') && document.getElementById('mortar-modal').classList.contains('visible')) ||
+      (document.getElementById('paper-modal') && document.getElementById('paper-modal').classList.contains('visible')) ||
+    (document.getElementById('wooden-mould-modal') && document.getElementById('wooden-mould-modal').classList.contains('visible')) ||
+    (document.getElementById('pedestal-modal') && document.getElementById('pedestal-modal').classList.contains('visible')) ||
+    (document.getElementById('drying-modal') && document.getElementById('drying-modal').classList.contains('visible')) ||
+    (document.getElementById('printing-modal') && document.getElementById('printing-modal').classList.contains('visible')) ||
+    (document.getElementById('diorama-modal') && document.getElementById('diorama-modal').classList.contains('visible'));
+
+    if (inRange && !tourActive && !anyExhibitOpen && guidePanel === null) {
+      setGuidePanel('proximity-menu');
+    } else if (!inRange && guidePanel === 'proximity-menu') {
+      setGuidePanel(null);
+    }
+  }
+
+  // Update secondary mixer (Guide NPC) during free explore, optimized by distance culling
   if (tourManager && mixers[1]) {
     const shouldUpdateGuide = tourManager.playerState !== PLAYER_STATES.FREE ||
       (character && character.position.distanceTo(tourManager.guide.position) < 15);

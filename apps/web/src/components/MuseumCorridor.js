@@ -7,7 +7,7 @@ function createStoneFloorTexture() {
   const ctx = canvas.getContext('2d');
   
   // Warm beige traditional stone tiles base
-  ctx.fillStyle = '#d2c7a3';
+  ctx.fillStyle = '#c2aa6b';
   ctx.fillRect(0, 0, 512, 512);
   
   // Add natural stone texture grain/noise
@@ -21,7 +21,7 @@ function createStoneFloorTexture() {
   }
   
   // Draw mortar lines
-  ctx.strokeStyle = '#b6ae93';
+  ctx.strokeStyle = '#a69157';
   ctx.lineWidth = 3;
   const tileSize = 128;
   for (let x = 0; x <= 512; x += tileSize) {
@@ -217,7 +217,7 @@ export function createMuseumCorridor(scene) {
   // Set bright, warm traditional background and fog
   const bgColor = 0xe8dcbf; // Soft warm beige plaster tint
   scene.background = new THREE.Color(bgColor);
-  scene.fog = new THREE.FogExp2(bgColor, 0.022); // Gentler, more open fog
+  scene.fog = null;
 
   const corridorLength = 70; // 70 meters long
   const corridorWidth = 22;   // 22 meters wide (expanded by ~50% from 15m)
@@ -346,23 +346,26 @@ export function createMuseumCorridor(scene) {
   purlinRight.position.set(pillarX * 0.5, height + 0.85, 0);
   scene.add(purlinRight);
 
-  // 5. Ceiling Planks (Bright cream ivory planks matching the walls)
-  const roofPlaneGeo = new THREE.PlaneGeometry(pillarX + 1.8, corridorLength);
-  const roofPlaneMat = new THREE.MeshStandardMaterial({ 
-    color: 0xe4d8be, // Warm cream plaster ceiling
-    roughness: 0.95 
+  // 5. Gabled roof planes — slope up toward ridge beam at center
+  const roofPlaneWidth = pillarX + 4;
+  const roofPlaneGeo = new THREE.PlaneGeometry(roofPlaneWidth, corridorLength);
+  const roofPlaneMat = new THREE.MeshStandardMaterial({
+    color: 0xe4d8be,
+    roughness: 0.95,
+    side: THREE.DoubleSide,
   });
+  const roofPitch = Math.PI / 10;
 
   const roofPlaneLeft = new THREE.Mesh(roofPlaneGeo, roofPlaneMat);
-  roofPlaneLeft.position.set(-pillarX / 2, height + 1.1, 0);
+  roofPlaneLeft.position.set(-(pillarX / 2 + 0.6), height + 0.6, 0);
   roofPlaneLeft.rotation.x = Math.PI / 2;
-  roofPlaneLeft.rotation.y = -Math.PI / 10; // Match rafter angle
+  roofPlaneLeft.rotation.y = roofPitch;
   scene.add(roofPlaneLeft);
 
   const roofPlaneRight = new THREE.Mesh(roofPlaneGeo, roofPlaneMat);
-  roofPlaneRight.position.set(pillarX / 2, height + 1.1, 0);
+  roofPlaneRight.position.set(pillarX / 2 + 0.6, height + 0.6, 0);
   roofPlaneRight.rotation.x = Math.PI / 2;
-  roofPlaneRight.rotation.y = Math.PI / 10; // Match rafter angle
+  roofPlaneRight.rotation.y = -roofPitch;
   scene.add(roofPlaneRight);
 
   // 6. Wall Details (Skirting and trims to enhance character)
@@ -401,19 +404,19 @@ export function createMuseumCorridor(scene) {
   createPlantPot(scene, halfWidth - 1.0, halfLength - 2.0);
 
   // 8. Ambient and Indirect Lighting
-  const ambientLight = new THREE.AmbientLight(0xffe9be, 1.2); // Warm cozy golden-yellow ambient fill light
+  const ambientLight = new THREE.AmbientLight(0xffe9be, 0.8); // Warm cozy golden-yellow ambient fill light
   scene.add(ambientLight);
 
   // Warm PointLights along the corridor (adjusted to a richer warm amber/yellow color)
-  const pointLight1 = new THREE.PointLight(0xffc875, 3.5, 40, 1.0);
+  const pointLight1 = new THREE.PointLight(0xffc875, 2.5, 40, 1.0);
   pointLight1.position.set(0, height - 1.2, -18);
   scene.add(pointLight1);
 
-  const pointLight2 = new THREE.PointLight(0xffc875, 3.5, 40, 1.0);
+  const pointLight2 = new THREE.PointLight(0xffc875, 2.5, 40, 1.0);
   pointLight2.position.set(0, height - 1.2, 0);
   scene.add(pointLight2);
 
-  const pointLight3 = new THREE.PointLight(0xffc875, 3.5, 40, 1.0);
+  const pointLight3 = new THREE.PointLight(0xffc875, 2.5, 40, 1.0);
   pointLight3.position.set(0, height - 1.2, 18);
   scene.add(pointLight3);
 
