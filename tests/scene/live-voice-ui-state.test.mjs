@@ -246,12 +246,12 @@ test('test_voice_ui_recovers_from_empty_recording_without_submit', async (t) => 
   controller.stopRecording();
   await new Promise((resolve) => setTimeout(resolve, 0));
 
-  assert.equal(submissions.length, 0);
-  assert.equal(resets.length, 1);
-  assert.equal(controller.voiceModal.classList.contains('visible'), false);
-  assert.equal(controller.isRecording, false);
-  assert.equal(controller.micStatusText.innerText, 'Nhấn nút để bắt đầu ghi âm');
-  assert.match(elements.get('toast-notification').innerText, /Không ghi nhận được âm thanh/u);
+  assert.equal(submissions.length, 0, "Data Integrity: Empty recording is not submitted, preventing network waste.");
+  assert.equal(resets.length, 1, "Resiliency: Reset handler is triggered once to restore clean state.");
+  assert.equal(controller.voiceModal.classList.contains('visible'), false, "UI UX Flow: Voice modal is closed immediately on recovery.");
+  assert.equal(controller.isRecording, false, "State Check: Recording flag is set to inactive.");
+  assert.equal(controller.micStatusText.innerText, 'Nhấn nút để bắt đầu ghi âm', "UI State: Status text resets to initial guide.");
+  assert.match(elements.get('toast-notification').innerText, /Không ghi nhận được âm thanh/u, "UX Guidance: Clean notification displayed to let user try again.");
 });
 
 test('test_voice_ui_stops_stream_when_media_recorder_setup_fails', async (t) => {
@@ -305,8 +305,8 @@ test('test_voice_ui_stops_stream_when_media_recorder_setup_fails', async (t) => 
   controller.openVoiceModal();
   await controller.startRecording();
 
-  assert.ok(trackStops.length > 0);
-  assert.equal(resets.length, 1);
-  assert.equal(controller.voiceModal.classList.contains('visible'), false);
-  assert.match(elements.get('toast-notification').innerText, /Không thể dùng micro/u);
+  assert.ok(trackStops.length > 0, "Resource Safety: Audio tracks are closed immediately upon recorder setup failure, preventing microphone leak.");
+  assert.equal(resets.length, 1, "State Safety: UI variables are reset to maintain a pristine DOM state.");
+  assert.equal(controller.voiceModal.classList.contains('visible'), false, "UX Safety: Voice modal is dismissed gracefully to allow manual typing fallback.");
+  assert.match(elements.get('toast-notification').innerText, /Không thể dùng micro/u, "Accessibility: User is proactively warned of device permissions with fallback tips.");
 });
